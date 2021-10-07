@@ -1,5 +1,5 @@
 # by-People.github.io
-thi is for my project website
+bentar bang masih ngumpulin energi dulu 🏃
 
 
 #################################
