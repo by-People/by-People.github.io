@@ -1,5 +1,5 @@
 # by-People.github.io
-bentar bang masih ngumpulin energi dulu 🏃
+Wait a minute, still charging the battery 🏃
 
 
 #################################
