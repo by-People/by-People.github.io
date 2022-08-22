@@ -1,9 +1,9 @@
 # by-People.github.io
-Wait a minute, still charging the battery 🏃
+Website is Open Now 🏃
 
 
 #################################
 #                               #
-#          COMING SOON          #
+#            WELCOME            #
 #                               #
 #################################
