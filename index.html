@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upscaler Gambar JPEG/PNG</title>
+    <title>JPEG/PNG Image Upscaler</title>
     <style>
         #drop-area.dragover {
         border: 2px dashed #3498db;
@@ -222,79 +222,79 @@
 </head>
 <body>
     <div class="container">
-        <h1>Upscaler Gambar JPEG/PNG</h1>
+        <h1>JPEG/PNG Image Upscaler</h1>
         
         <div class="controls">
             <div class="file-input-wrapper" id="drop-area">
-              <label for="image-upload">Pilih atau Tarik Gambar ke Sini (JPEG/PNG):</label>
-              <div class="file-input-button">Pilih File</div>
-              <span class="file-name" id="file-name">Belum ada file yang dipilih</span>
+              <label for="image-upload">Choose Image or Drag here (JPEG/PNG) (JPEG/PNG):</label>
+              <div class="file-input-button">Choose File</div>
+              <span class="file-name" id="file-name">No file selected</span>
               <input type="file" id="image-upload" accept="image/jpeg, image/png, image/jpg">
             </div>
             
             <div class="method-options">
                 <div class="method-option active" data-method="bilinear">
                     <h4>Bilinear</h4>
-                    <div class="method-description">Standar, hasil halus untuk sebagian besar gambar</div>
+                    <div class="method-description">Standard, smooth results for most images</div>
                 </div>
                 <div class="method-option" data-method="bicubic">
                     <h4>Bicubic</h4>
-                    <div class="method-description">Kualitas lebih tinggi, lebih tajam</div>
+                    <div class="method-description">Higher quality, sharper output</div>
                 </div>
                 <div class="method-option" data-method="nearest">
                     <h4>Nearest Neighbor</h4>
-                    <div class="method-description">Cocok untuk pixel art, tetap tajam</div>
+                    <div class="method-description">Great for pixel art, keeps edges sharp</div>
                 </div>
                 <div class="method-option" data-method="sharpen">
-                    <h4>Perjernihan</h4>
-                    <div class="method-description">Menajamkan gambar buram</div>
+                    <h4>Sharpen</h4>
+                    <div class="method-description">Sharpens blurry images</div>
                 </div>
             </div>
             
             <div class="filter-controls" style="margin-top: 15px; margin-bottom: 15px; padding: 15px; background-color: #f7f9fc; border: 1px solid #e0e0e0; border-radius: 6px;">
-                <h4 style="margin-top: 0;">Pengaturan Perjernihan:</h4>
+                <h4 style="margin-top: 0;">Sharpen Settings:</h4>
                 
                 <div style="display: flex; gap: 20px; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 200px;">
-                        <label for="sharpness">Ketajaman: <span id="sharpness-value">50%</span></label>
+                        <label for="sharpness">Sharpness: <span id="sharpness-value">50%</span></label>
                         <input type="range" id="sharpness" min="0" max="100" value="50" style="width: 100%;">
                     </div>
                     
                     <div style="flex: 1; min-width: 200px;">
-                        <label for="contrast">Kontras: <span id="contrast-value">10%</span></label>
+                        <label for="contrast">Contrast: <span id="contrast-value">10%</span></label>
                         <input type="range" id="contrast" min="0" max="50" value="10" style="width: 100%;">
                     </div>
                     
                     <div style="flex: 1; min-width: 200px;">
-                        <label for="noise-reduction">Reduksi Noise: <span id="noise-value">30%</span></label>
+                        <label for="noise-reduction">Noise Reduction: <span id="noise-value">30%</span></label>
                         <input type="range" id="noise-reduction" min="0" max="100" value="30" style="width: 100%;">
                     </div>
                 </div>
             </div>
             
-            <label for="scale-factor">Faktor Pembesaran: <span id="scale-value">2x</span></label>
+            <label for="scale-factor">Scale Factor: <span id="scale-value">2x</span></label>
             <input type="range" id="scale-factor" min="1.5" max="4" value="2" step="0.5">
             
-            <button id="upscale-btn" disabled>Upscale Gambar</button>
+            <button id="upscale-btn" disabled>Upscale Image</button>
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <div>Memproses gambar...</div>
+                <div>Processing image...</div>
             </div>
         </div>
         
         <div class="preview-container">
             <div class="preview-box">
-                <h3>Gambar Asli</h3>
+                <h3>Original Image</h3>
                 <canvas id="original-canvas"></canvas>
                 <div class="image-info" id="original-info"></div>
             </div>
             
             <div class="preview-box">
-                <h3>Hasil Upscale</h3>
+                <h3>Upscaled Result</h3>
                 <canvas id="upscaled-canvas"></canvas>
                 <div class="image-info" id="upscaled-info"></div>
-                <button id="download-btn" class="download-btn" disabled>Download Hasil</button>
+                <button id="download-btn" class="download-btn" disabled>Download Result</button>
             </div>
         </div>
     </div>
