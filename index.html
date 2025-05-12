@@ -543,9 +543,16 @@
                 link.style.marginTop = "10px";
                 link.style.textAlign = "center";
                 
-                // Tambahkan link ke halaman
-                document.querySelector('.preview-box:nth-child(2)').appendChild(link);
-                
+                // Hapus link download sebelumnya jika ada
+                const previewBox = document.querySelector('.preview-box:nth-child(2)');
+                const existingLink = previewBox.querySelector('a');
+                if (existingLink) {
+                    previewBox.removeChild(existingLink);
+                }
+
+                // Tambahkan link baru
+                previewBox.appendChild(link);
+
                 // Buat metode alternatif dengan Blob
                 const blob = dataURLToBlob(dataURL);
                 const blobUrl = URL.createObjectURL(blob);
