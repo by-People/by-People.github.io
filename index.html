@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upscaler Gambar JPEG/PNG</title>
     <style>
+        #drop-area.dragover {
+        border: 2px dashed #3498db;
+        background-color: #ecf5fd;
+        }
+
         body {
             font-family: Arial, sans-serif;
             max-width: 900px;
@@ -220,11 +225,11 @@
         <h1>Upscaler Gambar JPEG/PNG</h1>
         
         <div class="controls">
-            <div class="file-input-wrapper">
-                <label for="image-upload">Pilih Gambar (JPEG/PNG):</label>
-                <div class="file-input-button">Pilih File</div>
-                <span class="file-name" id="file-name">Belum ada file yang dipilih</span>
-                <input type="file" id="image-upload" accept="image/jpeg, image/png, image/jpg">
+            <div class="file-input-wrapper" id="drop-area">
+              <label for="image-upload">Pilih atau Tarik Gambar ke Sini (JPEG/PNG):</label>
+              <div class="file-input-button">Pilih File</div>
+              <span class="file-name" id="file-name">Belum ada file yang dipilih</span>
+              <input type="file" id="image-upload" accept="image/jpeg, image/png, image/jpg">
             </div>
             
             <div class="method-options">
@@ -550,7 +555,7 @@
                 link.click();
                 
                 // Beri tahu user
-                alert('File gambar sedang diunduh. Jika unduhan tidak dimulai otomatis, klik link yang muncul di bawah gambar hasil. Atau anda bisa klik kanan dan Save As');
+                alert('File gambar sedang diunduh. Jika unduhan tidak dimulai otomatis, klik link yang muncul di bawah gambar hasil.');
                 
                 // Bersihkan URL objek setelah digunakan
                 setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
@@ -702,7 +707,7 @@
                         
                         // Terapkan blur dengan intensitas tertentu
                         pixels[idx + c] = Math.round(
-                            origPixels[idx + c] * (1 - blurIntensity) + sum * blurIntensity
+                            origPixels[idx + c] * (1 - blurIntensity) + sum * blurIntensity 
                         );
                     }
                 }
@@ -723,6 +728,33 @@
                 }
             }
         }
+      const dropArea = document.getElementById('drop-area');
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropArea.classList.add('dragover');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropArea.classList.remove('dragover');
+            });
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                imageUpload.files = files;
+                const event = new Event('change');
+                imageUpload.dispatchEvent(event);
+            }
+        });
+
     </script>
 </body>
 </html>
