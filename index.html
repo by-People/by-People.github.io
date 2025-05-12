@@ -218,11 +218,26 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .chibi-footer {
+            display: block;
+            margin: 40px auto 10px;
+            width: 120px;
+            opacity: 0.9;
+        }
+
+        /* Sembunyikan di layar kecil (misalnya mobile) */
+        @media (max-width: 600px) {
+            .chibi-footer {
+                display: none;
+            }
+        }
+
     </style>
 </head>
 <body>
+    <img src="https://i.postimg.cc/0NrJzWrJ/chibi.png" alt="Chibi Mascot" class="chibi-footer">
     <div class="container">
-        <h1>JPEG/PNG Image Upscaler</h1>
+        <h1><span style="color:#3498db; font-weight:bold;">Waifu3x</span> – JPEG/PNG Image Upscaler</h1>
         
         <div class="controls">
             <div class="file-input-wrapper" id="drop-area">
