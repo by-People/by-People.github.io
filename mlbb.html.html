@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>MLBB Push Immortal</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box} body{margin:0;background:#f3f4f6;color:#111827}
+header{background:#111827;color:#fff;padding:20px 16px;position:sticky;top:0;z-index:10}
+.wrap{max-width:720px;margin:auto} h1{font-size:21px;margin:0 0 4px} .sub{font-size:13px;opacity:.75}
+main{padding:12px} .card{background:#fff;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px} .stat{background:#f8fafc;border-radius:12px;padding:10px;text-align:center}
+.num{font-weight:800;font-size:21px} .label{font-size:10px;color:#64748b;margin-top:2px}
+.progress{height:11px;background:#e5e7eb;border-radius:99px;margin-top:13px;overflow:hidden} .bar{height:100%;width:0;background:#111827}
+.today{border:2px solid #111827} .today h2{font-size:16px;margin:0 0 8px}
+button{font:inherit;font-weight:700;border:0;border-radius:11px;padding:11px 13px;background:#111827;color:white;cursor:pointer;touch-action:manipulation}
+button.secondary{background:#e5e7eb;color:#111827} .buttons{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.row{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid #eee}
+.row:last-child{border-bottom:0} .check{width:25px;height:25px;accent-color:#111827}
+.date{font-weight:700} .small{font-size:11px;color:#64748b;margin-top:2px}
+.badge{font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;background:#f1f5f9;white-space:nowrap}
+.done{background:#dcfce7;color:#166534} .muted{font-size:12px;color:#64748b}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>🎮 MLBB Push Mythical Immortal</h1><div class="sub">Mythic 10⭐ → Immortal 100⭐ · 25 Sep – 15 Des 2026</div></div></header>
+<main class="wrap">
+<div class="card">
+<div class="stats">
+<div class="stat"><div class="num" id="current">10⭐</div><div class="label">Bintang sekarang</div></div>
+<div class="stat"><div class="num" id="next">11⭐</div><div class="label">Target berikutnya</div></div>
+<div class="stat"><div class="num" id="remaining">90⭐</div><div class="label">Sisa</div></div>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p class="muted" id="pct">0% menuju Immortal</p>
+</div>
+
+<div class="card today">
+<h2>📌 Target hari ini</h2>
+<div id="today"></div>
+<div class="buttons">
+<button id="finishBtn">✓ Tandai selesai</button>
+<button class="secondary" id="resetBtn">Reset semua</button>
+</div>
+</div>
+
+<div class="card">
+<h2 style="margin:0 0 5px">Checklist 82 Hari</h2>
+<p class="muted">Sentuh kotak ☐ untuk menandai hari yang sudah mencapai target.</p>
+<div id="list"></div>
+</div>
+</main>
+
+<script>
+const SCHEDULE=[{day:1,date:"2026-09-25",daily:1,target:11},{day:2,date:"2026-09-26",daily:1,target:12},{day:3,date:"2026-09-27",daily:1,target:13},{day:4,date:"2026-09-28",daily:1,target:14},{day:5,date:"2026-09-29",daily:1,target:15},{day:6,date:"2026-09-30",daily:1,target:16},{day:7,date:"2026-10-01",daily:1,target:17},{day:8,date:"2026-10-02",daily:1,target:18},{day:9,date:"2026-10-03",daily:2,target:20},{day:10,date:"2026-10-04",daily:1,target:21},{day:11,date:"2026-10-05",daily:1,target:22},{day:12,date:"2026-10-06",daily:1,target:23},{day:13,date:"2026-10-07",daily:1,target:24},{day:14,date:"2026-10-08",daily:1,target:25},{day:15,date:"2026-10-09",daily:1,target:26},{day:16,date:"2026-10-10",daily:1,target:27},{day:17,date:"2026-10-11",daily:1,target:28},{day:18,date:"2026-10-12",daily:1,target:29},{day:19,date:"2026-10-13",daily:2,target:31},{day:20,date:"2026-10-14",daily:1,target:32},{day:21,date:"2026-10-15",daily:1,target:33},{day:22,date:"2026-10-16",daily:1,target:34},{day:23,date:"2026-10-17",daily:1,target:35},{day:24,date:"2026-10-18",daily:1,target:36},{day:25,date:"2026-10-19",daily:1,target:37},{day:26,date:"2026-10-20",daily:1,target:38},{day:27,date:"2026-10-21",daily:1,target:39},{day:28,date:"2026-10-22",daily:1,target:40},{day:29,date:"2026-10-23",daily:2,target:42},{day:30,date:"2026-10-24",daily:1,target:43},{day:31,date:"2026-10-25",daily:1,target:44},{day:32,date:"2026-10-26",daily:1,target:45},{day:33,date:"2026-10-27",daily:1,target:46},{day:34,date:"2026-10-28",daily:1,target:47},{day:35,date:"2026-10-29",daily:1,target:48},{day:36,date:"2026-10-30",daily:1,target:49},{day:37,date:"2026-10-31",daily:1,target:50},{day:38,date:"2026-11-01",daily:1,target:51},{day:39,date:"2026-11-02",daily:2,target:53},{day:40,date:"2026-11-03",daily:1,target:54},{day:41,date:"2026-11-04",daily:1,target:55},{day:42,date:"2026-11-05",daily:1,target:56},{day:43,date:"2026-11-06",daily:1,target:57},{day:44,date:"2026-11-07",daily:1,target:58},{day:45,date:"2026-11-08",daily:1,target:59},{day:46,date:"2026-11-09",daily:1,target:60},{day:47,date:"2026-11-10",daily:1,target:61},{day:48,date:"2026-11-11",daily:1,target:62},{day:49,date:"2026-11-12",daily:2,target:64},{day:50,date:"2026-11-13",daily:1,target:65},{day:51,date:"2026-11-14",daily:1,target:66},{day:52,date:"2026-11-15",daily:1,target:67},{day:53,date:"2026-11-16",daily:1,target:68},{day:54,date:"2026-11-17",daily:1,target:69},{day:55,date:"2026-11-18",daily:1,target:70},{day:56,date:"2026-11-19",daily:1,target:71},{day:57,date:"2026-11-20",daily:1,target:72},{day:58,date:"2026-11-21",daily:1,target:73},{day:59,date:"2026-11-22",daily:2,target:75},{day:60,date:"2026-11-23",daily:1,target:76},{day:61,date:"2026-11-24",daily:1,target:77},{day:62,date:"2026-11-25",daily:1,target:78},{day:63,date:"2026-11-26",daily:1,target:79},{day:64,date:"2026-11-27",daily:1,target:80},{day:65,date:"2026-11-28",daily:1,target:81},{day:66,date:"2026-11-29",daily:1,target:82},{day:67,date:"2026-11-30",daily:1,target:83},{day:68,date:"2026-12-01",daily:1,target:84},{day:69,date:"2026-12-02",daily:2,target:86},{day:70,date:"2026-12-03",daily:1,target:87},{day:71,date:"2026-12-04",daily:1,target:88},{day:72,date:"2026-12-05",daily:1,target:89},{day:73,date:"2026-12-06",daily:1,target:90},{day:74,date:"2026-12-07",daily:1,target:91},{day:75,date:"2026-12-08",daily:1,target:92},{day:76,date:"2026-12-09",daily:1,target:93},{day:77,date:"2026-12-10",daily:1,target:94},{day:78,date:"2026-12-11",daily:1,target:95},{day:79,date:"2026-12-12",daily:2,target:97},{day:80,date:"2026-12-13",daily:1,target:98},{day:81,date:"2026-12-14",daily:1,target:99},{day:82,date:"2026-12-15",daily:1,target:100}];
+const KEY="mlbb_immortal_check_v2";
+let state={};
+try{state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){state={}}
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function completedStars(){
+ let n=10;
+ for(const x of SCHEDULE) if(state[x.day]===true) n+=x.daily;
+ return Math.min(n,100);
+}
+function render(){
+ const current=completedStars();
+ const remaining=Math.max(0,100-current);
+ const percent=Math.min(100,Math.round((current-10)/90*100));
+ document.getElementById("current").textContent=current+"⭐";
+ document.getElementById("remaining").textContent=remaining+"⭐";
+ document.getElementById("bar").style.width=percent+"%";
+ document.getElementById("pct").textContent=percent+"% menuju Immortal";
+
+ const todayISO=new Date().toLocaleDateString("en-CA");
+ let item=SCHEDULE.find(x=>x.date===todayISO);
+ if(!item) item=SCHEDULE.find(x=>!state[x.day]) || SCHEDULE[SCHEDULE.length-1];
+ document.getElementById("next").textContent=item.target+"⭐";
+ document.getElementById("today").innerHTML=
+   "<b>"+item.date+"</b><br>Target hari ini: <b>+"+item.daily+"⭐</b> → <b>"+item.target+"⭐</b>";
+
+ const list=document.getElementById("list");
+ list.innerHTML="";
+ for(const x of SCHEDULE){
+   const row=document.createElement("div");
+   row.className="row";
+   const cb=document.createElement("input");
+   cb.type="checkbox"; cb.className="check"; cb.checked=state[x.day]===true;
+   cb.addEventListener("change",()=>{state[x.day]=cb.checked;save();render();});
+   const info=document.createElement("div");
+   info.innerHTML="<div class='date'>"+x.date+"</div><div class='small'>Hari "+x.day+" · +"+x.daily+"⭐ · Target "+x.target+"⭐</div>";
+   const badge=document.createElement("div");
+   badge.className="badge"+(cb.checked?" done":"");
+   badge.textContent=cb.checked?"Selesai":"Belum";
+   row.append(cb,info,badge);
+   list.appendChild(row);
+ }
+}
+document.getElementById("finishBtn").addEventListener("click",()=>{
+ const todayISO=new Date().toLocaleDateString("en-CA");
+ let item=SCHEDULE.find(x=>x.date===todayISO);
+ if(!item) item=SCHEDULE.find(x=>!state[x.day]);
+ if(item){state[item.day]=true;save();render();}
+});
+document.getElementById("resetBtn").addEventListener("click",()=>{
+ if(window.confirm("Hapus semua checklist?")){state={};save();render();}
+});
+render();
+</script>
+</body>
+</html>
