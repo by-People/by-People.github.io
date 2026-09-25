@@ -2,12 +2,10 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
 
-<title>MLBB Push Immortal Tracker</title>
+<title>MLBB Push Immortal</title>
 
 <style>
 * {
@@ -16,15 +14,15 @@
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: #f3f4f6;
     color: #111827;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 header {
     background: #111827;
     color: white;
-    padding: 22px 16px;
+    padding: 20px 15px;
 }
 
 .container {
@@ -32,57 +30,71 @@ header {
     margin: auto;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 22px;
+h1 {
+    font-size: 21px;
+    margin: 0 0 4px;
 }
 
-header p {
-    margin: 5px 0 0;
-    font-size: 13px;
-    opacity: .7;
+.sub {
+    font-size: 12px;
+    opacity: .75;
 }
 
 main {
-    padding: 14px;
+    padding: 13px;
 }
 
 .card {
     background: white;
     border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 14px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    padding: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 9px rgba(0,0,0,.06);
 }
 
-.card h2 {
-    margin-top: 0;
-    font-size: 17px;
+h2 {
+    font-size: 16px;
+    margin: 0 0 10px;
 }
 
 /* STATUS */
 
 .status {
     text-align: center;
-    padding: 15px;
+    padding: 14px;
     border-radius: 13px;
     font-weight: 800;
-    font-size: 18px;
 }
 
-.status.ahead {
+.ahead {
     background: #dcfce7;
     color: #166534;
 }
 
-.status.behind {
+.behind {
     background: #fee2e2;
     color: #991b1b;
 }
 
-.status.ontime {
+.ontime {
     background: #fef3c7;
     color: #92400e;
+}
+
+/* COUNTDOWN */
+
+.countdown {
+    font-size: 27px;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: .5px;
+}
+
+.count-label {
+    text-align: center;
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 3px;
 }
 
 /* STATS */
@@ -90,48 +102,48 @@ main {
 .stats {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 9px;
+    gap: 8px;
 }
 
 .stat {
     background: #f8fafc;
     border-radius: 12px;
-    padding: 13px;
+    padding: 11px;
     text-align: center;
 }
 
-.stat .number {
-    font-size: 22px;
-    font-weight: 800;
+.num {
+    font-size: 21px;
+    font-weight: 900;
 }
 
-.stat .label {
-    font-size: 11px;
+.label {
+    font-size: 10px;
     color: #64748b;
-    margin-top: 3px;
+    margin-top: 2px;
 }
 
 /* PROGRESS */
 
 .progress {
-    height: 13px;
+    height: 12px;
     background: #e5e7eb;
     border-radius: 99px;
     overflow: hidden;
-    margin-top: 15px;
+    margin-top: 13px;
 }
 
-.progress-bar {
+.bar {
     height: 100%;
-    width: 0%;
     background: #111827;
-    transition: width .3s;
+    width: 0%;
+    transition: .25s;
 }
 
-.progress-text {
-    text-align: center;
+.center {
     font-size: 12px;
     color: #64748b;
+    text-align: center;
     margin-top: 7px;
 }
 
@@ -139,24 +151,23 @@ main {
 
 input[type="number"] {
     width: 100%;
-    padding: 13px;
+    padding: 12px;
     border: 1px solid #d1d5db;
-    border-radius: 11px;
+    border-radius: 10px;
     font-size: 18px;
     text-align: center;
-    margin-top: 7px;
 }
 
 button {
     width: 100%;
     border: 0;
-    border-radius: 11px;
-    padding: 13px;
+    border-radius: 10px;
+    padding: 12px;
     font-size: 15px;
     font-weight: 800;
     background: #111827;
     color: white;
-    margin-top: 10px;
+    margin-top: 9px;
 }
 
 button.secondary {
@@ -166,21 +177,21 @@ button.secondary {
 
 /* TODAY */
 
-.today-box {
+.today {
     background: #f8fafc;
-    padding: 13px;
     border-radius: 12px;
+    padding: 12px;
 }
 
-.today-row {
+.line {
     display: flex;
     justify-content: space-between;
     padding: 6px 0;
     border-bottom: 1px solid #e5e7eb;
 }
 
-.today-row:last-child {
-    border-bottom: none;
+.line:last-child {
+    border: 0;
 }
 
 /* PROTECTION */
@@ -189,9 +200,9 @@ button.secondary {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px;
     background: #f8fafc;
-    border-radius: 12px;
+    padding: 12px;
+    border-radius: 11px;
 }
 
 .protection input {
@@ -199,19 +210,40 @@ button.secondary {
     height: 23px;
 }
 
+.small {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* BUFFER */
+
+.success,
+.warning {
+    padding: 12px;
+    border-radius: 11px;
+    font-size: 13px;
+}
+
+.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.warning {
+    background: #fff7ed;
+    color: #9a3412;
+}
+
 /* HISTORY */
 
 .history {
+    padding: 11px 0;
     border-bottom: 1px solid #e5e7eb;
-    padding: 12px 0;
+    font-size: 13px;
 }
 
 .history:last-child {
-    border-bottom: none;
-}
-
-.history-date {
-    font-weight: 800;
+    border: 0;
 }
 
 .green {
@@ -228,27 +260,6 @@ button.secondary {
     color: #64748b;
 }
 
-.small {
-    font-size: 12px;
-    color: #64748b;
-}
-
-.warning {
-    background: #fff7ed;
-    color: #9a3412;
-    padding: 12px;
-    border-radius: 11px;
-    font-size: 13px;
-}
-
-.success {
-    background: #dcfce7;
-    color: #166534;
-    padding: 12px;
-    border-radius: 11px;
-    font-size: 13px;
-}
-
 @media (min-width: 600px) {
 
     .stats {
@@ -259,17 +270,21 @@ button.secondary {
 </style>
 </head>
 
+
 <body>
+
 
 <header>
 
 <div class="container">
 
-<h1>🏆 MLBB Push Mythical Immortal</h1>
+<h1>
+🏆 MLBB Push Mythical Immortal
+</h1>
 
-<p>
-10⭐ → 100⭐ · 25 Sep 2026 → 15 Des 2026
-</p>
+<div class="sub">
+10⭐ → 100⭐ · Reset harian pukul 05:00 · UTC+8
+</div>
 
 </div>
 
@@ -279,65 +294,124 @@ button.secondary {
 <main class="container">
 
 
+<!-- COUNTDOWN -->
+
+<div class="card">
+
+<div
+id="countdown"
+class="countdown">
+
+--:--:--
+
+</div>
+
+<div class="count-label">
+
+⏱️ Reset MLBB berikutnya (05:00)
+
+</div>
+
+</div>
+
+
 <!-- STATUS -->
 
 <div class="card">
 
-<div id="statusBox" class="status">
+<div
+id="status"
+class="status ontime">
+
 Memuat...
-</div>
 
 </div>
 
+</div>
 
-<!-- MAIN STATS -->
+
+<!-- STATS -->
 
 <div class="card">
 
 <div class="stats">
 
+
 <div class="stat">
-<div class="number" id="currentStars">
+
+<div
+id="current"
+class="num">
+
 10⭐
+
 </div>
 
 <div class="label">
-Bintang Sekarang
+
+Bintang sekarang
+
 </div>
+
 </div>
 
 
 <div class="stat">
-<div class="number" id="targetStars">
+
+<div
+id="target"
+class="num">
+
 11⭐
+
 </div>
 
 <div class="label">
-Target Jadwal
+
+Target hari MLBB
+
 </div>
+
 </div>
 
 
 <div class="stat">
-<div class="number" id="remainingStars">
+
+<div
+id="remain"
+class="num">
+
 90⭐
+
 </div>
 
 <div class="label">
-Sisa
+
+Sisa ke Immortal
+
 </div>
+
 </div>
 
 
 <div class="stat">
-<div class="number" id="daysRemaining">
+
+<div
+id="days"
+class="num">
+
 82
+
 </div>
 
 <div class="label">
-Hari Tersisa
+
+Hari MLBB tersisa
+
 </div>
+
 </div>
+
 
 </div>
 
@@ -345,108 +419,152 @@ Hari Tersisa
 <div class="progress">
 
 <div
-id="progressBar"
-class="progress-bar">
+id="bar"
+class="bar">
+
 </div>
 
 </div>
+
 
 <div
 id="progressText"
-class="progress-text">
+class="center">
+
 0%
-</div>
 
 </div>
 
+</div>
 
-<!-- INPUT -->
+
+<!-- HARI MLBB -->
 
 <div class="card">
 
-<h2>⭐ Update Bintang</h2>
+<h2>
+📅 Hari MLBB Saat Ini
+</h2>
+
+
+<div class="today">
+
+
+<div class="line">
+
+<span>
+Hari ke-
+</span>
+
+<strong
+id="dayNumber">
+
+1 / 82
+
+</strong>
+
+</div>
+
+
+<div class="line">
+
+<span>
+Target hari ini
+</span>
+
+<strong
+id="todayTarget">
+
+11⭐
+
+</strong>
+
+</div>
+
+
+<div class="line">
+
+<span>
+Bintang aktual
+</span>
+
+<strong
+id="todayActual">
+
+10⭐
+
+</strong>
+
+</div>
+
+
+<div class="line">
+
+<span>
+Selisih
+</span>
+
+<strong
+id="difference">
+
+-1⭐
+
+</strong>
+
+</div>
+
+
+<div class="line">
+
+<span>
+Kebutuhan rata-rata
+</span>
+
+<strong
+id="avg">
+
+1.10⭐/hari
+
+</strong>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- UPDATE BINTANG -->
+
+<div class="card">
+
+<h2>
+⭐ Update Bintang
+</h2>
+
 
 <div class="small">
-Masukkan jumlah bintang kamu yang sebenarnya sekarang.
+
+Masukkan jumlah bintang kamu sekarang.
+
 </div>
+
 
 <input
 id="starInput"
 type="number"
 min="0"
 max="200"
-placeholder="Contoh: 13">
+placeholder="Contoh: 14">
 
-<button onclick="updateStars()">
+
+<button
+id="saveStars">
+
 💾 Simpan Bintang
+
 </button>
-
-</div>
-
-
-<!-- TODAY -->
-
-<div class="card">
-
-<h2>📅 Kondisi Hari Ini</h2>
-
-<div class="today-box">
-
-<div class="today-row">
-
-<span>Target jadwal</span>
-
-<strong id="todayTarget">
-11⭐
-</strong>
-
-</div>
-
-
-<div class="today-row">
-
-<span>Bintang kamu</span>
-
-<strong id="todayActual">
-10⭐
-</strong>
-
-</div>
-
-
-<div class="today-row">
-
-<span>Selisih</span>
-
-<strong id="todayDifference">
--1⭐
-</strong>
-
-</div>
-
-
-<div class="today-row">
-
-<span>Target harian minimum</span>
-
-<strong id="dailyNeeded">
-1⭐
-</strong>
-
-</div>
-
-
-<div class="today-row">
-
-<span>Rata-rata yang dibutuhkan</span>
-
-<strong id="averageNeeded">
-1.10⭐/hari
-</strong>
-
-</div>
-
-</div>
 
 </div>
 
@@ -455,24 +573,34 @@ placeholder="Contoh: 13">
 
 <div class="card">
 
-<h2>🛡️ Roam Star Protection</h2>
+<h2>
+🛡️ Roam Star Protection
+</h2>
+
 
 <div class="protection">
 
+
 <input
-type="checkbox"
-id="protectionCheck"
-onchange="saveProtection()">
+id="protection"
+type="checkbox">
+
 
 <div>
 
-<strong>Protection hari ini sudah digunakan</strong>
+<strong>
+Protection hari MLBB ini sudah digunakan
+</strong>
+
 
 <div class="small">
-Checklist jika kamu sudah mendapatkan/menggunakan protection hari ini.
+
+Status mengikuti reset pukul 05:00.
+
 </div>
 
 </div>
+
 
 </div>
 
@@ -483,10 +611,17 @@ Checklist jika kamu sudah mendapatkan/menggunakan protection hari ini.
 
 <div class="card">
 
-<h2>📊 Buffer Push</h2>
+<h2>
+📊 Buffer Push
+</h2>
 
-<div id="bufferBox">
+
+<div
+id="buffer"
+class="warning">
+
 Memuat...
+
 </div>
 
 </div>
@@ -496,10 +631,16 @@ Memuat...
 
 <div class="card">
 
-<h2>📅 Riwayat Push</h2>
+<h2>
+📚 Riwayat Push
+</h2>
 
-<div id="history">
+
+<div
+id="history">
+
 Belum ada data.
+
 </div>
 
 </div>
@@ -510,8 +651,8 @@ Belum ada data.
 <div class="card">
 
 <button
-class="secondary"
-onclick="resetTracker()">
+id="reset"
+class="secondary">
 
 🔄 Reset Tracker
 
@@ -525,125 +666,101 @@ onclick="resetTracker()">
 
 <script>
 
+
 /* =====================================================
-   CONFIGURATION
+   PENGATURAN UTAMA
 ===================================================== */
 
-const START_DATE = new Date("2026-09-25T00:00:00");
-
-const END_DATE = new Date("2026-12-15T23:59:59");
 
 const START_STARS = 10;
 
 const TARGET_STARS = 100;
 
-const TOTAL_NEEDED =
-    TARGET_STARS - START_STARS;
+const TOTAL_DAYS = 82;
+
+
+/*
+   RESET HARIAN MLBB
+
+   05:00 UTC+8
+*/
+
+const RESET_HOUR = 5;
+
+const TZ_OFFSET_MINUTES = 8 * 60;
+
+
+/*
+   Hari pertama:
+
+   25 September 2026
+   pukul 05:00 UTC+8
+*/
+
+
+const START_RESET_UTC =
+    Date.UTC(
+        2026,
+        8,
+        25,
+        0,
+        0
+    )
+    -
+    RESET_HOUR *
+    60 *
+    1000;
+
+
+/*
+   Penyimpanan browser
+*/
+
+const STORAGE_KEY =
+    "mlbb_immortal_smart_v3";
+
+
+let data = {
+
+    currentStars:
+        START_STARS,
+
+    history: {}
+
+};
+
+
+try {
+
+    data =
+        JSON.parse(
+            localStorage.getItem(
+                STORAGE_KEY
+            )
+        )
+        ||
+        data;
+
+}
+
+catch(e) {
+
+    data = {
+
+        currentStars:
+            START_STARS,
+
+        history: {}
+
+    };
+
+}
 
 
 /* =====================================================
    STORAGE
 ===================================================== */
 
-const STORAGE_KEY =
-    "mlbb_immortal_smart_tracker_v1";
-
-
-let data =
-    JSON.parse(
-        localStorage.getItem(STORAGE_KEY)
-        ||
-        "{}"
-    );
-
-
-/* =====================================================
-   DATE HELPERS
-===================================================== */
-
-function todayString() {
-
-    const d = new Date();
-
-    return d.toISOString().split("T")[0];
-
-}
-
-
-function daysBetween(start, end) {
-
-    const ms =
-        1000 *
-        60 *
-        60 *
-        24;
-
-    return Math.ceil(
-        (end - start) / ms
-    );
-
-}
-
-
-/* =====================================================
-   SCHEDULE
-===================================================== */
-
-/*
-   Kita membagi 90 bintang ke dalam 82 hari.
-
-   Beberapa hari target +2⭐
-   supaya total akhirnya tepat 100⭐.
-*/
-
-function getScheduleTarget(date) {
-
-    if (date <= START_DATE) {
-
-        return START_STARS;
-
-    }
-
-
-    if (date >= END_DATE) {
-
-        return TARGET_STARS;
-
-    }
-
-
-    const totalDays =
-        daysBetween(
-            START_DATE,
-            END_DATE
-        );
-
-    const elapsed =
-        daysBetween(
-            START_DATE,
-            date
-        );
-
-
-    const progress =
-        elapsed / totalDays;
-
-
-    return Math.min(
-        TARGET_STARS,
-        START_STARS +
-        Math.ceil(
-            TOTAL_NEEDED *
-            progress
-        )
-    );
-
-}
-
-
-/* =====================================================
-   SAVE
-===================================================== */
 
 function save() {
 
@@ -656,114 +773,295 @@ function save() {
 
 
 /* =====================================================
-   UPDATE STARS
+   WAKTU
 ===================================================== */
 
-function updateStars() {
 
-    const input =
-        document.getElementById(
-            "starInput"
+function nowUTCms() {
+
+    return Date.now();
+
+}
+
+
+/*
+   Mendapatkan waktu UTC+8
+*/
+
+function localParts(ms) {
+
+    const d =
+        new Date(
+            ms +
+            TZ_OFFSET_MINUTES *
+            60000
         );
 
-    const stars =
-        Number(input.value);
 
+    return {
 
-    if (
-        isNaN(stars) ||
-        stars < 0 ||
-        stars > 200
-    ) {
+        y:
+            d.getUTCFullYear(),
 
-        alert(
-            "Masukkan jumlah bintang yang valid."
-        );
+        m:
+            d.getUTCMonth(),
 
-        return;
+        day:
+            d.getUTCDate(),
 
-    }
+        h:
+            d.getUTCHours(),
 
+        min:
+            d.getUTCMinutes(),
 
-    const today =
-        todayString();
-
-
-    data.currentStars =
-        stars;
-
-
-    if (!data.history) {
-
-        data.history = {};
-
-    }
-
-
-    data.history[today] = {
-
-        stars: stars,
-
-        protection:
-            data.history[today]?.protection
-            || false
+        sec:
+            d.getUTCSeconds()
 
     };
-
-
-    save();
-
-    render();
 
 }
 
 
 /* =====================================================
-   PROTECTION
+   MENGHITUNG HARI MLBB
 ===================================================== */
 
-function saveProtection() {
 
-    const checked =
-        document.getElementById(
-            "protectionCheck"
-        ).checked;
+function mlbbDayIndex(ms) {
+
+    return Math.floor(
+
+        (
+            ms -
+            START_RESET_UTC
+        )
+        /
+        (
+            24 *
+            60 *
+            60 *
+            1000
+        )
+
+    ) + 1;
+
+}
 
 
-    const today =
-        todayString();
+function clampDay(day) {
+
+    return Math.max(
+
+        1,
+
+        Math.min(
+            TOTAL_DAYS,
+            day
+        )
+
+    );
+
+}
 
 
-    if (!data.history) {
+/* =====================================================
+   RESET BERIKUTNYA
+===================================================== */
 
-        data.history = {};
+
+function nextResetMs(ms) {
+
+    const p =
+        localParts(ms);
+
+
+    let resetUTC =
+
+        Date.UTC(
+
+            p.y,
+            p.m,
+            p.day,
+
+            RESET_HOUR,
+            0,
+            0
+
+        )
+        -
+        TZ_OFFSET_MINUTES *
+        60000;
+
+
+    if (
+        ms >= resetUTC
+    ) {
+
+        resetUTC +=
+            24 *
+            60 *
+            60 *
+            1000;
 
     }
 
 
-    if (!data.history[today]) {
+    return resetUTC;
 
-        data.history[today] = {
-
-            stars:
-                data.currentStars || START_STARS,
-
-            protection:
-                checked
-
-        };
-
-    } else {
-
-        data.history[today].protection =
-            checked;
-
-    }
+}
 
 
-    save();
+/* =====================================================
+   TARGET BINTANG
+===================================================== */
 
-    render();
+
+function targetForDay(day) {
+
+    day =
+        clampDay(day);
+
+
+    /*
+       Total:
+
+       90 bintang
+       selama 82 hari
+    */
+
+
+    return Math.min(
+
+        TARGET_STARS,
+
+        START_STARS +
+
+        Math.ceil(
+
+            (
+                90 *
+                day
+            )
+            /
+            TOTAL_DAYS
+
+        )
+
+    );
+
+}
+
+
+/* =====================================================
+   TANGGAL HARI MLBB
+===================================================== */
+
+
+function dateKeyForDay(day) {
+
+    const ms =
+
+        START_RESET_UTC +
+
+        (
+            day - 1
+        )
+        *
+        24 *
+        60 *
+        60 *
+        1000;
+
+
+    const p =
+        localParts(ms);
+
+
+    return (
+
+        String(p.y)
+            .padStart(4,"0")
+
+        + "-"
+
+        +
+
+        String(
+            p.m + 1
+        )
+        .padStart(2,"0")
+
+        + "-"
+
+        +
+
+        String(p.day)
+            .padStart(2,"0")
+
+    );
+
+}
+
+
+/* =====================================================
+   COUNTDOWN
+===================================================== */
+
+
+function formatCountdown(ms) {
+
+    let seconds =
+
+        Math.max(
+
+            0,
+
+            Math.floor(
+                ms / 1000
+            )
+
+        );
+
+
+    const hours =
+        Math.floor(
+            seconds / 3600
+        );
+
+
+    seconds %= 3600;
+
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    seconds %= 60;
+
+
+    return (
+
+        String(hours)
+            .padStart(2,"0")
+
+        + ":"
+
+        +
+
+        String(minutes)
+            .padStart(2,"0")
+
+        + ":"
+
+        +
+
+        String(seconds)
+            .padStart(2,"0")
+
+    );
 
 }
 
@@ -772,158 +1070,116 @@ function saveProtection() {
    RENDER
 ===================================================== */
 
+
 function render() {
-
-    let current =
-        Number(
-            data.currentStars
-        );
-
-
-    if (
-        isNaN(current)
-        ||
-        current === 0
-    ) {
-
-        current =
-            START_STARS;
-
-    }
 
 
     const now =
-        new Date();
+        nowUTCms();
+
+
+    const rawDay =
+        mlbbDayIndex(now);
+
+
+    const day =
+        clampDay(rawDay);
 
 
     const target =
-        getScheduleTarget(
-            now
-        );
+        targetForDay(day);
+
+
+    const current =
+        Number(
+            data.currentStars
+        )
+        ||
+        START_STARS;
 
 
     const remaining =
+
         Math.max(
+
             0,
+
             TARGET_STARS -
             current
+
         );
 
 
     const daysLeft =
+
         Math.max(
+
             0,
-            daysBetween(
-                now,
-                END_DATE
-            )
+
+            TOTAL_DAYS -
+            day +
+            1
+
         );
 
 
     const difference =
+
         current -
         target;
 
 
-    const progress =
-        Math.min(
-            100,
-            Math.max(
-                0,
-                (
-                    (current -
-                    START_STARS)
-                    /
-                    TOTAL_NEEDED
-                ) * 100
-            )
-        );
+    const average =
+
+        daysLeft > 0
+
+        ?
+
+        remaining /
+        daysLeft
+
+        :
+
+        remaining;
 
 
-    /* MAIN STATS */
+    /* -----------------------------
+       STATS
+    ----------------------------- */
+
 
     document.getElementById(
-        "currentStars"
+        "current"
     ).textContent =
         current + "⭐";
 
 
     document.getElementById(
-        "targetStars"
+        "target"
     ).textContent =
         target + "⭐";
 
 
     document.getElementById(
-        "remainingStars"
+        "remain"
     ).textContent =
         remaining + "⭐";
 
 
     document.getElementById(
-        "daysRemaining"
+        "days"
     ).textContent =
         daysLeft;
 
 
     document.getElementById(
-        "progressBar"
-    ).style.width =
-        progress + "%";
-
-
-    document.getElementById(
-        "progressText"
+        "dayNumber"
     ).textContent =
-        Math.round(progress)
-        +
-        "% menuju Immortal";
 
+        day +
+        " / " +
+        TOTAL_DAYS;
 
-    /* STATUS */
-
-    const status =
-        document.getElementById(
-            "statusBox"
-        );
-
-
-    if (difference > 0) {
-
-        status.className =
-            "status ahead";
-
-        status.innerHTML =
-            "🟢 Kamu " +
-            difference +
-            "⭐ lebih cepat dari jadwal!";
-
-    }
-
-    else if (difference < 0) {
-
-        status.className =
-            "status behind";
-
-        status.innerHTML =
-            "🔴 Kamu " +
-            Math.abs(difference) +
-            "⭐ tertinggal dari jadwal.";
-
-    }
-
-    else {
-
-        status.className =
-            "status ontime";
-
-        status.innerHTML =
-            "🟡 Kamu tepat sesuai jadwal.";
-
-    }
-
-
-    /* TODAY */
 
     document.getElementById(
         "todayTarget"
@@ -937,134 +1193,278 @@ function render() {
         current + "⭐";
 
 
-    const diffElement =
-        document.getElementById(
-            "todayDifference"
-        );
+    document.getElementById(
+        "difference"
+    ).textContent =
 
-
-    diffElement.textContent =
         (
             difference >= 0
             ? "+"
             : ""
         )
+
         +
+
         difference
+
         +
+
         "⭐";
 
 
-    diffElement.className =
-        difference > 0
-        ? "green"
-        : difference < 0
-        ? "red"
-        : "gray";
-
-
-    /* AVERAGE */
-
-    let averageNeeded = 0;
-
-
-    if (daysLeft > 0) {
-
-        averageNeeded =
-            remaining /
-            daysLeft;
-
-    }
-
-
     document.getElementById(
-        "averageNeeded"
+        "avg"
     ).textContent =
-        averageNeeded.toFixed(2)
+
+        average.toFixed(2)
+
         +
+
         "⭐/hari";
 
 
-    /* DAILY TARGET */
-
-    document.getElementById(
-        "dailyNeeded"
-    ).textContent =
-        averageNeeded.toFixed(2)
-        +
-        "⭐";
+    /* -----------------------------
+       PROGRESS
+    ----------------------------- */
 
 
-    /* BUFFER */
+    const percentage =
 
-    const bufferBox =
-        document.getElementById(
-            "bufferBox"
+        Math.max(
+
+            0,
+
+            Math.min(
+
+                100,
+
+                (
+                    (
+                        current -
+                        START_STARS
+                    )
+                    /
+                    90
+                )
+                *
+                100
+
+            )
+
         );
 
 
-    if (difference > 0) {
+    document.getElementById(
+        "bar"
+    ).style.width =
+        percentage + "%";
 
-        bufferBox.className =
-            "success";
 
-        bufferBox.innerHTML =
-            "🟢 <strong>Buffer +"
-            +
-            difference
-            +
-            "⭐</strong><br>" +
-            "Kamu boleh mengalami beberapa hari buruk " +
-            "tanpa langsung keluar dari jalur.";
+    document.getElementById(
+        "progressText"
+    ).textContent =
+
+        Math.round(
+            percentage
+        )
+
+        +
+
+        "% menuju Immortal";
+
+
+    /* -----------------------------
+       STATUS
+    ----------------------------- */
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+
+    if (
+        difference > 0
+    ) {
+
+        status.className =
+            "status ahead";
+
+
+        status.textContent =
+
+            "🟢 Kamu " +
+
+            difference +
+
+            "⭐ lebih cepat dari jadwal!";
 
     }
 
-    else if (difference < 0) {
+    else if (
+        difference < 0
+    ) {
 
-        bufferBox.className =
-            "warning";
+        status.className =
+            "status behind";
 
-        bufferBox.innerHTML =
-            "🔴 <strong>Defisit "
-            +
-            Math.abs(difference)
-            +
-            "⭐</strong><br>" +
-            "Kamu perlu mengejar sedikit lebih cepat " +
-            "dari rata-rata.";
+
+        status.textContent =
+
+            "🔴 Kamu " +
+
+            Math.abs(
+                difference
+            ) +
+
+            "⭐ tertinggal dari jadwal.";
 
     }
 
     else {
 
-        bufferBox.className =
-            "warning";
+        status.className =
+            "status ontime";
 
-        bufferBox.innerHTML =
-            "🟡 Tidak ada buffer.<br>" +
-            "Kamu tepat berada di jalur target.";
+
+        status.textContent =
+
+            "🟡 Kamu tepat sesuai jadwal.";
 
     }
 
 
-    /* PROTECTION */
+    /* -----------------------------
+       COUNTDOWN
+    ----------------------------- */
 
-    const today =
-        todayString();
 
-
-    const protection =
-        data.history?.[today]?.protection
-        || false;
+    const nextReset =
+        nextResetMs(now);
 
 
     document.getElementById(
-        "protectionCheck"
+        "countdown"
+    ).textContent =
+
+        formatCountdown(
+
+            nextReset -
+            now
+
+        );
+
+
+    /* -----------------------------
+       PROTECTION
+    ----------------------------- */
+
+
+    const todayKey =
+        dateKeyForDay(day);
+
+
+    const protection =
+
+        data.history
+        &&
+        data.history[todayKey]
+        &&
+        data.history[todayKey]
+            .protection;
+
+
+    document.getElementById(
+        "protection"
     ).checked =
-        protection;
+        !!protection;
 
 
-    /* INPUT */
+    /* -----------------------------
+       BUFFER
+    ----------------------------- */
+
+
+    const buffer =
+        document.getElementById(
+            "buffer"
+        );
+
+
+    if (
+        difference > 0
+    ) {
+
+        buffer.className =
+            "success";
+
+
+        buffer.innerHTML =
+
+            "🟢 <strong>Buffer +" +
+
+            difference +
+
+            "⭐</strong><br>" +
+
+            "Kamu berada di depan jadwal. " +
+
+            "Hari buruk sesekali masih bisa ditoleransi.";
+
+    }
+
+    else if (
+        difference < 0
+    ) {
+
+        buffer.className =
+            "warning";
+
+
+        buffer.innerHTML =
+
+            "🔴 <strong>Defisit " +
+
+            Math.abs(
+                difference
+            ) +
+
+            "⭐</strong><br>" +
+
+            "Kebutuhan rata-rata sekarang " +
+
+            "menjadi <strong>" +
+
+            average.toFixed(2) +
+
+            "⭐/hari</strong>.";
+
+    }
+
+    else {
+
+        buffer.className =
+            "warning";
+
+
+        buffer.innerHTML =
+
+            "🟡 <strong>Tepat di jalur.</strong><br>" +
+
+            "Jaga rata-rata sekitar <strong>" +
+
+            average.toFixed(2) +
+
+            "⭐/hari</strong>.";
+
+    }
+
+
+    /* -----------------------------
+       INPUT
+    ----------------------------- */
+
 
     document.getElementById(
         "starInput"
@@ -1078,26 +1478,226 @@ function render() {
 
 
 /* =====================================================
+   SIMPAN BINTANG
+===================================================== */
+
+
+document.getElementById(
+    "saveStars"
+).addEventListener(
+
+    "click",
+
+    function() {
+
+
+        const value =
+
+            Number(
+
+                document.getElementById(
+                    "starInput"
+                ).value
+
+            );
+
+
+        if (
+
+            !Number.isFinite(
+                value
+            )
+
+            ||
+
+            value < 0
+
+            ||
+
+            value > 200
+
+        ) {
+
+            alert(
+                "Masukkan jumlah bintang yang valid."
+            );
+
+            return;
+
+        }
+
+
+        data.currentStars =
+            Math.floor(value);
+
+
+        if (
+            !data.history
+        ) {
+
+            data.history = {};
+
+        }
+
+
+        const day =
+
+            clampDay(
+
+                mlbbDayIndex(
+                    nowUTCms()
+                )
+
+            );
+
+
+        const key =
+            dateKeyForDay(day);
+
+
+        if (
+            !data.history[key]
+        ) {
+
+            data.history[key] = {};
+
+        }
+
+
+        data.history[key].stars =
+            data.currentStars;
+
+
+        if (
+
+            typeof
+            data.history[key]
+                .protection
+            !==
+            "boolean"
+
+        ) {
+
+            data.history[key]
+                .protection =
+                false;
+
+        }
+
+
+        save();
+
+        render();
+
+    }
+
+);
+
+
+/* =====================================================
+   PROTECTION
+===================================================== */
+
+
+document.getElementById(
+    "protection"
+).addEventListener(
+
+    "change",
+
+    function(event) {
+
+
+        if (
+            !data.history
+        ) {
+
+            data.history = {};
+
+        }
+
+
+        const day =
+
+            clampDay(
+
+                mlbbDayIndex(
+                    nowUTCms()
+                )
+
+            );
+
+
+        const key =
+            dateKeyForDay(day);
+
+
+        if (
+            !data.history[key]
+        ) {
+
+            data.history[key] = {
+
+                stars:
+                    Number(
+                        data.currentStars
+                    )
+                    ||
+                    START_STARS
+
+            };
+
+        }
+
+
+        data.history[key]
+            .protection =
+
+            event.target.checked;
+
+
+        save();
+
+        render();
+
+    }
+
+);
+
+
+/* =====================================================
    HISTORY
 ===================================================== */
 
+
 function renderHistory() {
 
-    const historyBox =
+
+    const box =
         document.getElementById(
             "history"
         );
 
 
-    if (
-        !data.history
-        ||
+    const history =
+        data.history ||
+        {};
+
+
+    const keys =
+
         Object.keys(
-            data.history
-        ).length === 0
+            history
+        )
+        .sort()
+        .reverse();
+
+
+    if (
+        keys.length === 0
     ) {
 
-        historyBox.innerHTML =
+        box.innerHTML =
             "Belum ada data.";
 
         return;
@@ -1105,46 +1705,82 @@ function renderHistory() {
     }
 
 
-    const dates =
-        Object.keys(
-            data.history
-        )
-        .sort()
-        .reverse();
+    box.innerHTML =
 
+        keys.map(
 
-    historyBox.innerHTML =
-        dates.map(
-            date => {
+            function(key) {
+
 
                 const item =
-                    data.history[date];
+                    history[key];
 
 
-                const target =
-                    getScheduleTarget(
-                        new Date(
-                            date +
-                            "T00:00:00"
-                        )
+                const date =
+                    new Date(
+                        key +
+                        "T00:00:00"
                     );
 
 
+                const day =
+
+                    clampDay(
+
+                        Math.floor(
+
+                            (
+                                Date.UTC(
+
+                                    date.getFullYear(),
+
+                                    date.getMonth(),
+
+                                    date.getDate()
+
+                                )
+
+                                -
+
+                                Date.UTC(
+                                    2026,
+                                    8,
+                                    25
+                                )
+
+                            )
+                            /
+                            86400000
+
+                        )
+                        + 1
+
+                    );
+
+
+                const target =
+                    targetForDay(day);
+
+
                 const difference =
+
                     item.stars -
                     target;
 
 
-                let status;
+                let result;
 
 
                 if (
                     difference > 0
                 ) {
 
-                    status =
+                    result =
+
                         `<span class="green">
+
                         +${difference}⭐ ahead
+
                         </span>`;
 
                 }
@@ -1153,18 +1789,24 @@ function renderHistory() {
                     difference < 0
                 ) {
 
-                    status =
+                    result =
+
                         `<span class="red">
+
                         ${difference}⭐ behind
+
                         </span>`;
 
                 }
 
                 else {
 
-                    status =
+                    result =
+
                         `<span class="gray">
+
                         Sesuai jadwal
+
                         </span>`;
 
                 }
@@ -1174,37 +1816,50 @@ function renderHistory() {
 
                 <div class="history">
 
-                    <div class="history-date">
-                        ${date}
-                    </div>
+                    <strong>
+                        ${key}
+                    </strong>
 
-                    <div class="small">
+                    <br>
+
+                    <span class="small">
 
                         Bintang:
-                        <strong>
-                            ${item.stars}⭐
-                        </strong>
+                        ${item.stars}⭐
 
-                        · Target:
+                        ·
+
+                        Target:
                         ${target}⭐
 
-                    </div>
+                        ·
 
-                    <div>
+                        Hari:
+                        ${day}
 
-                        ${status}
+                    </span>
 
-                        ${item.protection
-                        ? " · 🛡️ Protection"
-                        : ""}
+                    <br>
 
-                    </div>
+                    ${result}
+
+                    ${
+                        item.protection
+                        ?
+
+                        " · 🛡️ Protection"
+
+                        :
+
+                        ""
+                    }
 
                 </div>
 
                 `;
 
             }
+
         )
         .join("");
 
@@ -1212,44 +1867,53 @@ function renderHistory() {
 
 
 /* =====================================================
-   RESET
+   RESET TRACKER
 ===================================================== */
 
-function resetTracker() {
 
-    const confirmReset =
-        confirm(
-            "Yakin ingin menghapus semua progres?"
-        );
+document.getElementById(
+    "reset"
+).addEventListener(
+
+    "click",
+
+    function() {
 
 
-    if (!confirmReset) {
+        if (
 
-        return;
+            confirm(
+                "Hapus semua progres tracker?"
+            )
+
+        ) {
+
+
+            data = {
+
+                currentStars:
+                    START_STARS,
+
+                history: {}
+
+            };
+
+
+            save();
+
+            render();
+
+        }
 
     }
 
-
-    data = {
-
-        currentStars:
-            START_STARS,
-
-        history: {}
-
-    };
-
-
-    save();
-
-    render();
-
-}
+);
 
 
 /* =====================================================
-   INITIALIZE
+   START
 ===================================================== */
+
 
 if (
     !data.currentStars
@@ -1274,7 +1938,27 @@ save();
 
 render();
 
+
+/*
+   Update setiap detik.
+
+   Jadi countdown berubah
+   secara real-time.
+
+   Saat pukul 05:00,
+   hari MLBB otomatis berubah.
+*/
+
+setInterval(
+
+    render,
+
+    1000
+
+);
+
 </script>
+
 
 </body>
 </html>
