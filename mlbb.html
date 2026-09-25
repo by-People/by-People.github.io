@@ -1,113 +1,1280 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <meta name="theme-color" content="#111827">
-<title>MLBB Push Immortal</title>
+
+<title>MLBB Push Immortal Tracker</title>
+
 <style>
-:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-*{box-sizing:border-box} body{margin:0;background:#f3f4f6;color:#111827}
-header{background:#111827;color:#fff;padding:20px 16px;position:sticky;top:0;z-index:10}
-.wrap{max-width:720px;margin:auto} h1{font-size:21px;margin:0 0 4px} .sub{font-size:13px;opacity:.75}
-main{padding:12px} .card{background:#fff;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px} .stat{background:#f8fafc;border-radius:12px;padding:10px;text-align:center}
-.num{font-weight:800;font-size:21px} .label{font-size:10px;color:#64748b;margin-top:2px}
-.progress{height:11px;background:#e5e7eb;border-radius:99px;margin-top:13px;overflow:hidden} .bar{height:100%;width:0;background:#111827}
-.today{border:2px solid #111827} .today h2{font-size:16px;margin:0 0 8px}
-button{font:inherit;font-weight:700;border:0;border-radius:11px;padding:11px 13px;background:#111827;color:white;cursor:pointer;touch-action:manipulation}
-button.secondary{background:#e5e7eb;color:#111827} .buttons{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.row{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid #eee}
-.row:last-child{border-bottom:0} .check{width:25px;height:25px;accent-color:#111827}
-.date{font-weight:700} .small{font-size:11px;color:#64748b;margin-top:2px}
-.badge{font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;background:#f1f5f9;white-space:nowrap}
-.done{background:#dcfce7;color:#166534} .muted{font-size:12px;color:#64748b}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 22px 16px;
+}
+
+.container {
+    max-width: 720px;
+    margin: auto;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+header p {
+    margin: 5px 0 0;
+    font-size: 13px;
+    opacity: .7;
+}
+
+main {
+    padding: 14px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 17px;
+}
+
+/* STATUS */
+
+.status {
+    text-align: center;
+    padding: 15px;
+    border-radius: 13px;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.status.ahead {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status.behind {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status.ontime {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+}
+
+.stat {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 13px;
+    text-align: center;
+}
+
+.stat .number {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.stat .label {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 3px;
+}
+
+/* PROGRESS */
+
+.progress {
+    height: 13px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #111827;
+    transition: width .3s;
+}
+
+.progress-text {
+    text-align: center;
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 7px;
+}
+
+/* INPUT */
+
+input[type="number"] {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 11px;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 7px;
+}
+
+button {
+    width: 100%;
+    border: 0;
+    border-radius: 11px;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 800;
+    background: #111827;
+    color: white;
+    margin-top: 10px;
+}
+
+button.secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+/* TODAY */
+
+.today-box {
+    background: #f8fafc;
+    padding: 13px;
+    border-radius: 12px;
+}
+
+.today-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.today-row:last-child {
+    border-bottom: none;
+}
+
+/* PROTECTION */
+
+.protection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.protection input {
+    width: 23px;
+    height: 23px;
+}
+
+/* HISTORY */
+
+.history {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 0;
+}
+
+.history:last-child {
+    border-bottom: none;
+}
+
+.history-date {
+    font-weight: 800;
+}
+
+.green {
+    color: #15803d;
+    font-weight: 800;
+}
+
+.red {
+    color: #dc2626;
+    font-weight: 800;
+}
+
+.gray {
+    color: #64748b;
+}
+
+.small {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.warning {
+    background: #fff7ed;
+    color: #9a3412;
+    padding: 12px;
+    border-radius: 11px;
+    font-size: 13px;
+}
+
+.success {
+    background: #dcfce7;
+    color: #166534;
+    padding: 12px;
+    border-radius: 11px;
+    font-size: 13px;
+}
+
+@media (min-width: 600px) {
+
+    .stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+}
 </style>
 </head>
+
 <body>
-<header><div class="wrap"><h1>🎮 MLBB Push Mythical Immortal</h1><div class="sub">Mythic 10⭐ → Immortal 100⭐ · 25 Sep – 15 Des 2026</div></div></header>
-<main class="wrap">
+
+<header>
+
+<div class="container">
+
+<h1>🏆 MLBB Push Mythical Immortal</h1>
+
+<p>
+10⭐ → 100⭐ · 25 Sep 2026 → 15 Des 2026
+</p>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- STATUS -->
+
 <div class="card">
+
+<div id="statusBox" class="status">
+Memuat...
+</div>
+
+</div>
+
+
+<!-- MAIN STATS -->
+
+<div class="card">
+
 <div class="stats">
-<div class="stat"><div class="num" id="current">10⭐</div><div class="label">Bintang sekarang</div></div>
-<div class="stat"><div class="num" id="next">11⭐</div><div class="label">Target berikutnya</div></div>
-<div class="stat"><div class="num" id="remaining">90⭐</div><div class="label">Sisa</div></div>
-</div>
-<div class="progress"><div class="bar" id="bar"></div></div>
-<p class="muted" id="pct">0% menuju Immortal</p>
+
+<div class="stat">
+<div class="number" id="currentStars">
+10⭐
 </div>
 
-<div class="card today">
-<h2>📌 Target hari ini</h2>
-<div id="today"></div>
-<div class="buttons">
-<button id="finishBtn">✓ Tandai selesai</button>
-<button class="secondary" id="resetBtn">Reset semua</button>
+<div class="label">
+Bintang Sekarang
 </div>
 </div>
+
+
+<div class="stat">
+<div class="number" id="targetStars">
+11⭐
+</div>
+
+<div class="label">
+Target Jadwal
+</div>
+</div>
+
+
+<div class="stat">
+<div class="number" id="remainingStars">
+90⭐
+</div>
+
+<div class="label">
+Sisa
+</div>
+</div>
+
+
+<div class="stat">
+<div class="number" id="daysRemaining">
+82
+</div>
+
+<div class="label">
+Hari Tersisa
+</div>
+</div>
+
+</div>
+
+
+<div class="progress">
+
+<div
+id="progressBar"
+class="progress-bar">
+</div>
+
+</div>
+
+<div
+id="progressText"
+class="progress-text">
+0%
+</div>
+
+</div>
+
+
+<!-- INPUT -->
 
 <div class="card">
-<h2 style="margin:0 0 5px">Checklist 82 Hari</h2>
-<p class="muted">Sentuh kotak ☐ untuk menandai hari yang sudah mencapai target.</p>
-<div id="list"></div>
+
+<h2>⭐ Update Bintang</h2>
+
+<div class="small">
+Masukkan jumlah bintang kamu yang sebenarnya sekarang.
 </div>
+
+<input
+id="starInput"
+type="number"
+min="0"
+max="200"
+placeholder="Contoh: 13">
+
+<button onclick="updateStars()">
+💾 Simpan Bintang
+</button>
+
+</div>
+
+
+<!-- TODAY -->
+
+<div class="card">
+
+<h2>📅 Kondisi Hari Ini</h2>
+
+<div class="today-box">
+
+<div class="today-row">
+
+<span>Target jadwal</span>
+
+<strong id="todayTarget">
+11⭐
+</strong>
+
+</div>
+
+
+<div class="today-row">
+
+<span>Bintang kamu</span>
+
+<strong id="todayActual">
+10⭐
+</strong>
+
+</div>
+
+
+<div class="today-row">
+
+<span>Selisih</span>
+
+<strong id="todayDifference">
+-1⭐
+</strong>
+
+</div>
+
+
+<div class="today-row">
+
+<span>Target harian minimum</span>
+
+<strong id="dailyNeeded">
+1⭐
+</strong>
+
+</div>
+
+
+<div class="today-row">
+
+<span>Rata-rata yang dibutuhkan</span>
+
+<strong id="averageNeeded">
+1.10⭐/hari
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROTECTION -->
+
+<div class="card">
+
+<h2>🛡️ Roam Star Protection</h2>
+
+<div class="protection">
+
+<input
+type="checkbox"
+id="protectionCheck"
+onchange="saveProtection()">
+
+<div>
+
+<strong>Protection hari ini sudah digunakan</strong>
+
+<div class="small">
+Checklist jika kamu sudah mendapatkan/menggunakan protection hari ini.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- BUFFER -->
+
+<div class="card">
+
+<h2>📊 Buffer Push</h2>
+
+<div id="bufferBox">
+Memuat...
+</div>
+
+</div>
+
+
+<!-- HISTORY -->
+
+<div class="card">
+
+<h2>📅 Riwayat Push</h2>
+
+<div id="history">
+Belum ada data.
+</div>
+
+</div>
+
+
+<!-- RESET -->
+
+<div class="card">
+
+<button
+class="secondary"
+onclick="resetTracker()">
+
+🔄 Reset Tracker
+
+</button>
+
+</div>
+
+
 </main>
 
+
 <script>
-const SCHEDULE=[{day:1,date:"2026-09-25",daily:1,target:11},{day:2,date:"2026-09-26",daily:1,target:12},{day:3,date:"2026-09-27",daily:1,target:13},{day:4,date:"2026-09-28",daily:1,target:14},{day:5,date:"2026-09-29",daily:1,target:15},{day:6,date:"2026-09-30",daily:1,target:16},{day:7,date:"2026-10-01",daily:1,target:17},{day:8,date:"2026-10-02",daily:1,target:18},{day:9,date:"2026-10-03",daily:2,target:20},{day:10,date:"2026-10-04",daily:1,target:21},{day:11,date:"2026-10-05",daily:1,target:22},{day:12,date:"2026-10-06",daily:1,target:23},{day:13,date:"2026-10-07",daily:1,target:24},{day:14,date:"2026-10-08",daily:1,target:25},{day:15,date:"2026-10-09",daily:1,target:26},{day:16,date:"2026-10-10",daily:1,target:27},{day:17,date:"2026-10-11",daily:1,target:28},{day:18,date:"2026-10-12",daily:1,target:29},{day:19,date:"2026-10-13",daily:2,target:31},{day:20,date:"2026-10-14",daily:1,target:32},{day:21,date:"2026-10-15",daily:1,target:33},{day:22,date:"2026-10-16",daily:1,target:34},{day:23,date:"2026-10-17",daily:1,target:35},{day:24,date:"2026-10-18",daily:1,target:36},{day:25,date:"2026-10-19",daily:1,target:37},{day:26,date:"2026-10-20",daily:1,target:38},{day:27,date:"2026-10-21",daily:1,target:39},{day:28,date:"2026-10-22",daily:1,target:40},{day:29,date:"2026-10-23",daily:2,target:42},{day:30,date:"2026-10-24",daily:1,target:43},{day:31,date:"2026-10-25",daily:1,target:44},{day:32,date:"2026-10-26",daily:1,target:45},{day:33,date:"2026-10-27",daily:1,target:46},{day:34,date:"2026-10-28",daily:1,target:47},{day:35,date:"2026-10-29",daily:1,target:48},{day:36,date:"2026-10-30",daily:1,target:49},{day:37,date:"2026-10-31",daily:1,target:50},{day:38,date:"2026-11-01",daily:1,target:51},{day:39,date:"2026-11-02",daily:2,target:53},{day:40,date:"2026-11-03",daily:1,target:54},{day:41,date:"2026-11-04",daily:1,target:55},{day:42,date:"2026-11-05",daily:1,target:56},{day:43,date:"2026-11-06",daily:1,target:57},{day:44,date:"2026-11-07",daily:1,target:58},{day:45,date:"2026-11-08",daily:1,target:59},{day:46,date:"2026-11-09",daily:1,target:60},{day:47,date:"2026-11-10",daily:1,target:61},{day:48,date:"2026-11-11",daily:1,target:62},{day:49,date:"2026-11-12",daily:2,target:64},{day:50,date:"2026-11-13",daily:1,target:65},{day:51,date:"2026-11-14",daily:1,target:66},{day:52,date:"2026-11-15",daily:1,target:67},{day:53,date:"2026-11-16",daily:1,target:68},{day:54,date:"2026-11-17",daily:1,target:69},{day:55,date:"2026-11-18",daily:1,target:70},{day:56,date:"2026-11-19",daily:1,target:71},{day:57,date:"2026-11-20",daily:1,target:72},{day:58,date:"2026-11-21",daily:1,target:73},{day:59,date:"2026-11-22",daily:2,target:75},{day:60,date:"2026-11-23",daily:1,target:76},{day:61,date:"2026-11-24",daily:1,target:77},{day:62,date:"2026-11-25",daily:1,target:78},{day:63,date:"2026-11-26",daily:1,target:79},{day:64,date:"2026-11-27",daily:1,target:80},{day:65,date:"2026-11-28",daily:1,target:81},{day:66,date:"2026-11-29",daily:1,target:82},{day:67,date:"2026-11-30",daily:1,target:83},{day:68,date:"2026-12-01",daily:1,target:84},{day:69,date:"2026-12-02",daily:2,target:86},{day:70,date:"2026-12-03",daily:1,target:87},{day:71,date:"2026-12-04",daily:1,target:88},{day:72,date:"2026-12-05",daily:1,target:89},{day:73,date:"2026-12-06",daily:1,target:90},{day:74,date:"2026-12-07",daily:1,target:91},{day:75,date:"2026-12-08",daily:1,target:92},{day:76,date:"2026-12-09",daily:1,target:93},{day:77,date:"2026-12-10",daily:1,target:94},{day:78,date:"2026-12-11",daily:1,target:95},{day:79,date:"2026-12-12",daily:2,target:97},{day:80,date:"2026-12-13",daily:1,target:98},{day:81,date:"2026-12-14",daily:1,target:99},{day:82,date:"2026-12-15",daily:1,target:100}];
-const KEY="mlbb_immortal_check_v2";
-let state={};
-try{state=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){state={}}
 
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
-function completedStars(){
- let n=10;
- for(const x of SCHEDULE) if(state[x.day]===true) n+=x.daily;
- return Math.min(n,100);
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+const START_DATE = new Date("2026-09-25T00:00:00");
+
+const END_DATE = new Date("2026-12-15T23:59:59");
+
+const START_STARS = 10;
+
+const TARGET_STARS = 100;
+
+const TOTAL_NEEDED =
+    TARGET_STARS - START_STARS;
+
+
+/* =====================================================
+   STORAGE
+===================================================== */
+
+const STORAGE_KEY =
+    "mlbb_immortal_smart_tracker_v1";
+
+
+let data =
+    JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+        ||
+        "{}"
+    );
+
+
+/* =====================================================
+   DATE HELPERS
+===================================================== */
+
+function todayString() {
+
+    const d = new Date();
+
+    return d.toISOString().split("T")[0];
+
 }
-function render(){
- const current=completedStars();
- const remaining=Math.max(0,100-current);
- const percent=Math.min(100,Math.round((current-10)/90*100));
- document.getElementById("current").textContent=current+"⭐";
- document.getElementById("remaining").textContent=remaining+"⭐";
- document.getElementById("bar").style.width=percent+"%";
- document.getElementById("pct").textContent=percent+"% menuju Immortal";
 
- const todayISO=new Date().toLocaleDateString("en-CA");
- let item=SCHEDULE.find(x=>x.date===todayISO);
- if(!item) item=SCHEDULE.find(x=>!state[x.day]) || SCHEDULE[SCHEDULE.length-1];
- document.getElementById("next").textContent=item.target+"⭐";
- document.getElementById("today").innerHTML=
-   "<b>"+item.date+"</b><br>Target hari ini: <b>+"+item.daily+"⭐</b> → <b>"+item.target+"⭐</b>";
 
- const list=document.getElementById("list");
- list.innerHTML="";
- for(const x of SCHEDULE){
-   const row=document.createElement("div");
-   row.className="row";
-   const cb=document.createElement("input");
-   cb.type="checkbox"; cb.className="check"; cb.checked=state[x.day]===true;
-   cb.addEventListener("change",()=>{state[x.day]=cb.checked;save();render();});
-   const info=document.createElement("div");
-   info.innerHTML="<div class='date'>"+x.date+"</div><div class='small'>Hari "+x.day+" · +"+x.daily+"⭐ · Target "+x.target+"⭐</div>";
-   const badge=document.createElement("div");
-   badge.className="badge"+(cb.checked?" done":"");
-   badge.textContent=cb.checked?"Selesai":"Belum";
-   row.append(cb,info,badge);
-   list.appendChild(row);
- }
+function daysBetween(start, end) {
+
+    const ms =
+        1000 *
+        60 *
+        60 *
+        24;
+
+    return Math.ceil(
+        (end - start) / ms
+    );
+
 }
-document.getElementById("finishBtn").addEventListener("click",()=>{
- const todayISO=new Date().toLocaleDateString("en-CA");
- let item=SCHEDULE.find(x=>x.date===todayISO);
- if(!item) item=SCHEDULE.find(x=>!state[x.day]);
- if(item){state[item.day]=true;save();render();}
-});
-document.getElementById("resetBtn").addEventListener("click",()=>{
- if(window.confirm("Hapus semua checklist?")){state={};save();render();}
-});
+
+
+/* =====================================================
+   SCHEDULE
+===================================================== */
+
+/*
+   Kita membagi 90 bintang ke dalam 82 hari.
+
+   Beberapa hari target +2⭐
+   supaya total akhirnya tepat 100⭐.
+*/
+
+function getScheduleTarget(date) {
+
+    if (date <= START_DATE) {
+
+        return START_STARS;
+
+    }
+
+
+    if (date >= END_DATE) {
+
+        return TARGET_STARS;
+
+    }
+
+
+    const totalDays =
+        daysBetween(
+            START_DATE,
+            END_DATE
+        );
+
+    const elapsed =
+        daysBetween(
+            START_DATE,
+            date
+        );
+
+
+    const progress =
+        elapsed / totalDays;
+
+
+    return Math.min(
+        TARGET_STARS,
+        START_STARS +
+        Math.ceil(
+            TOTAL_NEEDED *
+            progress
+        )
+    );
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function save() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE STARS
+===================================================== */
+
+function updateStars() {
+
+    const input =
+        document.getElementById(
+            "starInput"
+        );
+
+    const stars =
+        Number(input.value);
+
+
+    if (
+        isNaN(stars) ||
+        stars < 0 ||
+        stars > 200
+    ) {
+
+        alert(
+            "Masukkan jumlah bintang yang valid."
+        );
+
+        return;
+
+    }
+
+
+    const today =
+        todayString();
+
+
+    data.currentStars =
+        stars;
+
+
+    if (!data.history) {
+
+        data.history = {};
+
+    }
+
+
+    data.history[today] = {
+
+        stars: stars,
+
+        protection:
+            data.history[today]?.protection
+            || false
+
+    };
+
+
+    save();
+
+    render();
+
+}
+
+
+/* =====================================================
+   PROTECTION
+===================================================== */
+
+function saveProtection() {
+
+    const checked =
+        document.getElementById(
+            "protectionCheck"
+        ).checked;
+
+
+    const today =
+        todayString();
+
+
+    if (!data.history) {
+
+        data.history = {};
+
+    }
+
+
+    if (!data.history[today]) {
+
+        data.history[today] = {
+
+            stars:
+                data.currentStars || START_STARS,
+
+            protection:
+                checked
+
+        };
+
+    } else {
+
+        data.history[today].protection =
+            checked;
+
+    }
+
+
+    save();
+
+    render();
+
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function render() {
+
+    let current =
+        Number(
+            data.currentStars
+        );
+
+
+    if (
+        isNaN(current)
+        ||
+        current === 0
+    ) {
+
+        current =
+            START_STARS;
+
+    }
+
+
+    const now =
+        new Date();
+
+
+    const target =
+        getScheduleTarget(
+            now
+        );
+
+
+    const remaining =
+        Math.max(
+            0,
+            TARGET_STARS -
+            current
+        );
+
+
+    const daysLeft =
+        Math.max(
+            0,
+            daysBetween(
+                now,
+                END_DATE
+            )
+        );
+
+
+    const difference =
+        current -
+        target;
+
+
+    const progress =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                (
+                    (current -
+                    START_STARS)
+                    /
+                    TOTAL_NEEDED
+                ) * 100
+            )
+        );
+
+
+    /* MAIN STATS */
+
+    document.getElementById(
+        "currentStars"
+    ).textContent =
+        current + "⭐";
+
+
+    document.getElementById(
+        "targetStars"
+    ).textContent =
+        target + "⭐";
+
+
+    document.getElementById(
+        "remainingStars"
+    ).textContent =
+        remaining + "⭐";
+
+
+    document.getElementById(
+        "daysRemaining"
+    ).textContent =
+        daysLeft;
+
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        progress + "%";
+
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        Math.round(progress)
+        +
+        "% menuju Immortal";
+
+
+    /* STATUS */
+
+    const status =
+        document.getElementById(
+            "statusBox"
+        );
+
+
+    if (difference > 0) {
+
+        status.className =
+            "status ahead";
+
+        status.innerHTML =
+            "🟢 Kamu " +
+            difference +
+            "⭐ lebih cepat dari jadwal!";
+
+    }
+
+    else if (difference < 0) {
+
+        status.className =
+            "status behind";
+
+        status.innerHTML =
+            "🔴 Kamu " +
+            Math.abs(difference) +
+            "⭐ tertinggal dari jadwal.";
+
+    }
+
+    else {
+
+        status.className =
+            "status ontime";
+
+        status.innerHTML =
+            "🟡 Kamu tepat sesuai jadwal.";
+
+    }
+
+
+    /* TODAY */
+
+    document.getElementById(
+        "todayTarget"
+    ).textContent =
+        target + "⭐";
+
+
+    document.getElementById(
+        "todayActual"
+    ).textContent =
+        current + "⭐";
+
+
+    const diffElement =
+        document.getElementById(
+            "todayDifference"
+        );
+
+
+    diffElement.textContent =
+        (
+            difference >= 0
+            ? "+"
+            : ""
+        )
+        +
+        difference
+        +
+        "⭐";
+
+
+    diffElement.className =
+        difference > 0
+        ? "green"
+        : difference < 0
+        ? "red"
+        : "gray";
+
+
+    /* AVERAGE */
+
+    let averageNeeded = 0;
+
+
+    if (daysLeft > 0) {
+
+        averageNeeded =
+            remaining /
+            daysLeft;
+
+    }
+
+
+    document.getElementById(
+        "averageNeeded"
+    ).textContent =
+        averageNeeded.toFixed(2)
+        +
+        "⭐/hari";
+
+
+    /* DAILY TARGET */
+
+    document.getElementById(
+        "dailyNeeded"
+    ).textContent =
+        averageNeeded.toFixed(2)
+        +
+        "⭐";
+
+
+    /* BUFFER */
+
+    const bufferBox =
+        document.getElementById(
+            "bufferBox"
+        );
+
+
+    if (difference > 0) {
+
+        bufferBox.className =
+            "success";
+
+        bufferBox.innerHTML =
+            "🟢 <strong>Buffer +"
+            +
+            difference
+            +
+            "⭐</strong><br>" +
+            "Kamu boleh mengalami beberapa hari buruk " +
+            "tanpa langsung keluar dari jalur.";
+
+    }
+
+    else if (difference < 0) {
+
+        bufferBox.className =
+            "warning";
+
+        bufferBox.innerHTML =
+            "🔴 <strong>Defisit "
+            +
+            Math.abs(difference)
+            +
+            "⭐</strong><br>" +
+            "Kamu perlu mengejar sedikit lebih cepat " +
+            "dari rata-rata.";
+
+    }
+
+    else {
+
+        bufferBox.className =
+            "warning";
+
+        bufferBox.innerHTML =
+            "🟡 Tidak ada buffer.<br>" +
+            "Kamu tepat berada di jalur target.";
+
+    }
+
+
+    /* PROTECTION */
+
+    const today =
+        todayString();
+
+
+    const protection =
+        data.history?.[today]?.protection
+        || false;
+
+
+    document.getElementById(
+        "protectionCheck"
+    ).checked =
+        protection;
+
+
+    /* INPUT */
+
+    document.getElementById(
+        "starInput"
+    ).value =
+        current;
+
+
+    renderHistory();
+
+}
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+function renderHistory() {
+
+    const historyBox =
+        document.getElementById(
+            "history"
+        );
+
+
+    if (
+        !data.history
+        ||
+        Object.keys(
+            data.history
+        ).length === 0
+    ) {
+
+        historyBox.innerHTML =
+            "Belum ada data.";
+
+        return;
+
+    }
+
+
+    const dates =
+        Object.keys(
+            data.history
+        )
+        .sort()
+        .reverse();
+
+
+    historyBox.innerHTML =
+        dates.map(
+            date => {
+
+                const item =
+                    data.history[date];
+
+
+                const target =
+                    getScheduleTarget(
+                        new Date(
+                            date +
+                            "T00:00:00"
+                        )
+                    );
+
+
+                const difference =
+                    item.stars -
+                    target;
+
+
+                let status;
+
+
+                if (
+                    difference > 0
+                ) {
+
+                    status =
+                        `<span class="green">
+                        +${difference}⭐ ahead
+                        </span>`;
+
+                }
+
+                else if (
+                    difference < 0
+                ) {
+
+                    status =
+                        `<span class="red">
+                        ${difference}⭐ behind
+                        </span>`;
+
+                }
+
+                else {
+
+                    status =
+                        `<span class="gray">
+                        Sesuai jadwal
+                        </span>`;
+
+                }
+
+
+                return `
+
+                <div class="history">
+
+                    <div class="history-date">
+                        ${date}
+                    </div>
+
+                    <div class="small">
+
+                        Bintang:
+                        <strong>
+                            ${item.stars}⭐
+                        </strong>
+
+                        · Target:
+                        ${target}⭐
+
+                    </div>
+
+                    <div>
+
+                        ${status}
+
+                        ${item.protection
+                        ? " · 🛡️ Protection"
+                        : ""}
+
+                    </div>
+
+                </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetTracker() {
+
+    const confirmReset =
+        confirm(
+            "Yakin ingin menghapus semua progres?"
+        );
+
+
+    if (!confirmReset) {
+
+        return;
+
+    }
+
+
+    data = {
+
+        currentStars:
+            START_STARS,
+
+        history: {}
+
+    };
+
+
+    save();
+
+    render();
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+if (
+    !data.currentStars
+) {
+
+    data.currentStars =
+        START_STARS;
+
+}
+
+
+if (
+    !data.history
+) {
+
+    data.history = {};
+
+}
+
+
+save();
+
 render();
+
 </script>
+
 </body>
 </html>
