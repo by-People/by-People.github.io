@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>MLBB Smart Push Calculator</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f4f6;color:#111827;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:#111827;color:#fff;padding:20px 15px}.container{max-width:760px;margin:auto}h1{font-size:21px;margin:0 0 5px}.sub{font-size:12px;opacity:.78}
+main{padding:13px}.card{background:#fff;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 2px 9px #00000010}h2{font-size:16px;margin:0 0 10px}
+.small{font-size:11px;color:#64748b}label{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
+select,input{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;background:#fff;font-size:16px}
+button{width:100%;border:0;border-radius:10px;padding:12px;font-size:15px;font-weight:800;background:#111827;color:#fff;margin-top:9px}.secondary{background:#e5e7eb;color:#111827}
+.hidden{display:none}.hero{text-align:center;padding:16px;background:#f8fafc;border-radius:13px}.big{font-size:30px;font-weight:900}.medium{font-size:19px;font-weight:900}
+.countdown{text-align:center;font-size:28px;font-weight:900}.center{text-align:center}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{background:#f8fafc;border-radius:12px;padding:11px;text-align:center}.num{font-size:21px;font-weight:900}.label{font-size:10px;color:#64748b;margin-top:3px}
+.progress{height:12px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:13px}.bar{height:100%;background:#111827;width:0%;transition:.25s}
+.status{text-align:center;padding:13px;border-radius:12px;font-weight:800}.ahead{background:#dcfce7;color:#166534}.behind{background:#fee2e2;color:#991b1b}.ontime{background:#fef3c7;color:#92400e}
+.success,.warning{padding:12px;border-radius:11px;font-size:13px}.success{background:#dcfce7;color:#166534}.warning{background:#fff7ed;color:#9a3412}
+.line{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e5e7eb}.line:last-child{border:0}
+.protection{display:flex;align-items:center;gap:10px;background:#f8fafc;padding:12px;border-radius:11px}.protection input{width:23px;height:23px}
+.history{padding:11px 0;border-bottom:1px solid #e5e7eb;font-size:13px}.history:last-child{border:0}
+.green{color:#15803d;font-weight:800}.red{color:#dc2626;font-weight:800}.gray{color:#64748b}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="container"><h1>🏆 MLBB Smart Push Calculator</h1><div class="sub">Pilih rank awal → hitung jalan ke Mythical Immortal → tracker otomatis</div></div></header>
+<main class="container">
+
+<div id="setup" class="card">
+<h2>🚀 Pengaturan Awal</h2>
+<div class="small">Pilih rank dan bintang kamu sekarang. Tracker menghitung kebutuhan net menuju Mythical Immortal.</div>
+<label>Rank sekarang</label><select id="rankSelect"></select>
+<label>Bintang di rank sekarang</label><input id="startStars" type="number" min="0" max="1000" inputmode="numeric" value="0">
+<div class="small" id="starHint"></div>
+<label>Sisa hari menuju target</label><input id="daysInput" type="number" min="1" max="365" inputmode="numeric" value="82">
+<button id="startTracker">🚀 Mulai Tracker</button>
+</div>
+
+<div id="app" class="hidden">
+<div class="card"><div class="countdown" id="countdown">--:--:--</div><div class="small center" id="resetLabel">Reset berikutnya</div></div>
+<div class="card"><div class="status ontime" id="status">Memuat...</div></div>
+<div class="card"><div class="hero"><div class="small">TARGET</div><div class="big">Mythical Immortal</div><div class="medium">100⭐</div><div class="small" id="routeText">-</div></div></div>
+
+<div class="card"><h2>📊 Progress</h2><div class="grid">
+<div class="stat"><div class="num" id="current">0⭐</div><div class="label">Bintang sekarang</div></div>
+<div class="stat"><div class="num" id="required">0⭐</div><div class="label">Total kebutuhan net</div></div>
+<div class="stat"><div class="num" id="remain">0⭐</div><div class="label">Sisa ke Immortal</div></div>
+<div class="stat"><div class="num" id="days">0</div><div class="label">Hari tersisa</div></div>
+</div><div class="progress"><div class="bar" id="bar"></div></div><div class="small center" id="progressText">0%</div></div>
+
+<div class="card"><h2>📅 Target Hari Ini</h2>
+<div class="line"><span>Hari MLBB</span><strong id="dayNumber">1</strong></div>
+<div class="line"><span>Target bintang</span><strong id="todayTarget">0⭐</strong></div>
+<div class="line"><span>Progress aktual</span><strong id="todayActual">0⭐</strong></div>
+<div class="line"><span>Selisih</span><strong id="difference">0⭐</strong></div>
+<div class="line"><span>Kebutuhan rata-rata</span><strong id="avg">0.00⭐/hari</strong></div></div>
+
+<div class="card"><h2>⭐ Update Bintang</h2><div class="small">Masukkan total bintang sekarang. Angka tidak akan kembali saat countdown berjalan.</div>
+<input id="starInput" type="number" min="0" max="1000" inputmode="numeric" placeholder="Contoh: 14">
+<button id="saveStars">💾 Simpan Bintang</button></div>
+
+<div class="card"><h2>🛡️ Roam Star Protection</h2><div class="protection"><input id="protection" type="checkbox"><div><strong>Protection hari ini sudah digunakan</strong><div class="small">Mengikuti reset server.</div></div></div></div>
+
+<div class="card"><h2>📈 Buffer</h2><div id="buffer" class="warning">Memuat...</div></div>
+
+<div class="card"><h2>🌐 Server Reset</h2>
+<div class="line"><span>Timezone HP</span><strong id="tzName">-</strong></div>
+<div class="line"><span>UTC offset</span><strong id="tzOffset">-</strong></div>
+<div class="line"><span>Reset lokal</span><strong id="localReset">-</strong></div>
+<div class="small" style="margin-top:8px">Reset mengikuti satu momen global 08:00 UTC dan otomatis dikonversi ke timezone perangkat.</div></div>
+
+<div class="card"><h2>📚 Riwayat</h2><div id="history">Belum ada data.</div></div>
+<div class="card"><button id="changeSetup" class="secondary">⚙️ Ubah Rank / Pengaturan</button><button id="resetAll" class="secondary">🔄 Reset Semua Data</button></div>
+</div>
+</main>
+
+<script>
+const KEY="mlbb_smart_push_v6", SERVER_RESET_UTC=8, TARGET=100;
+const RANKS=[
+["warrior3","Warrior III",3],["warrior2","Warrior II",3],["warrior1","Warrior I",3],
+["elite3","Elite III",4],["elite2","Elite II",4],["elite1","Elite I",4],
+["master4","Master IV",4],["master3","Master III",4],["master2","Master II",4],["master1","Master I",4],
+["gm5","Grandmaster V",5],["gm4","Grandmaster IV",5],["gm3","Grandmaster III",5],["gm2","Grandmaster II",5],["gm1","Grandmaster I",5],
+["epic5","Epic V",5],["epic4","Epic IV",5],["epic3","Epic III",5],["epic2","Epic II",5],["epic1","Epic I",5],
+["legend5","Legend V",5],["legend4","Legend IV",5],["legend3","Legend III",5],["legend2","Legend II",5],["legend1","Legend I",5],
+["mythic","Mythic",25],["honor","Mythical Honor",25],["glory","Mythical Glory",50],["immortal","Mythical Immortal",100]
+];
+let data={started:false,rankId:"epic2",currentStars:0,totalRequired:0,days:82,startServerDay:null,history:{}};
+try{data=Object.assign(data,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const $=id=>document.getElementById(id);
+RANKS.forEach(r=>{let o=document.createElement("option");o.value=r[0];o.textContent=r[1];$("rankSelect").appendChild(o)});
+$("rankSelect").value=data.rankId;
+
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function idx(id){return RANKS.findIndex(r=>r[0]===id)}
+function rank(id){return RANKS[idx(id)]}
+function resetMs(ms){
+ const d=new Date(ms);
+ let x=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),SERVER_RESET_UTC,0,0);
+ if(ms>=x)x+=86400000;
+ return x;
+}
+function serverDay(ms){return resetMs(ms)-86400000}
+function countdown(ms){
+ let s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600);s%=3600;
+ let m=Math.floor(s/60);s%=60;
+ return [h,m,s].map((x,i)=>String(x).padStart(2,"0")).join(":")
+}
+function tz(){
+ const z=Intl.DateTimeFormat().resolvedOptions().timeZone||"Unknown";
+ const off=-new Date().getTimezoneOffset();
+ const sign=off>=0?"+":"-";const a=Math.abs(off),h=Math.floor(a/60),m=a%60;
+ return {name:z,text:`UTC${sign}${h}${m?":"+String(m).padStart(2,"0"):""}`}
+}
+function resetLocal(){
+ return new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(resetMs(Date.now())))
+}
+function required(id,stars){
+ let i=idx(id);if(i<0)return 0;
+ if(id==="immortal")return 0;
+ if(i<=24){
+   let total=RANKS[i][2]-stars;
+   for(let j=i+1;j<=24;j++)total+=RANKS[j][2];
+   return total+100;
+ }
+ if(i>=25)return Math.max(0,100-stars);
+ return 0;
+}
+function globalProgress(id,stars){
+ let i=idx(id),p=stars;
+ if(i<25)for(let j=i+1;j<=24;j++)p+=RANKS[j][2];
+ if(i<25)p+=100;
+ else p=stars;
+ return p;
+}
+function currentDay(){
+ if(data.startServerDay==null)return 1;
+ return Math.max(1,Math.min(data.days,Math.floor((serverDay(Date.now())-data.startServerDay)/86400000)+1))
+}
+function targetDay(d){return Math.min(data.totalRequired,Math.ceil(data.totalRequired*d/data.days))}
+function hint(){
+ let r=rank($("rankSelect").value),i=idx($("rankSelect").value);
+ $("startStars").max=i<25?r[2]-1:1000;
+ if(i<25)$("starHint").textContent=`${r[1]} membutuhkan ${r[2]}⭐ untuk naik ke divisi berikutnya.`;
+ else if(i===25)$("starHint").textContent="Mythic: 0–24⭐.";
+ else if(i===26)$("starHint").textContent="Honor: 25–49⭐.";
+ else if(i===27)$("starHint").textContent="Glory: 50–99⭐.";
+ else $("starHint").textContent="Kamu sudah mencapai Mythical Immortal.";
+}
+$("rankSelect").onchange=hint;hint();
+
+$("startTracker").onclick=()=>{
+ const id=$("rankSelect").value,r=rank(id),i=idx(id),s=Math.floor(Number($("startStars").value)),days=Math.floor(Number($("daysInput").value));
+ if(!Number.isFinite(s)||s<0){alert("Bintang tidak valid.");return}
+ if(i<25&&s>=r[2]){alert(`Untuk ${r[1]}, masukkan 0 sampai ${r[2]-1} bintang.`);return}
+ if(!Number.isFinite(days)||days<1){alert("Jumlah hari tidak valid.");return}
+ data.started=true;data.rankId=id;data.currentStars=s;data.days=days;data.totalRequired=required(id,s);data.startServerDay=serverDay(Date.now());data.history={};
+ save();showApp();
+};
+function showApp(){$("setup").classList.add("hidden");$("app").classList.remove("hidden");$("starInput").value=data.currentStars;render()}
+function showSetup(){$("app").classList.add("hidden");$("setup").classList.remove("hidden");$("rankSelect").value=data.rankId;$("startStars").value=data.currentStars;$("daysInput").value=data.days;hint()}
+
+function render(){
+ if(!data.started)return;
+ const now=Date.now(),d=currentDay(),target=targetDay(d),cur=Number(data.currentStars)||0,progress=globalProgress(data.rankId,cur);
+ const remain=Math.max(0,data.totalRequired-progress),left=Math.max(0,data.days-d+1),avg=left?remain/left:remain,diff=progress-target;
+ $("countdown").textContent=countdown(resetMs(now)-now);
+ const z=tz();$("resetLabel").textContent=`Reset berikutnya ${resetLocal()} · ${z.text}`;
+ $("current").textContent=cur+"⭐";$("required").textContent=data.totalRequired+"⭐";$("remain").textContent=remain+"⭐";$("days").textContent=left;
+ $("dayNumber").textContent=`${d} / ${data.days}`;$("todayTarget").textContent=target+"⭐";$("todayActual").textContent=progress+"⭐";$("difference").textContent=(diff>=0?"+":"")+diff+"⭐";$("avg").textContent=avg.toFixed(2)+"⭐/hari";
+ const pct=data.totalRequired?Math.min(100,Math.max(0,progress/data.totalRequired*100)):100;$("bar").style.width=pct+"%";$("progressText").textContent=Math.round(pct)+"% menuju Immortal";
+ const st=$("status");st.className="status "+(diff>0?"ahead":diff<0?"behind":"ontime");st.textContent=diff>0?`🟢 Kamu ${diff}⭐ lebih cepat dari target.`:diff<0?`🔴 Kamu ${Math.abs(diff)}⭐ tertinggal dari target.`:"🟡 Kamu tepat di jalur target.";
+ $("routeText").textContent=`${rank(data.rankId)[1]} ${cur}⭐ → Mythical Immortal 100⭐`;
+ $("tzName").textContent=z.name;$("tzOffset").textContent=z.text;$("localReset").textContent=resetLocal();
+ $("buffer").className=diff>=0?"success":"warning";$("buffer").innerHTML=diff>0?`🟢 <strong>Buffer +${diff}⭐</strong><br>Kamu berada di depan jadwal.`:diff<0?`🔴 <strong>Defisit ${Math.abs(diff)}⭐</strong><br>Kebutuhan rata-rata ${avg.toFixed(2)}⭐/hari.`:`🟡 <strong>Tepat di jalur.</strong><br>Kebutuhan rata-rata ${avg.toFixed(2)}⭐/hari.`;
+ const key=new Date(serverDay(now)).toISOString().slice(0,10);$("protection").checked=!!(data.history[key]&&data.history[key].protection);renderHistory();
+}
+$("saveStars").onclick=()=>{
+ const v=Math.floor(Number($("starInput").value));if(!Number.isFinite(v)||v<0){alert("Bintang tidak valid.");return}
+ data.currentStars=v;const k=new Date(serverDay(Date.now())).toISOString().slice(0,10);data.history[k]=data.history[k]||{};data.history[k].stars=v;save();render();$("starInput").value=v;
+};
+$("protection").onchange=e=>{const k=new Date(serverDay(Date.now())).toISOString().slice(0,10);data.history[k]=data.history[k]||{stars:data.currentStars};data.history[k].protection=e.target.checked;save()};
+function renderHistory(){
+ const ks=Object.keys(data.history||{}).sort().reverse();$("history").innerHTML=ks.length?ks.map(k=>`<div class="history"><strong>${k}</strong><br><span class="small">Bintang: ${data.history[k].stars||0}⭐${data.history[k].protection?" · 🛡️ Protection digunakan":""}</span></div>`).join(""):"Belum ada data.";
+}
+$("changeSetup").onclick=showSetup;
+$("resetAll").onclick=()=>{if(confirm("Hapus seluruh progres tracker?")){localStorage.removeItem(KEY);location.reload()}};
+if(data.started)showApp();else $("setup").classList.remove("hidden");
+setInterval(render,1000);
+</script>
+</body>
+</html>
