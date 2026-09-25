@@ -1,273 +1,489 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
 
-<title>MLBB Push Immortal</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta
+name="theme-color"
+content="#111827">
+
+<title>
+MLBB Push Immortal
+</title>
+
 
 <style>
-* {
-    box-sizing: border-box;
+
+*{
+box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    background: #f3f4f6;
-    color: #111827;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+body{
+
+margin:0;
+
+background:#f3f4f6;
+
+color:#111827;
+
+font-family:
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+sans-serif;
+
 }
 
-header {
-    background: #111827;
-    color: white;
-    padding: 20px 15px;
+
+header{
+
+background:#111827;
+
+color:white;
+
+padding:20px 15px;
+
 }
 
-.container {
-    max-width: 720px;
-    margin: auto;
+
+.container{
+
+max-width:720px;
+
+margin:auto;
+
 }
 
-h1 {
-    font-size: 21px;
-    margin: 0 0 4px;
+
+h1{
+
+font-size:21px;
+
+margin:0 0 4px;
+
 }
 
-.sub {
-    font-size: 12px;
-    opacity: .75;
+
+.sub{
+
+font-size:12px;
+
+opacity:.75;
+
 }
 
-main {
-    padding: 13px;
+
+main{
+
+padding:13px;
+
 }
 
-.card {
-    background: white;
-    border-radius: 16px;
-    padding: 15px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 9px rgba(0,0,0,.06);
+
+.card{
+
+background:white;
+
+border-radius:16px;
+
+padding:15px;
+
+margin-bottom:12px;
+
+box-shadow:
+0 2px 9px rgba(0,0,0,.06);
+
 }
 
-h2 {
-    font-size: 16px;
-    margin: 0 0 10px;
+
+h2{
+
+font-size:16px;
+
+margin:0 0 10px;
+
 }
+
 
 /* STATUS */
 
-.status {
-    text-align: center;
-    padding: 14px;
-    border-radius: 13px;
-    font-weight: 800;
+.status{
+
+text-align:center;
+
+padding:14px;
+
+border-radius:13px;
+
+font-weight:800;
+
 }
 
-.ahead {
-    background: #dcfce7;
-    color: #166534;
+
+.ahead{
+
+background:#dcfce7;
+
+color:#166534;
+
 }
 
-.behind {
-    background: #fee2e2;
-    color: #991b1b;
+
+.behind{
+
+background:#fee2e2;
+
+color:#991b1b;
+
 }
 
-.ontime {
-    background: #fef3c7;
-    color: #92400e;
+
+.ontime{
+
+background:#fef3c7;
+
+color:#92400e;
+
 }
+
 
 /* COUNTDOWN */
 
-.countdown {
-    font-size: 27px;
-    font-weight: 900;
-    text-align: center;
-    letter-spacing: .5px;
+.countdown{
+
+font-size:27px;
+
+font-weight:900;
+
+text-align:center;
+
+letter-spacing:.5px;
+
 }
 
-.count-label {
-    text-align: center;
-    font-size: 11px;
-    color: #64748b;
-    margin-top: 3px;
+
+.count-label{
+
+text-align:center;
+
+font-size:11px;
+
+color:#64748b;
+
+margin-top:3px;
+
 }
+
 
 /* STATS */
 
-.stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+.stats{
+
+display:grid;
+
+grid-template-columns:
+repeat(2,1fr);
+
+gap:8px;
+
 }
 
-.stat {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 11px;
-    text-align: center;
+
+.stat{
+
+background:#f8fafc;
+
+border-radius:12px;
+
+padding:11px;
+
+text-align:center;
+
 }
 
-.num {
-    font-size: 21px;
-    font-weight: 900;
+
+.num{
+
+font-size:21px;
+
+font-weight:900;
+
 }
 
-.label {
-    font-size: 10px;
-    color: #64748b;
-    margin-top: 2px;
+
+.label{
+
+font-size:10px;
+
+color:#64748b;
+
+margin-top:2px;
+
 }
+
 
 /* PROGRESS */
 
-.progress {
-    height: 12px;
-    background: #e5e7eb;
-    border-radius: 99px;
-    overflow: hidden;
-    margin-top: 13px;
+.progress{
+
+height:12px;
+
+background:#e5e7eb;
+
+border-radius:99px;
+
+overflow:hidden;
+
+margin-top:13px;
+
 }
 
-.bar {
-    height: 100%;
-    background: #111827;
-    width: 0%;
-    transition: .25s;
+
+.bar{
+
+height:100%;
+
+background:#111827;
+
+width:0%;
+
+transition:.25s;
+
 }
 
-.center {
-    font-size: 12px;
-    color: #64748b;
-    text-align: center;
-    margin-top: 7px;
+
+.center{
+
+font-size:12px;
+
+color:#64748b;
+
+text-align:center;
+
+margin-top:7px;
+
 }
+
 
 /* INPUT */
 
-input[type="number"] {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    font-size: 18px;
-    text-align: center;
+input[type="number"]{
+
+width:100%;
+
+padding:12px;
+
+border:1px solid #d1d5db;
+
+border-radius:10px;
+
+font-size:18px;
+
+text-align:center;
+
 }
 
-button {
-    width: 100%;
-    border: 0;
-    border-radius: 10px;
-    padding: 12px;
-    font-size: 15px;
-    font-weight: 800;
-    background: #111827;
-    color: white;
-    margin-top: 9px;
+
+button{
+
+width:100%;
+
+border:0;
+
+border-radius:10px;
+
+padding:12px;
+
+font-size:15px;
+
+font-weight:800;
+
+background:#111827;
+
+color:white;
+
+margin-top:9px;
+
 }
 
-button.secondary {
-    background: #e5e7eb;
-    color: #111827;
+
+button.secondary{
+
+background:#e5e7eb;
+
+color:#111827;
+
 }
+
 
 /* TODAY */
 
-.today {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 12px;
+.today{
+
+background:#f8fafc;
+
+border-radius:12px;
+
+padding:12px;
+
 }
 
-.line {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid #e5e7eb;
+
+.line{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:6px 0;
+
+border-bottom:
+1px solid #e5e7eb;
+
 }
 
-.line:last-child {
-    border: 0;
+
+.line:last-child{
+
+border:0;
+
 }
+
 
 /* PROTECTION */
 
-.protection {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8fafc;
-    padding: 12px;
-    border-radius: 11px;
+.protection{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+background:#f8fafc;
+
+padding:12px;
+
+border-radius:11px;
+
 }
 
-.protection input {
-    width: 23px;
-    height: 23px;
+
+.protection input{
+
+width:23px;
+
+height:23px;
+
 }
 
-.small {
-    font-size: 11px;
-    color: #64748b;
+
+.small{
+
+font-size:11px;
+
+color:#64748b;
+
 }
+
 
 /* BUFFER */
 
 .success,
-.warning {
-    padding: 12px;
-    border-radius: 11px;
-    font-size: 13px;
+.warning{
+
+padding:12px;
+
+border-radius:11px;
+
+font-size:13px;
+
 }
 
-.success {
-    background: #dcfce7;
-    color: #166534;
+
+.success{
+
+background:#dcfce7;
+
+color:#166534;
+
 }
 
-.warning {
-    background: #fff7ed;
-    color: #9a3412;
+
+.warning{
+
+background:#fff7ed;
+
+color:#9a3412;
+
 }
+
 
 /* HISTORY */
 
-.history {
-    padding: 11px 0;
-    border-bottom: 1px solid #e5e7eb;
-    font-size: 13px;
-}
+.history{
 
-.history:last-child {
-    border: 0;
-}
+padding:11px 0;
 
-.green {
-    color: #15803d;
-    font-weight: 800;
-}
+border-bottom:
+1px solid #e5e7eb;
 
-.red {
-    color: #dc2626;
-    font-weight: 800;
-}
-
-.gray {
-    color: #64748b;
-}
-
-@media (min-width: 600px) {
-
-    .stats {
-        grid-template-columns: repeat(4, 1fr);
-    }
+font-size:13px;
 
 }
+
+
+.history:last-child{
+
+border:0;
+
+}
+
+
+.green{
+
+color:#15803d;
+
+font-weight:800;
+
+}
+
+
+.red{
+
+color:#dc2626;
+
+font-weight:800;
+
+}
+
+
+.gray{
+
+color:#64748b;
+
+}
+
+
+@media(min-width:600px){
+
+.stats{
+
+grid-template-columns:
+repeat(4,1fr);
+
+}
+
+}
+
 </style>
+
 </head>
 
 
@@ -279,11 +495,16 @@ button.secondary {
 <div class="container">
 
 <h1>
+
 🏆 MLBB Push Mythical Immortal
+
 </h1>
 
+
 <div class="sub">
+
 10⭐ → 100⭐ · Reset harian pukul 17:00 · UTC+8
+
 </div>
 
 </div>
@@ -305,6 +526,7 @@ class="countdown">
 --:--:--
 
 </div>
+
 
 <div class="count-label">
 
@@ -443,7 +665,9 @@ class="center">
 <div class="card">
 
 <h2>
+
 📅 Hari MLBB Saat Ini
+
 </h2>
 
 
@@ -453,8 +677,11 @@ class="center">
 <div class="line">
 
 <span>
+
 Hari ke-
+
 </span>
+
 
 <strong
 id="dayNumber">
@@ -469,8 +696,11 @@ id="dayNumber">
 <div class="line">
 
 <span>
+
 Target hari ini
+
 </span>
+
 
 <strong
 id="todayTarget">
@@ -485,8 +715,11 @@ id="todayTarget">
 <div class="line">
 
 <span>
+
 Bintang aktual
+
 </span>
+
 
 <strong
 id="todayActual">
@@ -501,8 +734,11 @@ id="todayActual">
 <div class="line">
 
 <span>
+
 Selisih
+
 </span>
+
 
 <strong
 id="difference">
@@ -517,8 +753,11 @@ id="difference">
 <div class="line">
 
 <span>
+
 Kebutuhan rata-rata
+
 </span>
+
 
 <strong
 id="avg">
@@ -540,7 +779,9 @@ id="avg">
 <div class="card">
 
 <h2>
+
 ⭐ Update Bintang
+
 </h2>
 
 
@@ -556,6 +797,7 @@ id="starInput"
 type="number"
 min="0"
 max="200"
+inputmode="numeric"
 placeholder="Contoh: 14">
 
 
@@ -574,7 +816,9 @@ id="saveStars">
 <div class="card">
 
 <h2>
+
 🛡️ Roam Star Protection
+
 </h2>
 
 
@@ -589,18 +833,19 @@ type="checkbox">
 <div>
 
 <strong>
+
 Protection hari MLBB ini sudah digunakan
+
 </strong>
 
 
 <div class="small">
 
-Status mengikuti reset pukul 05:00.
+Status mengikuti reset pukul 17:00.
 
 </div>
 
 </div>
-
 
 </div>
 
@@ -612,7 +857,9 @@ Status mengikuti reset pukul 05:00.
 <div class="card">
 
 <h2>
+
 📊 Buffer Push
+
 </h2>
 
 
@@ -632,7 +879,9 @@ Memuat...
 <div class="card">
 
 <h2>
+
 📚 Riwayat Push
+
 </h2>
 
 
@@ -668,106 +917,167 @@ class="secondary">
 
 
 /* =====================================================
-   PENGATURAN UTAMA
+   PENGATURAN
 ===================================================== */
+
+
+/*
+
+Target:
+
+10⭐ → 100⭐
+
+Durasi:
+
+82 hari
+
+Reset:
+
+17:00 UTC+8
+
+*/
 
 
 const START_STARS = 10;
 
+
 const TARGET_STARS = 100;
+
 
 const TOTAL_DAYS = 82;
 
 
 /*
-   RESET HARIAN MLBB
 
-   05:00 UTC+8
+Jam reset MLBB
+
+17 = 5 sore
+
 */
+
 
 const RESET_HOUR = 17;
 
-const TZ_OFFSET_MINUTES = 8 * 60;
+
+/*
+
+UTC+8
+
+*/
+
+
+const TZ_OFFSET_MINUTES =
+8 * 60;
 
 
 /*
-   Hari pertama:
 
-   25 September 2026
-   pukul 05:00 UTC+8
+Tanggal awal:
+
+25 September 2026
+
+Reset pertama:
+
+25 September
+17:00 UTC+8
+
 */
 
 
 const START_RESET_UTC =
-    Date.UTC(
-        2026,
-        8,
-        25,
-        0,
-        0
-    )
-    -
-    RESET_HOUR *
-    60 *
-    1000;
+
+Date.UTC(
+
+2026,
+
+8,
+
+25,
+
+0,
+
+0
+
+)
+
+-
+
+RESET_HOUR *
+60 *
+1000;
 
 
 /*
-   Penyimpanan browser
+
+Local Storage
+
 */
 
+
 const STORAGE_KEY =
-    "mlbb_immortal_smart_v3";
+"mlbb_immortal_smart_v4";
+
+
+/* =====================================================
+   DATA
+===================================================== */
 
 
 let data = {
 
-    currentStars:
-        START_STARS,
+currentStars:
+START_STARS,
 
-    history: {}
+history:{}
 
 };
 
 
-try {
+try{
 
-    data =
-        JSON.parse(
-            localStorage.getItem(
-                STORAGE_KEY
-            )
-        )
-        ||
-        data;
+const saved =
+localStorage.getItem(
+STORAGE_KEY
+);
+
+
+if(saved){
+
+data =
+JSON.parse(saved);
 
 }
 
-catch(e) {
+}
 
-    data = {
+catch(e){
 
-        currentStars:
-            START_STARS,
+data = {
 
-        history: {}
+currentStars:
+START_STARS,
 
-    };
+history:{}
+
+};
 
 }
 
 
 /* =====================================================
-   STORAGE
+   SAVE
 ===================================================== */
 
 
-function save() {
+function save(){
 
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(data)
-    );
+localStorage.setItem(
+
+STORAGE_KEY,
+
+JSON.stringify(data)
+
+);
 
 }
 
@@ -777,90 +1087,115 @@ function save() {
 ===================================================== */
 
 
-function nowUTCms() {
+function nowUTCms(){
 
-    return Date.now();
+return Date.now();
 
 }
 
 
 /*
-   Mendapatkan waktu UTC+8
+
+Mengambil waktu UTC+8
+
 */
 
-function localParts(ms) {
 
-    const d =
-        new Date(
-            ms +
-            TZ_OFFSET_MINUTES *
-            60000
-        );
+function localParts(ms){
+
+const d =
+
+new Date(
+
+ms +
+
+TZ_OFFSET_MINUTES *
+60000
+
+);
 
 
-    return {
+return{
 
-        y:
-            d.getUTCFullYear(),
+year:
+d.getUTCFullYear(),
 
-        m:
-            d.getUTCMonth(),
+month:
+d.getUTCMonth(),
 
-        day:
-            d.getUTCDate(),
+day:
+d.getUTCDate(),
 
-        h:
-            d.getUTCHours(),
+hour:
+d.getUTCHours(),
 
-        min:
-            d.getUTCMinutes(),
+minute:
+d.getUTCMinutes(),
 
-        sec:
-            d.getUTCSeconds()
+second:
+d.getUTCSeconds()
 
-    };
+};
 
 }
 
 
 /* =====================================================
-   MENGHITUNG HARI MLBB
+   HARI MLBB
 ===================================================== */
 
 
-function mlbbDayIndex(ms) {
+function mlbbDayIndex(ms){
 
-    return Math.floor(
+return Math.floor(
 
-        (
-            ms -
-            START_RESET_UTC
-        )
-        /
-        (
-            24 *
-            60 *
-            60 *
-            1000
-        )
+(
 
-    ) + 1;
+ms -
+START_RESET_UTC
+
+)
+
+/
+
+(
+
+24 *
+60 *
+60 *
+1000
+
+)
+
+)
+
++ 1;
 
 }
 
 
-function clampDay(day) {
+/*
 
-    return Math.max(
+Membatasi hari
 
-        1,
+*/
 
-        Math.min(
-            TOTAL_DAYS,
-            day
-        )
 
-    );
+function clampDay(day){
+
+return Math.max(
+
+1,
+
+Math.min(
+
+TOTAL_DAYS,
+
+day
+
+)
+
+);
 
 }
 
@@ -870,44 +1205,58 @@ function clampDay(day) {
 ===================================================== */
 
 
-function nextResetMs(ms) {
+function nextResetMs(ms){
 
-    const p =
-        localParts(ms);
-
-
-    let resetUTC =
-
-        Date.UTC(
-
-            p.y,
-            p.m,
-            p.day,
-
-            RESET_HOUR,
-            0,
-            0
-
-        )
-        -
-        TZ_OFFSET_MINUTES *
-        60000;
+const p =
+localParts(ms);
 
 
-    if (
-        ms >= resetUTC
-    ) {
+let resetUTC =
 
-        resetUTC +=
-            24 *
-            60 *
-            60 *
-            1000;
+Date.UTC(
 
-    }
+p.year,
+
+p.month,
+
+p.day,
+
+RESET_HOUR,
+
+0,
+
+0
+
+)
+
+-
+
+TZ_OFFSET_MINUTES *
+60000;
 
 
-    return resetUTC;
+/*
+
+Jika sekarang sudah
+melewati reset hari ini,
+ambil reset besok.
+
+*/
+
+
+if(ms >= resetUTC){
+
+resetUTC +=
+
+24 *
+60 *
+60 *
+1000;
+
+}
+
+
+return resetUTC;
 
 }
 
@@ -917,38 +1266,40 @@ function nextResetMs(ms) {
 ===================================================== */
 
 
-function targetForDay(day) {
+/*
 
-    day =
-        clampDay(day);
+90 bintang dibagi
+ke 82 hari.
+
+Karena 90 / 82 ≈ 1.10
+
+Beberapa hari otomatis
+mendapat target +2.
+
+*/
 
 
-    /*
-       Total:
+function targetForDay(day){
 
-       90 bintang
-       selama 82 hari
-    */
+day =
+clampDay(day);
 
 
-    return Math.min(
+return Math.min(
 
-        TARGET_STARS,
+TARGET_STARS,
 
-        START_STARS +
+START_STARS +
 
-        Math.ceil(
+Math.ceil(
 
-            (
-                90 *
-                day
-            )
-            /
-            TOTAL_DAYS
+90 *
+day /
+TOTAL_DAYS
 
-        )
+)
 
-    );
+);
 
 }
 
@@ -958,48 +1309,73 @@ function targetForDay(day) {
 ===================================================== */
 
 
-function dateKeyForDay(day) {
+function dateKeyForDay(day){
 
-    const ms =
+const ms =
 
-        START_RESET_UTC +
+START_RESET_UTC +
 
-        (
-            day - 1
-        )
-        *
-        24 *
-        60 *
-        60 *
-        1000;
+(
+
+day -
+1
+
+)
+
+*
+
+24 *
+60 *
+60 *
+1000;
 
 
-    const p =
-        localParts(ms);
+const p =
+localParts(ms);
 
 
-    return (
+return (
 
-        String(p.y)
-            .padStart(4,"0")
+String(
+p.year
+)
 
-        + "-"
+.padStart(
+4,
+"0"
+)
 
-        +
++
 
-        String(
-            p.m + 1
-        )
-        .padStart(2,"0")
+"-"
 
-        + "-"
++
 
-        +
+String(
+p.month + 1
+)
 
-        String(p.day)
-            .padStart(2,"0")
+.padStart(
+2,
+"0"
+)
 
-    );
++
+
+"-"
+
++
+
+String(
+p.day
+)
+
+.padStart(
+2,
+"0"
+)
+
+);
 
 }
 
@@ -1009,470 +1385,524 @@ function dateKeyForDay(day) {
 ===================================================== */
 
 
-function formatCountdown(ms) {
+function formatCountdown(ms){
 
-    let seconds =
+let seconds =
 
-        Math.max(
+Math.max(
 
-            0,
+0,
 
-            Math.floor(
-                ms / 1000
-            )
+Math.floor(
+ms / 1000
+)
 
-        );
-
-
-    const hours =
-        Math.floor(
-            seconds / 3600
-        );
+);
 
 
-    seconds %= 3600;
+const hours =
+
+Math.floor(
+seconds / 3600
+);
 
 
-    const minutes =
-        Math.floor(
-            seconds / 60
-        );
+seconds %= 3600;
 
 
-    seconds %= 60;
+const minutes =
+
+Math.floor(
+seconds / 60
+);
 
 
-    return (
+seconds %= 60;
 
-        String(hours)
-            .padStart(2,"0")
 
-        + ":"
+return (
 
-        +
+String(hours)
+.padStart(2,"0")
 
-        String(minutes)
-            .padStart(2,"0")
++
 
-        + ":"
+":"
 
-        +
++
 
-        String(seconds)
-            .padStart(2,"0")
+String(minutes)
+.padStart(2,"0")
 
-    );
++
+
+":"
+
++
+
+String(seconds)
+.padStart(2,"0")
+
+);
 
 }
 
 
 /* =====================================================
-   RENDER
+   UPDATE TAMPILAN
 ===================================================== */
 
 
-function render() {
+function render(){
 
 
-    const now =
-        nowUTCms();
+const now =
+nowUTCms();
 
 
-    const rawDay =
-        mlbbDayIndex(now);
+const rawDay =
+mlbbDayIndex(now);
 
 
-    const day =
-        clampDay(rawDay);
+const day =
+clampDay(rawDay);
 
 
-    const target =
-        targetForDay(day);
+const target =
+targetForDay(day);
 
 
-    const current =
-        Number(
-            data.currentStars
-        )
-        ||
-        START_STARS;
+const current =
 
+Number(
+data.currentStars
+)
 
-    const remaining =
+||
 
-        Math.max(
+START_STARS;
 
-            0,
 
-            TARGET_STARS -
-            current
+const remaining =
 
-        );
+Math.max(
 
+0,
 
-    const daysLeft =
+TARGET_STARS -
+current
 
-        Math.max(
+);
 
-            0,
 
-            TOTAL_DAYS -
-            day +
-            1
+const daysLeft =
 
-        );
+Math.max(
 
+0,
 
-    const difference =
+TOTAL_DAYS -
+day +
+1
 
-        current -
-        target;
+);
 
 
-    const average =
+const difference =
 
-        daysLeft > 0
+current -
+target;
 
-        ?
 
-        remaining /
-        daysLeft
+const average =
 
-        :
+daysLeft > 0
 
-        remaining;
+?
 
+remaining /
+daysLeft
 
-    /* -----------------------------
-       STATS
-    ----------------------------- */
+:
 
+remaining;
 
-    document.getElementById(
-        "current"
-    ).textContent =
-        current + "⭐";
 
+/* -------------------------
+   STATS
+------------------------- */
 
-    document.getElementById(
-        "target"
-    ).textContent =
-        target + "⭐";
 
+document.getElementById(
+"current"
+).textContent =
 
-    document.getElementById(
-        "remain"
-    ).textContent =
-        remaining + "⭐";
+current +
+"⭐";
 
 
-    document.getElementById(
-        "days"
-    ).textContent =
-        daysLeft;
+document.getElementById(
+"target"
+).textContent =
 
+target +
+"⭐";
 
-    document.getElementById(
-        "dayNumber"
-    ).textContent =
 
-        day +
-        " / " +
-        TOTAL_DAYS;
+document.getElementById(
+"remain"
+).textContent =
 
+remaining +
+"⭐";
 
-    document.getElementById(
-        "todayTarget"
-    ).textContent =
-        target + "⭐";
 
+document.getElementById(
+"days"
+).textContent =
 
-    document.getElementById(
-        "todayActual"
-    ).textContent =
-        current + "⭐";
+daysLeft;
 
 
-    document.getElementById(
-        "difference"
-    ).textContent =
+document.getElementById(
+"dayNumber"
+).textContent =
 
-        (
-            difference >= 0
-            ? "+"
-            : ""
-        )
+day +
+" / " +
+TOTAL_DAYS;
 
-        +
 
-        difference
+document.getElementById(
+"todayTarget"
+).textContent =
 
-        +
+target +
+"⭐";
 
-        "⭐";
 
+document.getElementById(
+"todayActual"
+).textContent =
 
-    document.getElementById(
-        "avg"
-    ).textContent =
+current +
+"⭐";
 
-        average.toFixed(2)
 
-        +
+document.getElementById(
+"difference"
+).textContent =
 
-        "⭐/hari";
+(
 
+difference >= 0
+?
 
-    /* -----------------------------
-       PROGRESS
-    ----------------------------- */
+"+"
+:
 
+""
 
-    const percentage =
+)
 
-        Math.max(
++
 
-            0,
+difference +
 
-            Math.min(
+"⭐";
 
-                100,
 
-                (
-                    (
-                        current -
-                        START_STARS
-                    )
-                    /
-                    90
-                )
-                *
-                100
+document.getElementById(
+"avg"
+).textContent =
 
-            )
+average.toFixed(2)
 
-        );
++
 
+"⭐/hari";
 
-    document.getElementById(
-        "bar"
-    ).style.width =
-        percentage + "%";
 
+/* -------------------------
+   PROGRESS
+------------------------- */
 
-    document.getElementById(
-        "progressText"
-    ).textContent =
 
-        Math.round(
-            percentage
-        )
+const percentage =
 
-        +
+Math.max(
 
-        "% menuju Immortal";
+0,
 
+Math.min(
 
-    /* -----------------------------
-       STATUS
-    ----------------------------- */
+100,
 
+(
 
-    const status =
-        document.getElementById(
-            "status"
-        );
+(
+current -
+START_STARS
+)
 
+/
 
-    if (
-        difference > 0
-    ) {
+90
 
-        status.className =
-            "status ahead";
+)
 
+*
 
-        status.textContent =
+100
 
-            "🟢 Kamu " +
+)
 
-            difference +
+);
 
-            "⭐ lebih cepat dari jadwal!";
 
-    }
+document.getElementById(
+"bar"
+).style.width =
 
-    else if (
-        difference < 0
-    ) {
+percentage +
+"%";
 
-        status.className =
-            "status behind";
 
+document.getElementById(
+"progressText"
+).textContent =
 
-        status.textContent =
+Math.round(
+percentage
+)
 
-            "🔴 Kamu " +
++
 
-            Math.abs(
-                difference
-            ) +
+"% menuju Immortal";
 
-            "⭐ tertinggal dari jadwal.";
 
-    }
+/* -------------------------
+   STATUS
+------------------------- */
 
-    else {
 
-        status.className =
-            "status ontime";
+const status =
 
+document.getElementById(
+"status"
+);
 
-        status.textContent =
 
-            "🟡 Kamu tepat sesuai jadwal.";
+if(
+difference > 0
+){
 
-    }
+status.className =
+"status ahead";
 
 
-    /* -----------------------------
-       COUNTDOWN
-    ----------------------------- */
+status.textContent =
 
+"🟢 Kamu " +
 
-    const nextReset =
-        nextResetMs(now);
+difference +
 
+"⭐ lebih cepat dari jadwal!";
 
-    document.getElementById(
-        "countdown"
-    ).textContent =
+}
 
-        formatCountdown(
 
-            nextReset -
-            now
+else if(
+difference < 0
+){
 
-        );
+status.className =
+"status behind";
 
 
-    /* -----------------------------
-       PROTECTION
-    ----------------------------- */
+status.textContent =
 
+"🔴 Kamu " +
 
-    const todayKey =
-        dateKeyForDay(day);
+Math.abs(
+difference
+)
 
++
 
-    const protection =
+"⭐ tertinggal dari jadwal.";
 
-        data.history
-        &&
-        data.history[todayKey]
-        &&
-        data.history[todayKey]
-            .protection;
+}
 
 
-    document.getElementById(
-        "protection"
-    ).checked =
-        !!protection;
+else{
 
+status.className =
+"status ontime";
 
-    /* -----------------------------
-       BUFFER
-    ----------------------------- */
 
+status.textContent =
 
-    const buffer =
-        document.getElementById(
-            "buffer"
-        );
+"🟡 Kamu tepat sesuai jadwal.";
 
+}
 
-    if (
-        difference > 0
-    ) {
 
-        buffer.className =
-            "success";
+/* -------------------------
+   COUNTDOWN
+------------------------- */
 
 
-        buffer.innerHTML =
+const nextReset =
+nextResetMs(now);
 
-            "🟢 <strong>Buffer +" +
 
-            difference +
+document.getElementById(
+"countdown"
+).textContent =
 
-            "⭐</strong><br>" +
+formatCountdown(
 
-            "Kamu berada di depan jadwal. " +
+nextReset -
+now
 
-            "Hari buruk sesekali masih bisa ditoleransi.";
+);
 
-    }
 
-    else if (
-        difference < 0
-    ) {
+/* -------------------------
+   PROTECTION
+------------------------- */
 
-        buffer.className =
-            "warning";
 
+const todayKey =
 
-        buffer.innerHTML =
+dateKeyForDay(
+day
+);
 
-            "🔴 <strong>Defisit " +
 
-            Math.abs(
-                difference
-            ) +
+const protection =
 
-            "⭐</strong><br>" +
+data.history &&
 
-            "Kebutuhan rata-rata sekarang " +
+data.history[
+todayKey
+] &&
 
-            "menjadi <strong>" +
+data.history[
+todayKey
+].protection;
 
-            average.toFixed(2) +
 
-            "⭐/hari</strong>.";
+document.getElementById(
+"protection"
+).checked =
 
-    }
+!!protection;
 
-    else {
 
-        buffer.className =
-            "warning";
+/* -------------------------
+   BUFFER
+------------------------- */
 
 
-        buffer.innerHTML =
+const buffer =
 
-            "🟡 <strong>Tepat di jalur.</strong><br>" +
+document.getElementById(
+"buffer"
+);
 
-            "Jaga rata-rata sekitar <strong>" +
 
-            average.toFixed(2) +
+if(
+difference > 0
+){
 
-            "⭐/hari</strong>.";
+buffer.className =
+"success";
 
-    }
 
+buffer.innerHTML =
 
-    /* -----------------------------
-       INPUT
-    ----------------------------- */
+"🟢 <strong>Buffer +" +
 
+difference +
 
-    document.getElementById(
-        "starInput"
-    ).value =
-        current;
+"⭐</strong><br>" +
 
+"Kamu berada di depan jadwal. " +
 
-    renderHistory();
+"Kalau besok kalah, buffer ini masih membantu.";
+
+}
+
+
+else if(
+difference < 0
+){
+
+buffer.className =
+"warning";
+
+
+buffer.innerHTML =
+
+"🔴 <strong>Defisit " +
+
+Math.abs(
+difference
+)
+
++
+
+"⭐</strong><br>" +
+
+"Kebutuhan rata-rata sekarang " +
+
+"<strong>" +
+
+average.toFixed(2) +
+
+"⭐/hari</strong>.";
+
+}
+
+
+else{
+
+buffer.className =
+"warning";
+
+
+buffer.innerHTML =
+
+"🟡 <strong>Tepat di jalur.</strong><br>" +
+
+"Jaga rata-rata sekitar " +
+
+"<strong>" +
+
+average.toFixed(2) +
+
+"⭐/hari</strong>.";
+
+}
+
+
+/*
+
+PENTING:
+
+JANGAN mengisi starInput
+di dalam render().
+
+Kalau dilakukan,
+angka yang sedang diketik
+akan terus kembali ke angka lama.
+
+*/
+
+
+renderHistory();
 
 }
 
@@ -1483,113 +1913,200 @@ function render() {
 
 
 document.getElementById(
-    "saveStars"
+"saveStars"
 ).addEventListener(
 
-    "click",
+"click",
 
-    function() {
-
-
-        const value =
-
-            Number(
-
-                document.getElementById(
-                    "starInput"
-                ).value
-
-            );
+function(){
 
 
-        if (
+const input =
 
-            !Number.isFinite(
-                value
-            )
-
-            ||
-
-            value < 0
-
-            ||
-
-            value > 200
-
-        ) {
-
-            alert(
-                "Masukkan jumlah bintang yang valid."
-            );
-
-            return;
-
-        }
+document.getElementById(
+"starInput"
+);
 
 
-        data.currentStars =
-            Math.floor(value);
+const value =
+
+Number(
+input.value
+);
 
 
-        if (
-            !data.history
-        ) {
+if(
 
-            data.history = {};
+!Number.isFinite(
+value
+)
 
-        }
+||
 
+value < 0
 
-        const day =
+||
 
-            clampDay(
+value > 200
 
-                mlbbDayIndex(
-                    nowUTCms()
-                )
+){
 
-            );
+alert(
+"Masukkan jumlah bintang yang valid."
+);
 
+return;
 
-        const key =
-            dateKeyForDay(day);
-
-
-        if (
-            !data.history[key]
-        ) {
-
-            data.history[key] = {};
-
-        }
+}
 
 
-        data.history[key].stars =
-            data.currentStars;
+/*
+
+Simpan bintang
+
+*/
 
 
-        if (
+data.currentStars =
 
-            typeof
-            data.history[key]
-                .protection
-            !==
-            "boolean"
-
-        ) {
-
-            data.history[key]
-                .protection =
-                false;
-
-        }
+Math.floor(
+value
+);
 
 
-        save();
+/*
 
-        render();
+Pastikan history ada
 
-    }
+*/
+
+
+if(
+!data.history
+){
+
+data.history = {};
+
+}
+
+
+/*
+
+Ambil hari MLBB sekarang
+
+*/
+
+
+const day =
+
+clampDay(
+
+mlbbDayIndex(
+nowUTCms()
+)
+
+);
+
+
+/*
+
+Tanggal hari MLBB
+
+*/
+
+
+const key =
+
+dateKeyForDay(
+day
+);
+
+
+/*
+
+Buat data hari
+jika belum ada
+
+*/
+
+
+if(
+!data.history[key]
+){
+
+data.history[key] = {};
+
+}
+
+
+/*
+
+Simpan bintang hari tersebut
+
+*/
+
+
+data.history[key].stars =
+
+data.currentStars;
+
+
+/*
+
+Jika protection belum ada,
+jangan menghapus nilainya.
+
+*/
+
+
+if(
+
+typeof
+data.history[key].protection
+!==
+"boolean"
+
+){
+
+data.history[key].protection =
+false;
+
+}
+
+
+/*
+
+Simpan
+
+*/
+
+
+save();
+
+
+/*
+
+Update tampilan
+
+*/
+
+
+render();
+
+
+/*
+
+Setelah disimpan,
+input tetap menunjukkan
+nilai yang baru.
+
+*/
+
+
+input.value =
+data.currentStars;
+
+}
 
 );
 
@@ -1600,67 +2117,73 @@ document.getElementById(
 
 
 document.getElementById(
-    "protection"
+"protection"
 ).addEventListener(
 
-    "change",
+"change",
 
-    function(event) {
-
-
-        if (
-            !data.history
-        ) {
-
-            data.history = {};
-
-        }
+function(event){
 
 
-        const day =
+if(
+!data.history
+){
 
-            clampDay(
+data.history = {};
 
-                mlbbDayIndex(
-                    nowUTCms()
-                )
-
-            );
+}
 
 
-        const key =
-            dateKeyForDay(day);
+const day =
+
+clampDay(
+
+mlbbDayIndex(
+nowUTCms()
+)
+
+);
 
 
-        if (
-            !data.history[key]
-        ) {
+const key =
 
-            data.history[key] = {
-
-                stars:
-                    Number(
-                        data.currentStars
-                    )
-                    ||
-                    START_STARS
-
-            };
-
-        }
+dateKeyForDay(
+day
+);
 
 
-        data.history[key]
-            .protection =
+if(
+!data.history[key]
+){
 
-            event.target.checked;
+data.history[key] = {
+
+stars:
+
+Number(
+data.currentStars
+)
+
+||
+
+START_STARS
+
+};
+
+}
 
 
-        save();
+data.history[key].protection =
 
-        render();
+event.target.checked;
 
-    }
+
+save();
+
+
+render();
+
+}
 
 );
 
@@ -1670,290 +2193,358 @@ document.getElementById(
 ===================================================== */
 
 
-function renderHistory() {
+function renderHistory(){
 
 
-    const box =
-        document.getElementById(
-            "history"
-        );
+const box =
 
+document.getElementById(
+"history"
+);
 
-    const history =
-        data.history ||
-        {};
 
+const history =
 
-    const keys =
+data.history ||
+{};
 
-        Object.keys(
-            history
-        )
-        .sort()
-        .reverse();
 
+const keys =
 
-    if (
-        keys.length === 0
-    ) {
+Object.keys(
+history
+)
+.sort()
+.reverse();
 
-        box.innerHTML =
-            "Belum ada data.";
 
-        return;
+if(
+keys.length === 0
+){
 
-    }
+box.innerHTML =
+"Belum ada data.";
 
+return;
 
-    box.innerHTML =
+}
 
-        keys.map(
 
-            function(key) {
+box.innerHTML =
 
+keys.map(
 
-                const item =
-                    history[key];
+function(key){
 
 
-                const date =
-                    new Date(
-                        key +
-                        "T00:00:00"
-                    );
+const item =
+history[key];
 
 
-                const day =
+const date =
 
-                    clampDay(
+new Date(
+key +
+"T00:00:00"
+);
 
-                        Math.floor(
 
-                            (
-                                Date.UTC(
+const day =
 
-                                    date.getFullYear(),
+clampDay(
 
-                                    date.getMonth(),
+Math.floor(
 
-                                    date.getDate()
+(
 
-                                )
+Date.UTC(
 
-                                -
+date.getFullYear(),
 
-                                Date.UTC(
-                                    2026,
-                                    8,
-                                    25
-                                )
+date.getMonth(),
 
-                            )
-                            /
-                            86400000
+date.getDate()
 
-                        )
-                        + 1
+)
 
-                    );
+-
 
+Date.UTC(
 
-                const target =
-                    targetForDay(day);
+2026,
 
+8,
 
-                const difference =
+25
 
-                    item.stars -
-                    target;
+)
 
+)
 
-                let result;
+/
 
+86400000
 
-                if (
-                    difference > 0
-                ) {
+)
 
-                    result =
++ 1
 
-                        `<span class="green">
+);
 
-                        +${difference}⭐ ahead
 
-                        </span>`;
+const target =
 
-                }
+targetForDay(
+day
+);
 
-                else if (
-                    difference < 0
-                ) {
 
-                    result =
+const difference =
 
-                        `<span class="red">
+item.stars -
+target;
 
-                        ${difference}⭐ behind
 
-                        </span>`;
+let result;
 
-                }
 
-                else {
+if(
+difference > 0
+){
 
-                    result =
+result =
 
-                        `<span class="gray">
+`<span class="green">
 
-                        Sesuai jadwal
++${difference}⭐ ahead
 
-                        </span>`;
+</span>`;
 
-                }
+}
 
 
-                return `
+else if(
+difference < 0
+){
 
-                <div class="history">
+result =
 
-                    <strong>
-                        ${key}
-                    </strong>
+`<span class="red">
 
-                    <br>
+${difference}⭐ behind
 
-                    <span class="small">
+</span>`;
 
-                        Bintang:
-                        ${item.stars}⭐
+}
 
-                        ·
 
-                        Target:
-                        ${target}⭐
+else{
 
-                        ·
+result =
 
-                        Hari:
-                        ${day}
+`<span class="gray">
 
-                    </span>
+Sesuai jadwal
 
-                    <br>
+</span>`;
 
-                    ${result}
+}
 
-                    ${
-                        item.protection
-                        ?
 
-                        " · 🛡️ Protection"
+return `
 
-                        :
+<div class="history">
 
-                        ""
-                    }
+<strong>
 
-                </div>
+${key}
 
-                `;
+</strong>
 
-            }
+<br>
 
-        )
-        .join("");
+<span class="small">
+
+Bintang:
+${item.stars}⭐
+
+·
+
+Target:
+${target}⭐
+
+·
+
+Hari:
+${day}
+
+</span>
+
+<br>
+
+${result}
+
+${
+
+item.protection
+
+?
+
+" · 🛡️ Protection"
+
+:
+
+""
+
+}
+
+</div>
+
+`;
+
+}
+
+)
+
+.join("");
 
 }
 
 
 /* =====================================================
-   RESET TRACKER
+   RESET
 ===================================================== */
 
 
 document.getElementById(
-    "reset"
+"reset"
 ).addEventListener(
 
-    "click",
+"click",
 
-    function() {
-
-
-        if (
-
-            confirm(
-                "Hapus semua progres tracker?"
-            )
-
-        ) {
+function(){
 
 
-            data = {
+if(
 
-                currentStars:
-                    START_STARS,
+confirm(
+"Hapus semua progres tracker?"
+)
 
-                history: {}
-
-            };
+){
 
 
-            save();
+data = {
 
-            render();
+currentStars:
+START_STARS,
 
-        }
+history:{}
 
-    }
+};
+
+
+save();
+
+
+render();
+
+
+/*
+
+Setelah reset,
+isi input dengan
+10⭐.
+
+*/
+
+
+document.getElementById(
+"starInput"
+).value =
+START_STARS;
+
+}
+
+}
 
 );
 
 
 /* =====================================================
-   START
+   INITIALIZE
 ===================================================== */
 
 
-if (
-    !data.currentStars
-) {
+if(
+!data.currentStars
+){
 
-    data.currentStars =
-        START_STARS;
+data.currentStars =
+START_STARS;
 
 }
 
 
-if (
-    !data.history
-) {
+if(
+!data.history
+){
 
-    data.history = {};
+data.history = {};
 
 }
 
 
 save();
 
+
+/*
+
+Isi input SEKALI
+ketika halaman pertama
+kali dibuka.
+
+Tidak dilakukan
+setiap render.
+
+*/
+
+
+document.getElementById(
+"starInput"
+).value =
+
+data.currentStars;
+
+
+/*
+
+Render pertama
+
+*/
+
+
 render();
 
 
 /*
-   Update setiap detik.
 
-   Jadi countdown berubah
-   secara real-time.
+Update countdown
+setiap detik.
 
-   Saat pukul 05:00,
-   hari MLBB otomatis berubah.
+Input tidak akan
+terganggu karena
+render() tidak lagi
+mengubah starInput.
+
 */
+
 
 setInterval(
 
-    render,
+render,
 
-    1000
+1000
 
 );
 
@@ -1961,4 +2552,5 @@ setInterval(
 
 
 </body>
+
 </html>
