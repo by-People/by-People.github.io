@@ -1,195 +1,2679 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#111827">
-<title>MLBB Smart Push Calculator</title>
+<title>MLBB Smart Push Tracker</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f4f6;color:#111827;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{background:#111827;color:#fff;padding:20px 15px}.container{max-width:760px;margin:auto}h1{font-size:21px;margin:0 0 5px}.sub{font-size:12px;opacity:.78}
-main{padding:13px}.card{background:#fff;border-radius:16px;padding:15px;margin-bottom:12px;box-shadow:0 2px 9px #00000010}h2{font-size:16px;margin:0 0 10px}
-.small{font-size:11px;color:#64748b}label{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
-select,input{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;background:#fff;font-size:16px}
-button{width:100%;border:0;border-radius:10px;padding:12px;font-size:15px;font-weight:800;background:#111827;color:#fff;margin-top:9px}.secondary{background:#e5e7eb;color:#111827}
-.hidden{display:none}.hero{text-align:center;padding:16px;background:#f8fafc;border-radius:13px}.big{font-size:30px;font-weight:900}.medium{font-size:19px;font-weight:900}
-.countdown{text-align:center;font-size:28px;font-weight:900}.center{text-align:center}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{background:#f8fafc;border-radius:12px;padding:11px;text-align:center}.num{font-size:21px;font-weight:900}.label{font-size:10px;color:#64748b;margin-top:3px}
-.progress{height:12px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:13px}.bar{height:100%;background:#111827;width:0%;transition:.25s}
-.status{text-align:center;padding:13px;border-radius:12px;font-weight:800}.ahead{background:#dcfce7;color:#166534}.behind{background:#fee2e2;color:#991b1b}.ontime{background:#fef3c7;color:#92400e}
-.success,.warning{padding:12px;border-radius:11px;font-size:13px}.success{background:#dcfce7;color:#166534}.warning{background:#fff7ed;color:#9a3412}
-.line{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e5e7eb}.line:last-child{border:0}
-.protection{display:flex;align-items:center;gap:10px;background:#f8fafc;padding:12px;border-radius:11px}.protection input{width:23px;height:23px}
-.history{padding:11px 0;border-bottom:1px solid #e5e7eb;font-size:13px}.history:last-child{border:0}
-.green{color:#15803d;font-weight:800}.red{color:#dc2626;font-weight:800}.gray{color:#64748b}
-@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 20px 16px;
+}
+
+.container {
+    width: 100%;
+    max-width: 760px;
+    margin: auto;
+}
+
+h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.subtitle {
+    margin-top: 5px;
+    font-size: 12px;
+    opacity: .75;
+}
+
+main {
+    padding: 14px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 13px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+h2 {
+    margin: 0 0 12px;
+    font-size: 17px;
+}
+
+.small {
+    font-size: 12px;
+    color: #64748b;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+select,
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 11px;
+    font-size: 16px;
+    background: white;
+}
+
+button {
+    border: 0;
+    border-radius: 11px;
+    padding: 12px 15px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.primary {
+    width: 100%;
+    margin-top: 12px;
+    background: #111827;
+    color: white;
+}
+
+.secondary {
+    width: 100%;
+    margin-top: 8px;
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Position */
+
+.position {
+    text-align: center;
+    padding: 18px;
+    background: #f8fafc;
+    border-radius: 14px;
+}
+
+.position .rank {
+    font-size: 27px;
+    font-weight: 900;
+}
+
+.position .stars {
+    margin-top: 5px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* Stats */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+}
+
+.stat {
+    padding: 12px;
+    border-radius: 12px;
+    background: #f8fafc;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.stat-label {
+    margin-top: 3px;
+    font-size: 10px;
+    color: #64748b;
+}
+
+/* Progress */
+
+.progress {
+    margin-top: 13px;
+    height: 12px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #111827;
+    transition: .25s;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* Add stars */
+
+.star-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.star-button {
+    width: 55px;
+    height: 55px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 28px;
+    background: #e2e8f0;
+}
+
+.star-number {
+    width: 90px;
+    text-align: center;
+    font-size: 27px;
+    font-weight: 900;
+}
+
+.add {
+    width: 100%;
+    background: #166534;
+    color: white;
+}
+
+.subtract {
+    width: 100%;
+    margin-top: 8px;
+    background: #991b1b;
+    color: white;
+}
+
+/* Status */
+
+.status {
+    padding: 13px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 800;
+}
+
+.ahead {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.behind {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.ontime {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Rows */
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.row:last-child {
+    border-bottom: 0;
+}
+
+/* Countdown */
+
+.countdown {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+/* Protection */
+
+.protection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 11px;
+}
+
+.protection input {
+    width: 23px;
+    height: 23px;
+}
+
+/* History */
+
+.history-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+}
+
+.history-item:last-child {
+    border-bottom: 0;
+}
+
+.success {
+    padding: 12px;
+    border-radius: 11px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 13px;
+}
+
+.warning {
+    padding: 12px;
+    border-radius: 11px;
+    background: #fff7ed;
+    color: #9a3412;
+    font-size: 13px;
+}
+
+@media (min-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
 </style>
 </head>
+
 <body>
-<header><div class="container"><h1>🏆 MLBB Smart Push Calculator</h1><div class="sub">Pilih rank awal → hitung jalan ke Mythical Immortal → tracker otomatis</div></div></header>
+
+<header>
+<div class="container">
+    <h1>🏆 MLBB Smart Push Tracker</h1>
+    <div class="subtitle">
+        Otomatis menghitung rank, divisi, bintang, target harian, dan progres menuju Mythical Immortal.
+    </div>
+</div>
+</header>
+
 <main class="container">
 
-<div id="setup" class="card">
+<!-- ================= SETUP ================= -->
+
+<div id="setup">
+
+<div class="card">
+
 <h2>🚀 Pengaturan Awal</h2>
-<div class="small">Pilih rank dan bintang kamu sekarang. Tracker menghitung kebutuhan net menuju Mythical Immortal.</div>
-<label>Rank sekarang</label><select id="rankSelect"></select>
-<label>Bintang di rank sekarang</label><input id="startStars" type="number" min="0" max="1000" inputmode="numeric" value="0">
-<div class="small" id="starHint"></div>
-<label>Sisa hari menuju target</label><input id="daysInput" type="number" min="1" max="365" inputmode="numeric" value="82">
-<button id="startTracker">🚀 Mulai Tracker</button>
+
+<div class="small">
+Masukkan posisi kamu sekarang. Setelah itu kamu cukup menambahkan atau mengurangi
+jumlah bintang yang diperoleh setiap bermain.
 </div>
+
+<label>Rank</label>
+
+<select id="rankSelect"></select>
+
+<label>Divisi</label>
+
+<select id="divisionSelect"></select>
+
+<label>Bintang saat ini</label>
+
+<input
+    id="initialStars"
+    type="number"
+    min="0"
+    value="0"
+    inputmode="numeric"
+>
+
+<div id="starInfo" class="small"></div>
+
+<label>Sisa hari menuju target</label>
+
+<input
+    id="daysInput"
+    type="number"
+    min="1"
+    max="365"
+    value="82"
+    inputmode="numeric"
+>
+
+<button class="primary" id="startButton">
+🚀 Mulai Tracker
+</button>
+
+</div>
+
+</div>
+
+<!-- ================= APP ================= -->
 
 <div id="app" class="hidden">
-<div class="card"><div class="countdown" id="countdown">--:--:--</div><div class="small center" id="resetLabel">Reset berikutnya</div></div>
-<div class="card"><div class="status ontime" id="status">Memuat...</div></div>
-<div class="card"><div class="hero"><div class="small">TARGET</div><div class="big">Mythical Immortal</div><div class="medium">100⭐</div><div class="small" id="routeText">-</div></div></div>
 
-<div class="card"><h2>📊 Progress</h2><div class="grid">
-<div class="stat"><div class="num" id="current">0⭐</div><div class="label">Bintang sekarang</div></div>
-<div class="stat"><div class="num" id="required">0⭐</div><div class="label">Total kebutuhan net</div></div>
-<div class="stat"><div class="num" id="remain">0⭐</div><div class="label">Sisa ke Immortal</div></div>
-<div class="stat"><div class="num" id="days">0</div><div class="label">Hari tersisa</div></div>
-</div><div class="progress"><div class="bar" id="bar"></div></div><div class="small center" id="progressText">0%</div></div>
+<!-- COUNTDOWN -->
 
-<div class="card"><h2>📅 Target Hari Ini</h2>
-<div class="line"><span>Hari MLBB</span><strong id="dayNumber">1</strong></div>
-<div class="line"><span>Target bintang</span><strong id="todayTarget">0⭐</strong></div>
-<div class="line"><span>Progress aktual</span><strong id="todayActual">0⭐</strong></div>
-<div class="line"><span>Selisih</span><strong id="difference">0⭐</strong></div>
-<div class="line"><span>Kebutuhan rata-rata</span><strong id="avg">0.00⭐/hari</strong></div></div>
+<div class="card">
 
-<div class="card"><h2>⭐ Update Bintang</h2><div class="small">Masukkan total bintang sekarang. Angka tidak akan kembali saat countdown berjalan.</div>
-<input id="starInput" type="number" min="0" max="1000" inputmode="numeric" placeholder="Contoh: 14">
-<button id="saveStars">💾 Simpan Bintang</button></div>
-
-<div class="card"><h2>🛡️ Roam Star Protection</h2><div class="protection"><input id="protection" type="checkbox"><div><strong>Protection hari ini sudah digunakan</strong><div class="small">Mengikuti reset server.</div></div></div></div>
-
-<div class="card"><h2>📈 Buffer</h2><div id="buffer" class="warning">Memuat...</div></div>
-
-<div class="card"><h2>🌐 Server Reset</h2>
-<div class="line"><span>Timezone HP</span><strong id="tzName">-</strong></div>
-<div class="line"><span>UTC offset</span><strong id="tzOffset">-</strong></div>
-<div class="line"><span>Reset lokal</span><strong id="localReset">-</strong></div>
-<div class="small" style="margin-top:8px">Reset mengikuti satu momen global 08:00 UTC dan otomatis dikonversi ke timezone perangkat.</div></div>
-
-<div class="card"><h2>📚 Riwayat</h2><div id="history">Belum ada data.</div></div>
-<div class="card"><button id="changeSetup" class="secondary">⚙️ Ubah Rank / Pengaturan</button><button id="resetAll" class="secondary">🔄 Reset Semua Data</button></div>
+<div class="countdown" id="countdown">
+00:00:00
 </div>
+
+<div class="small" style="text-align:center" id="resetInfo">
+Reset berikutnya
+</div>
+
+</div>
+
+<!-- CURRENT POSITION -->
+
+<div class="card">
+
+<h2>📍 Posisi Sekarang</h2>
+
+<div class="position">
+
+<div class="rank" id="currentRank">
+Epic V
+</div>
+
+<div class="stars" id="currentStars">
+1⭐ / 5⭐
+</div>
+
+<div class="small" id="nextRank">
+Menuju Epic IV
+</div>
+
+</div>
+
+</div>
+
+<!-- STATUS -->
+
+<div class="card">
+
+<div id="status" class="status ontime">
+Tepat di jalur target.
+</div>
+
+</div>
+
+<!-- PROGRESS -->
+
+<div class="card">
+
+<h2>📊 Progress Menuju Immortal</h2>
+
+<div class="grid">
+
+<div class="stat">
+<div class="stat-number" id="progressStars">
+0⭐
+</div>
+<div class="stat-label">
+DIPEROLEH SEJAK AWAL
+</div>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="remainingStars">
+0⭐
+</div>
+<div class="stat-label">
+SISA KE IMMORTAL
+</div>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="requiredStars">
+0⭐
+</div>
+<div class="stat-label">
+TOTAL KEBUTUHAN
+</div>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="daysLeft">
+0
+</div>
+<div class="stat-label">
+HARI TERSISA
+</div>
+</div>
+
+</div>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="progress-text" id="progressText">
+0%
+</div>
+
+</div>
+
+<!-- ADD STARS -->
+
+<div class="card">
+
+<h2>⭐ Update Bintang</h2>
+
+<div class="small">
+Masukkan jumlah bintang yang kamu dapatkan dari pertandingan.
+Contoh: menang +3⭐ → masukkan 3.
+</div>
+
+<div class="star-control">
+
+<button class="star-button" id="minusStar">
+−
+</button>
+
+<div class="star-number" id="addAmount">
+1
+</div>
+
+<button class="star-button" id="plusStar">
++
+</button>
+
+</div>
+
+<button class="add" id="addStars">
+＋ Tambahkan Bintang
+</button>
+
+<button class="subtract" id="subtractStars">
+－ Kurangi Bintang
+</button>
+
+</div>
+
+<!-- DAILY TARGET -->
+
+<div class="card">
+
+<h2>📅 Target Hari Ini</h2>
+
+<div class="row">
+<span>Hari MLBB</span>
+<strong id="dayNumber">1 / 82</strong>
+</div>
+
+<div class="row">
+<span>Target sampai hari ini</span>
+<strong id="targetToday">0⭐</strong>
+</div>
+
+<div class="row">
+<span>Progress aktual</span>
+<strong id="actualToday">0⭐</strong>
+</div>
+
+<div class="row">
+<span>Selisih</span>
+<strong id="difference">0⭐</strong>
+</div>
+
+<div class="row">
+<span>Kebutuhan rata-rata</span>
+<strong id="average">0.00⭐ / hari</strong>
+</div>
+
+</div>
+
+<!-- BUFFER -->
+
+<div class="card">
+
+<h2>📈 Buffer</h2>
+
+<div id="buffer" class="warning">
+Memuat...
+</div>
+
+</div>
+
+<!-- PROTECTION -->
+
+<div class="card">
+
+<h2>🛡️ Roam Star Protection</h2>
+
+<div class="protection">
+
+<input type="checkbox" id="protection">
+
+<div>
+<strong>Protection hari ini sudah digunakan</strong>
+
+<div class="small">
+Status otomatis berganti setelah reset server.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SERVER RESET -->
+
+<div class="card">
+
+<h2>🌐 Server Reset</h2>
+
+<div class="row">
+<span>Timezone perangkat</span>
+<strong id="timezone">
+-
+</strong>
+</div>
+
+<div class="row">
+<span>UTC</span>
+<strong id="utcOffset">
+-
+</strong>
+</div>
+
+<div class="row">
+<span>Reset lokal</span>
+<strong id="localReset">
+-
+</strong>
+</div>
+
+<div class="small" style="margin-top:8px">
+Reset server menggunakan 08:00 UTC dan otomatis dikonversikan
+ke timezone perangkat.
+</div>
+
+</div>
+
+<!-- HISTORY -->
+
+<div class="card">
+
+<h2>📚 Riwayat</h2>
+
+<div id="history">
+Belum ada data.
+</div>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div class="card">
+
+<button class="secondary" id="changeSetup">
+⚙️ Ubah Pengaturan
+</button>
+
+<button class="secondary" id="resetAll">
+🔄 Reset Semua Data
+</button>
+
+</div>
+
+</div>
+
 </main>
 
 <script>
-const KEY="mlbb_smart_push_v6", SERVER_RESET_UTC=8, TARGET=100;
-const RANKS=[
-["warrior3","Warrior III",3],["warrior2","Warrior II",3],["warrior1","Warrior I",3],
-["elite3","Elite III",4],["elite2","Elite II",4],["elite1","Elite I",4],
-["master4","Master IV",4],["master3","Master III",4],["master2","Master II",4],["master1","Master I",4],
-["gm5","Grandmaster V",5],["gm4","Grandmaster IV",5],["gm3","Grandmaster III",5],["gm2","Grandmaster II",5],["gm1","Grandmaster I",5],
-["epic5","Epic V",5],["epic4","Epic IV",5],["epic3","Epic III",5],["epic2","Epic II",5],["epic1","Epic I",5],
-["legend5","Legend V",5],["legend4","Legend IV",5],["legend3","Legend III",5],["legend2","Legend II",5],["legend1","Legend I",5],
-["mythic","Mythic",25],["honor","Mythical Honor",25],["glory","Mythical Glory",50],["immortal","Mythical Immortal",100]
+
+/* =========================================================
+   DATA RANK
+========================================================= */
+
+const RANKS = [
+
+{
+    id: "warrior",
+    name: "Warrior",
+    divisions: ["III","II","I"],
+    starsPerDivision: 3
+},
+
+{
+    id: "elite",
+    name: "Elite",
+    divisions: ["III","II","I"],
+    starsPerDivision: 4
+},
+
+{
+    id: "master",
+    name: "Master",
+    divisions: ["IV","III","II","I"],
+    starsPerDivision: 4
+},
+
+{
+    id: "grandmaster",
+    name: "Grandmaster",
+    divisions: ["V","IV","III","II","I"],
+    starsPerDivision: 5
+},
+
+{
+    id: "epic",
+    name: "Epic",
+    divisions: ["V","IV","III","II","I"],
+    starsPerDivision: 5
+},
+
+{
+    id: "legend",
+    name: "Legend",
+    divisions: ["V","IV","III","II","I"],
+    starsPerDivision: 5
+},
+
+{
+    id: "mythic",
+    name: "Mythic",
+    divisions: null,
+    starsPerDivision: null
+},
+
+{
+    id: "honor",
+    name: "Mythical Honor",
+    divisions: null,
+    starsPerDivision: null
+},
+
+{
+    id: "glory",
+    name: "Mythical Glory",
+    divisions: null,
+    starsPerDivision: null
+},
+
+{
+    id: "immortal",
+    name: "Mythical Immortal",
+    divisions: null,
+    starsPerDivision: null
+}
+
 ];
-let data={started:false,rankId:"epic2",currentStars:0,totalRequired:0,days:82,startServerDay:null,history:{}};
-try{data=Object.assign(data,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
-const $=id=>document.getElementById(id);
-RANKS.forEach(r=>{let o=document.createElement("option");o.value=r[0];o.textContent=r[1];$("rankSelect").appendChild(o)});
-$("rankSelect").value=data.rankId;
 
-function save(){localStorage.setItem(KEY,JSON.stringify(data))}
-function idx(id){return RANKS.findIndex(r=>r[0]===id)}
-function rank(id){return RANKS[idx(id)]}
-function resetMs(ms){
- const d=new Date(ms);
- let x=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),SERVER_RESET_UTC,0,0);
- if(ms>=x)x+=86400000;
- return x;
-}
-function serverDay(ms){return resetMs(ms)-86400000}
-function countdown(ms){
- let s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600);s%=3600;
- let m=Math.floor(s/60);s%=60;
- return [h,m,s].map((x,i)=>String(x).padStart(2,"0")).join(":")
-}
-function tz(){
- const z=Intl.DateTimeFormat().resolvedOptions().timeZone||"Unknown";
- const off=-new Date().getTimezoneOffset();
- const sign=off>=0?"+":"-";const a=Math.abs(off),h=Math.floor(a/60),m=a%60;
- return {name:z,text:`UTC${sign}${h}${m?":"+String(m).padStart(2,"0"):""}`}
-}
-function resetLocal(){
- return new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(resetMs(Date.now())))
-}
-function required(id,stars){
- let i=idx(id);if(i<0)return 0;
- if(id==="immortal")return 0;
- if(i<=24){
-   let total=RANKS[i][2]-stars;
-   for(let j=i+1;j<=24;j++)total+=RANKS[j][2];
-   return total+100;
- }
- if(i>=25)return Math.max(0,100-stars);
- return 0;
-}
-function globalProgress(id,stars){
- let i=idx(id),p=stars;
- if(i<25)for(let j=i+1;j<=24;j++)p+=RANKS[j][2];
- if(i<25)p+=100;
- else p=stars;
- return p;
-}
-function currentDay(){
- if(data.startServerDay==null)return 1;
- return Math.max(1,Math.min(data.days,Math.floor((serverDay(Date.now())-data.startServerDay)/86400000)+1))
-}
-function targetDay(d){return Math.min(data.totalRequired,Math.ceil(data.totalRequired*d/data.days))}
-function hint(){
- let r=rank($("rankSelect").value),i=idx($("rankSelect").value);
- $("startStars").max=i<25?r[2]-1:1000;
- if(i<25)$("starHint").textContent=`${r[1]} membutuhkan ${r[2]}⭐ untuk naik ke divisi berikutnya.`;
- else if(i===25)$("starHint").textContent="Mythic: 0–24⭐.";
- else if(i===26)$("starHint").textContent="Honor: 25–49⭐.";
- else if(i===27)$("starHint").textContent="Glory: 50–99⭐.";
- else $("starHint").textContent="Kamu sudah mencapai Mythical Immortal.";
-}
-$("rankSelect").onchange=hint;hint();
 
-$("startTracker").onclick=()=>{
- const id=$("rankSelect").value,r=rank(id),i=idx(id),s=Math.floor(Number($("startStars").value)),days=Math.floor(Number($("daysInput").value));
- if(!Number.isFinite(s)||s<0){alert("Bintang tidak valid.");return}
- if(i<25&&s>=r[2]){alert(`Untuk ${r[1]}, masukkan 0 sampai ${r[2]-1} bintang.`);return}
- if(!Number.isFinite(days)||days<1){alert("Jumlah hari tidak valid.");return}
- data.started=true;data.rankId=id;data.currentStars=s;data.days=days;data.totalRequired=required(id,s);data.startServerDay=serverDay(Date.now());data.history={};
- save();showApp();
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEY = "MLBB_SMART_TRACKER_V8";
+
+
+let data = {
+
+    started: false,
+
+    initialRank: null,
+
+    initialDivision: null,
+
+    initialStars: 0,
+
+    currentRank: null,
+
+    currentDivision: null,
+
+    currentStars: 0,
+
+    totalEarned: 0,
+
+    totalRequired: 0,
+
+    days: 82,
+
+    startServerDay: null,
+
+    history: {}
+
 };
-function showApp(){$("setup").classList.add("hidden");$("app").classList.remove("hidden");$("starInput").value=data.currentStars;render()}
-function showSetup(){$("app").classList.add("hidden");$("setup").classList.remove("hidden");$("rankSelect").value=data.rankId;$("startStars").value=data.currentStars;$("daysInput").value=data.days;hint()}
 
-function render(){
- if(!data.started)return;
- const now=Date.now(),d=currentDay(),target=targetDay(d),cur=Number(data.currentStars)||0,progress=globalProgress(data.rankId,cur);
- const remain=Math.max(0,data.totalRequired-progress),left=Math.max(0,data.days-d+1),avg=left?remain/left:remain,diff=progress-target;
- $("countdown").textContent=countdown(resetMs(now)-now);
- const z=tz();$("resetLabel").textContent=`Reset berikutnya ${resetLocal()} · ${z.text}`;
- $("current").textContent=cur+"⭐";$("required").textContent=data.totalRequired+"⭐";$("remain").textContent=remain+"⭐";$("days").textContent=left;
- $("dayNumber").textContent=`${d} / ${data.days}`;$("todayTarget").textContent=target+"⭐";$("todayActual").textContent=progress+"⭐";$("difference").textContent=(diff>=0?"+":"")+diff+"⭐";$("avg").textContent=avg.toFixed(2)+"⭐/hari";
- const pct=data.totalRequired?Math.min(100,Math.max(0,progress/data.totalRequired*100)):100;$("bar").style.width=pct+"%";$("progressText").textContent=Math.round(pct)+"% menuju Immortal";
- const st=$("status");st.className="status "+(diff>0?"ahead":diff<0?"behind":"ontime");st.textContent=diff>0?`🟢 Kamu ${diff}⭐ lebih cepat dari target.`:diff<0?`🔴 Kamu ${Math.abs(diff)}⭐ tertinggal dari target.`:"🟡 Kamu tepat di jalur target.";
- $("routeText").textContent=`${rank(data.rankId)[1]} ${cur}⭐ → Mythical Immortal 100⭐`;
- $("tzName").textContent=z.name;$("tzOffset").textContent=z.text;$("localReset").textContent=resetLocal();
- $("buffer").className=diff>=0?"success":"warning";$("buffer").innerHTML=diff>0?`🟢 <strong>Buffer +${diff}⭐</strong><br>Kamu berada di depan jadwal.`:diff<0?`🔴 <strong>Defisit ${Math.abs(diff)}⭐</strong><br>Kebutuhan rata-rata ${avg.toFixed(2)}⭐/hari.`:`🟡 <strong>Tepat di jalur.</strong><br>Kebutuhan rata-rata ${avg.toFixed(2)}⭐/hari.`;
- const key=new Date(serverDay(now)).toISOString().slice(0,10);$("protection").checked=!!(data.history[key]&&data.history[key].protection);renderHistory();
+
+try {
+
+    const saved =
+        localStorage.getItem(STORAGE_KEY);
+
+    if (saved) {
+
+        data =
+            Object.assign(
+                data,
+                JSON.parse(saved)
+            );
+
+    }
+
+} catch (e) {}
+
+
+/* =========================================================
+   ELEMENT HELPER
+========================================================= */
+
+function $(id) {
+
+    return document.getElementById(id);
+
 }
-$("saveStars").onclick=()=>{
- const v=Math.floor(Number($("starInput").value));if(!Number.isFinite(v)||v<0){alert("Bintang tidak valid.");return}
- data.currentStars=v;const k=new Date(serverDay(Date.now())).toISOString().slice(0,10);data.history[k]=data.history[k]||{};data.history[k].stars=v;save();render();$("starInput").value=v;
+
+
+/* =========================================================
+   FIND RANK
+========================================================= */
+
+function getRank(id) {
+
+    return RANKS.find(
+        rank => rank.id === id
+    );
+
+}
+
+
+/* =========================================================
+   SERVER RESET
+========================================================= */
+
+const SERVER_RESET_UTC = 8;
+
+
+function getServerReset(ms) {
+
+    const d = new Date(ms);
+
+    let reset = Date.UTC(
+
+        d.getUTCFullYear(),
+
+        d.getUTCMonth(),
+
+        d.getUTCDate(),
+
+        SERVER_RESET_UTC,
+
+        0,
+
+        0
+
+    );
+
+    if (ms >= reset) {
+
+        reset += 86400000;
+
+    }
+
+    return reset;
+
+}
+
+
+function getServerDay(ms) {
+
+    return getServerReset(ms) - 86400000;
+
+}
+
+
+/* =========================================================
+   TIMEZONE
+========================================================= */
+
+function getTimezone() {
+
+    const name =
+        Intl.DateTimeFormat()
+        .resolvedOptions()
+        .timeZone || "Unknown";
+
+    const offset =
+        -new Date().getTimezoneOffset();
+
+    const sign =
+        offset >= 0 ? "+" : "-";
+
+    const abs =
+        Math.abs(offset);
+
+    const hours =
+        Math.floor(abs / 60);
+
+    const minutes =
+        abs % 60;
+
+    let text =
+        "UTC" + sign + hours;
+
+    if (minutes) {
+
+        text +=
+            ":" +
+            String(minutes)
+            .padStart(2,"0");
+
+    }
+
+    return {
+
+        name,
+        text
+
+    };
+
+}
+
+
+function getLocalResetTime() {
+
+    return new Intl.DateTimeFormat(
+
+        "id-ID",
+
+        {
+
+            hour: "2-digit",
+
+            minute: "2-digit",
+
+            hour12: false
+
+        }
+
+    ).format(
+
+        new Date(
+            getServerReset(Date.now())
+        )
+
+    );
+
+}
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+function formatCountdown(ms) {
+
+    let seconds =
+        Math.max(
+            0,
+            Math.floor(ms / 1000)
+        );
+
+    const hours =
+        Math.floor(seconds / 3600);
+
+    seconds %= 3600;
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    seconds %= 60;
+
+    return [
+
+        hours,
+
+        minutes,
+
+        seconds
+
+    ]
+    .map(
+        x =>
+        String(x).padStart(2,"0")
+    )
+    .join(":");
+
+}
+
+
+/* =========================================================
+   RANK ORDER
+========================================================= */
+
+function rankPosition(rankId, division, stars) {
+
+    let position = 0;
+
+    for (const rank of RANKS) {
+
+        if (rank.id === "mythic") {
+
+            break;
+
+        }
+
+        if (rank.id === rankId) {
+
+            if (rank.divisions) {
+
+                const divIndex =
+                    rank.divisions.indexOf(
+                        division
+                    );
+
+                position +=
+                    divIndex *
+                    rank.starsPerDivision;
+
+                position += stars;
+
+            }
+
+            break;
+
+        }
+
+        if (rank.divisions) {
+
+            position +=
+                rank.divisions.length *
+                rank.starsPerDivision;
+
+        }
+
+    }
+
+    return position;
+
+}
+
+
+/* =========================================================
+   MYTHIC CONTINUOUS POSITION
+========================================================= */
+
+function getMythicGlobal(rankId, stars) {
+
+    if (rankId === "mythic") {
+
+        return stars;
+
+    }
+
+    if (rankId === "honor") {
+
+        return stars;
+
+    }
+
+    if (rankId === "glory") {
+
+        return stars;
+
+    }
+
+    if (rankId === "immortal") {
+
+        return stars;
+
+    }
+
+    return 0;
+
+}
+
+
+/* =========================================================
+   CONVERT NORMAL RANK TO NEXT POSITION
+========================================================= */
+
+function advanceNormalRank(rankId, division, stars, amount) {
+
+    let rankIndex =
+        RANKS.findIndex(
+            r => r.id === rankId
+        );
+
+    let rank =
+        RANKS[rankIndex];
+
+    let divIndex =
+        rank.divisions.indexOf(
+            division
+        );
+
+    stars += amount;
+
+    while (
+
+        rankIndex < 6 &&
+        stars >= rank.starsPerDivision
+
+    ) {
+
+        stars -=
+            rank.starsPerDivision;
+
+        divIndex++;
+
+        if (
+            divIndex >=
+            rank.divisions.length
+        ) {
+
+            rankIndex++;
+
+            rank =
+                RANKS[rankIndex];
+
+            if (
+                rank.id === "mythic"
+            ) {
+
+                return {
+
+                    rankId: "mythic",
+
+                    division: null,
+
+                    stars
+
+                };
+
+            }
+
+            divIndex = 0;
+
+        }
+
+    }
+
+    return {
+
+        rankId: rank.id,
+
+        division:
+            rank.divisions[divIndex],
+
+        stars
+
+    };
+
+}
+
+
+/* =========================================================
+   ADVANCE ANY POSITION
+========================================================= */
+
+function advancePosition(amount) {
+
+    if (amount <= 0) {
+
+        return;
+
+    }
+
+    /*
+       NORMAL RANK
+    */
+
+    if (
+        ["warrior",
+        "elite",
+        "master",
+        "grandmaster",
+        "epic",
+        "legend"]
+        .includes(
+            data.currentRank
+        )
+    ) {
+
+        const result =
+            advanceNormalRank(
+
+                data.currentRank,
+
+                data.currentDivision,
+
+                data.currentStars,
+
+                amount
+
+            );
+
+        data.currentRank =
+            result.rankId;
+
+        data.currentDivision =
+            result.division;
+
+        data.currentStars =
+            result.stars;
+
+        return;
+
+    }
+
+
+    /*
+       MYTHIC → HONOR
+       HONOR → GLORY
+       GLORY → IMMORTAL
+    */
+
+    data.currentStars += amount;
+
+    if (
+        data.currentRank === "mythic" &&
+        data.currentStars >= 25
+    ) {
+
+        data.currentRank = "honor";
+
+    }
+
+    if (
+        data.currentRank === "honor" &&
+        data.currentStars >= 50
+    ) {
+
+        data.currentRank = "glory";
+
+    }
+
+    if (
+        data.currentRank === "glory" &&
+        data.currentStars >= 100
+    ) {
+
+        data.currentRank = "immortal";
+
+    }
+
+}
+
+
+/* =========================================================
+   SUBTRACT POSITION
+========================================================= */
+
+function subtractPosition(amount) {
+
+    if (amount <= 0) {
+
+        return;
+
+    }
+
+    data.totalEarned =
+        Math.max(
+            0,
+            data.totalEarned - amount
+        );
+
+
+    /*
+       Untuk koreksi kecil,
+       kita hitung ulang posisi dari
+       posisi awal + totalEarned.
+    */
+
+    restoreFromInitial();
+
+}
+
+
+/* =========================================================
+   RESTORE POSITION
+========================================================= */
+
+function restoreFromInitial() {
+
+    data.currentRank =
+        data.initialRank;
+
+    data.currentDivision =
+        data.initialDivision;
+
+    data.currentStars =
+        data.initialStars;
+
+
+    let amount =
+        data.totalEarned;
+
+
+    if (
+        ["warrior",
+        "elite",
+        "master",
+        "grandmaster",
+        "epic",
+        "legend"]
+        .includes(
+            data.currentRank
+        )
+    ) {
+
+        const result =
+            advanceNormalRank(
+
+                data.currentRank,
+
+                data.currentDivision,
+
+                data.currentStars,
+
+                amount
+
+            );
+
+        data.currentRank =
+            result.rankId;
+
+        data.currentDivision =
+            result.division;
+
+        data.currentStars =
+            result.stars;
+
+        return;
+
+    }
+
+
+    data.currentStars =
+        data.initialStars +
+        amount;
+
+
+    if (
+        data.currentRank === "mythic" &&
+        data.currentStars >= 25
+    ) {
+
+        data.currentRank =
+            "honor";
+
+    }
+
+    if (
+        data.currentRank === "honor" &&
+        data.currentStars >= 50
+    ) {
+
+        data.currentRank =
+            "glory";
+
+    }
+
+    if (
+        data.currentRank === "glory" &&
+        data.currentStars >= 100
+    ) {
+
+        data.currentRank =
+            "immortal";
+
+    }
+
+}
+
+
+/* =========================================================
+   CALCULATE REQUIRED FROM INITIAL
+========================================================= */
+
+function calculateRequired() {
+
+    let total = 0;
+
+    const startRank =
+        getRank(
+            data.initialRank
+        );
+
+    if (
+        data.initialRank === "immortal"
+    ) {
+
+        return 0;
+
+    }
+
+
+    if (
+        startRank.divisions
+    ) {
+
+        const divIndex =
+            startRank.divisions.indexOf(
+                data.initialDivision
+            );
+
+        total +=
+            startRank.starsPerDivision -
+            data.initialStars;
+
+
+        total +=
+            (
+                startRank.divisions.length -
+                divIndex -
+                1
+            ) *
+            startRank.starsPerDivision;
+
+
+        const startIndex =
+            RANKS.findIndex(
+                r =>
+                r.id === data.initialRank
+            );
+
+
+        for (
+            let i = startIndex + 1;
+            i <= 5;
+            i++
+        ) {
+
+            total +=
+                RANKS[i].divisions.length *
+                RANKS[i].starsPerDivision;
+
+        }
+
+
+        /*
+           Mythic 0 → Immortal 100
+        */
+
+        total += 100;
+
+        return total;
+
+    }
+
+
+    /*
+       Mythic / Honor / Glory
+    */
+
+    return Math.max(
+        0,
+        100 -
+        data.initialStars
+    );
+
+}
+
+
+/* =========================================================
+   SETUP RANK SELECT
+========================================================= */
+
+function populateRanks() {
+
+    $("rankSelect").innerHTML = "";
+
+    RANKS.forEach(
+        rank => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                rank.id;
+
+            option.textContent =
+                rank.name;
+
+            $("rankSelect")
+                .appendChild(
+                    option
+                );
+
+        }
+    );
+
+}
+
+
+function populateDivisions() {
+
+    const rank =
+        getRank(
+            $("rankSelect").value
+        );
+
+
+    $("divisionSelect")
+        .innerHTML = "";
+
+
+    if (
+        !rank.divisions
+    ) {
+
+        $("divisionSelect")
+            .disabled = true;
+
+        $("divisionSelect")
+            .innerHTML =
+            "<option value='none'>Tidak ada divisi</option>";
+
+        $("initialStars").max =
+            rank.id === "mythic"
+            ? 24
+            : rank.id === "honor"
+            ? 49
+            : rank.id === "glory"
+            ? 99
+            : 1000;
+
+        updateStarInfo();
+
+        return;
+
+    }
+
+
+    $("divisionSelect")
+        .disabled = false;
+
+
+    rank.divisions.forEach(
+        division => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                division;
+
+            option.textContent =
+                rank.name +
+                " " +
+                division;
+
+            $("divisionSelect")
+                .appendChild(
+                    option
+                );
+
+        }
+    );
+
+
+    $("initialStars").max =
+        rank.starsPerDivision - 1;
+
+
+    updateStarInfo();
+
+}
+
+
+function updateStarInfo() {
+
+    const rank =
+        getRank(
+            $("rankSelect").value
+        );
+
+
+    if (!rank.divisions) {
+
+        if (
+            rank.id === "mythic"
+        ) {
+
+            $("starInfo").textContent =
+                "Mythic: 0–24⭐. Pada 25⭐ otomatis menjadi Mythical Honor.";
+
+        }
+
+        else if (
+            rank.id === "honor"
+        ) {
+
+            $("starInfo").textContent =
+                "Mythical Honor: 25–49⭐. Pada 50⭐ otomatis menjadi Mythical Glory.";
+
+        }
+
+        else if (
+            rank.id === "glory"
+        ) {
+
+            $("starInfo").textContent =
+                "Mythical Glory: 50–99⭐. Pada 100⭐ otomatis menjadi Mythical Immortal.";
+
+        }
+
+        else {
+
+            $("starInfo").textContent =
+                "Mythical Immortal: 100⭐+.";
+
+        }
+
+        return;
+
+    }
+
+
+    $("starInfo").textContent =
+        rank.name +
+        " " +
+        $("divisionSelect").value +
+        " memiliki " +
+        rank.starsPerDivision +
+        "⭐ untuk naik ke divisi berikutnya.";
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+$("rankSelect").onchange =
+    populateDivisions;
+
+$("divisionSelect").onchange =
+    updateStarInfo;
+
+
+$("startButton").onclick = function() {
+
+    const rankId =
+        $("rankSelect").value;
+
+    const rank =
+        getRank(rankId);
+
+    const stars =
+        Math.floor(
+            Number(
+                $("initialStars").value
+            )
+        );
+
+    const days =
+        Math.floor(
+            Number(
+                $("daysInput").value
+            )
+        );
+
+
+    if (
+        !Number.isFinite(stars) ||
+        stars < 0
+    ) {
+
+        alert(
+            "Masukkan bintang yang valid."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        rank.divisions &&
+        stars >= rank.starsPerDivision
+    ) {
+
+        alert(
+            "Bintang melebihi batas divisi."
+        );
+
+        return;
+
+    }
+
+
+    data.started =
+        true;
+
+    data.initialRank =
+        rankId;
+
+    data.initialDivision =
+        rank.divisions
+        ? $("divisionSelect").value
+        : null;
+
+    data.initialStars =
+        stars;
+
+    data.currentRank =
+        data.initialRank;
+
+    data.currentDivision =
+        data.initialDivision;
+
+    data.currentStars =
+        stars;
+
+    data.totalEarned =
+        0;
+
+    data.days =
+        days;
+
+    data.totalRequired =
+        calculateRequired();
+
+    data.startServerDay =
+        getServerDay(
+            Date.now()
+        );
+
+    data.history = {};
+
+
+    save();
+
+    showApp();
+
 };
-$("protection").onchange=e=>{const k=new Date(serverDay(Date.now())).toISOString().slice(0,10);data.history[k]=data.history[k]||{stars:data.currentStars};data.history[k].protection=e.target.checked;save()};
-function renderHistory(){
- const ks=Object.keys(data.history||{}).sort().reverse();$("history").innerHTML=ks.length?ks.map(k=>`<div class="history"><strong>${k}</strong><br><span class="small">Bintang: ${data.history[k].stars||0}⭐${data.history[k].protection?" · 🛡️ Protection digunakan":""}</span></div>`).join(""):"Belum ada data.";
+
+
+/* =========================================================
+   ADD / SUBTRACT CONTROL
+========================================================= */
+
+let addAmount = 1;
+
+
+function updateAmount() {
+
+    $("addAmount")
+        .textContent =
+        addAmount;
+
 }
-$("changeSetup").onclick=showSetup;
-$("resetAll").onclick=()=>{if(confirm("Hapus seluruh progres tracker?")){localStorage.removeItem(KEY);location.reload()}};
-if(data.started)showApp();else $("setup").classList.remove("hidden");
-setInterval(render,1000);
+
+
+$("plusStar").onclick =
+function() {
+
+    addAmount++;
+
+    updateAmount();
+
+};
+
+
+$("minusStar").onclick =
+function() {
+
+    addAmount =
+        Math.max(
+            1,
+            addAmount - 1
+        );
+
+    updateAmount();
+
+};
+
+
+/* =========================================================
+   ADD STARS
+========================================================= */
+
+$("addStars").onclick =
+function() {
+
+    const amount =
+        addAmount;
+
+
+    if (
+        data.currentRank ===
+        "immortal"
+    ) {
+
+        alert(
+            "Kamu sudah mencapai Mythical Immortal."
+        );
+
+        return;
+
+    }
+
+
+    data.totalEarned +=
+        amount;
+
+
+    advancePosition(
+        amount
+    );
+
+
+    save();
+
+    recordHistory(
+        amount,
+        "add"
+    );
+
+    render();
+
+};
+
+
+/* =========================================================
+   SUBTRACT STARS
+========================================================= */
+
+$("subtractStars").onclick =
+function() {
+
+    if (
+        data.totalEarned <= 0
+    ) {
+
+        alert(
+            "Belum ada bintang yang bisa dikurangi."
+        );
+
+        return;
+
+    }
+
+
+    const amount =
+        Math.min(
+            addAmount,
+            data.totalEarned
+        );
+
+
+    subtractPosition(
+        amount
+    );
+
+
+    save();
+
+    recordHistory(
+        amount,
+        "subtract"
+    );
+
+    render();
+
+};
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function recordHistory(
+    amount,
+    type
+) {
+
+    const key =
+        new Date(
+            getServerDay(
+                Date.now()
+            )
+        )
+        .toISOString()
+        .slice(0,10);
+
+
+    if (
+        !data.history[key]
+    ) {
+
+        data.history[key] = {
+
+            earned: 0,
+
+            protection: false
+
+        };
+
+    }
+
+
+    if (
+        type === "add"
+    ) {
+
+        data.history[key]
+            .earned += amount;
+
+    }
+
+    else {
+
+        data.history[key]
+            .earned -= amount;
+
+    }
+
+
+    save();
+
+}
+
+
+/* =========================================================
+   PROTECTION
+========================================================= */
+
+$("protection").onchange =
+function() {
+
+    const key =
+        new Date(
+            getServerDay(
+                Date.now()
+            )
+        )
+        .toISOString()
+        .slice(0,10);
+
+
+    if (
+        !data.history[key]
+    ) {
+
+        data.history[key] = {
+
+            earned: 0,
+
+            protection: false
+
+        };
+
+    }
+
+
+    data.history[key]
+        .protection =
+        this.checked;
+
+
+    save();
+
+};
+
+
+/* =========================================================
+   CURRENT DAY
+========================================================= */
+
+function getCurrentDay() {
+
+    if (
+        data.startServerDay === null
+    ) {
+
+        return 1;
+
+    }
+
+
+    return Math.max(
+
+        1,
+
+        Math.min(
+
+            data.days,
+
+            Math.floor(
+
+                (
+                    getServerDay(
+                        Date.now()
+                    ) -
+                    data.startServerDay
+                )
+                /
+                86400000
+
+            )
+            + 1
+
+        )
+
+    );
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render() {
+
+    if (
+        !data.started
+    ) {
+
+        return;
+
+    }
+
+
+    const now =
+        Date.now();
+
+
+    const currentDay =
+        getCurrentDay();
+
+
+    const target =
+        Math.min(
+
+            data.totalRequired,
+
+            Math.ceil(
+
+                data.totalRequired *
+                currentDay /
+                data.days
+
+            )
+
+        );
+
+
+    const actual =
+        data.totalEarned;
+
+
+    const difference =
+        actual - target;
+
+
+    const remaining =
+        Math.max(
+
+            0,
+
+            data.totalRequired -
+            actual
+
+        );
+
+
+    const daysLeft =
+        Math.max(
+
+            0,
+
+            data.days -
+            currentDay +
+            1
+
+        );
+
+
+    const average =
+        daysLeft > 0
+        ? remaining / daysLeft
+        : remaining;
+
+
+    /* Countdown */
+
+    $("countdown")
+        .textContent =
+        formatCountdown(
+
+            getServerReset(now) -
+            now
+
+        );
+
+
+    const tz =
+        getTimezone();
+
+
+    $("resetInfo")
+        .textContent =
+
+        "Reset berikutnya " +
+        getLocalResetTime() +
+        " · " +
+        tz.text;
+
+
+    /* Position */
+
+    const rank =
+        getRank(
+            data.currentRank
+        );
+
+
+    let rankName =
+        rank.name;
+
+
+    if (
+        rank.divisions
+    ) {
+
+        rankName +=
+            " " +
+            data.currentDivision;
+
+        $("currentStars")
+            .textContent =
+
+            data.currentStars +
+            "⭐ / " +
+            rank.starsPerDivision +
+            "⭐";
+
+
+        const divIndex =
+            rank.divisions.indexOf(
+                data.currentDivision
+            );
+
+
+        if (
+            divIndex <
+            rank.divisions.length - 1
+        ) {
+
+            $("nextRank")
+                .textContent =
+
+                "Menuju " +
+                rank.name +
+                " " +
+                rank.divisions[
+                    divIndex + 1
+                ] +
+                " · " +
+                (
+                    rank.starsPerDivision -
+                    data.currentStars
+                ) +
+                "⭐ lagi";
+
+        }
+
+        else {
+
+            const nextRankIndex =
+                RANKS.findIndex(
+                    r =>
+                    r.id ===
+                    data.currentRank
+                ) + 1;
+
+
+            $("nextRank")
+                .textContent =
+
+                "Menuju " +
+                RANKS[nextRankIndex]
+                .name +
+                " · " +
+                (
+                    rank.starsPerDivision -
+                    data.currentStars
+                ) +
+                "⭐ lagi";
+
+        }
+
+    }
+
+    else {
+
+        $("currentStars")
+            .textContent =
+
+            data.currentStars +
+            "⭐";
+
+
+        if (
+            data.currentRank ===
+            "mythic"
+        ) {
+
+            $("nextRank")
+                .textContent =
+                "Menuju Mythical Honor · " +
+                (
+                    25 -
+                    data.currentStars
+                ) +
+                "⭐ lagi";
+
+        }
+
+        else if (
+            data.currentRank ===
+            "honor"
+        ) {
+
+            $("nextRank")
+                .textContent =
+                "Menuju Mythical Glory · " +
+                (
+                    50 -
+                    data.currentStars
+                ) +
+                "⭐ lagi";
+
+        }
+
+        else if (
+            data.currentRank ===
+            "glory"
+        ) {
+
+            $("nextRank")
+                .textContent =
+                "Menuju Mythical Immortal · " +
+                (
+                    100 -
+                    data.currentStars
+                ) +
+                "⭐ lagi";
+
+        }
+
+        else {
+
+            $("nextRank")
+                .textContent =
+                "🏆 Target tercapai!";
+
+        }
+
+    }
+
+
+    $("currentRank")
+        .textContent =
+        rankName;
+
+
+    /* Stats */
+
+    $("progressStars")
+        .textContent =
+        actual +
+        "⭐";
+
+
+    $("remainingStars")
+        .textContent =
+        remaining +
+        "⭐";
+
+
+    $("requiredStars")
+        .textContent =
+        data.totalRequired +
+        "⭐";
+
+
+    $("daysLeft")
+        .textContent =
+        daysLeft;
+
+
+    const percentage =
+
+        data.totalRequired > 0
+
+        ? Math.min(
+
+            100,
+
+            Math.max(
+
+                0,
+
+                actual /
+                data.totalRequired *
+                100
+
+            )
+
+        )
+
+        : 100;
+
+
+    $("progressBar")
+        .style.width =
+        percentage +
+        "%";
+
+
+    $("progressText")
+        .textContent =
+        Math.round(
+            percentage
+        ) +
+        "% menuju Mythical Immortal";
+
+
+    /* Daily */
+
+    $("dayNumber")
+        .textContent =
+        currentDay +
+        " / " +
+        data.days;
+
+
+    $("targetToday")
+        .textContent =
+        target +
+        "⭐";
+
+
+    $("actualToday")
+        .textContent =
+        actual +
+        "⭐";
+
+
+    $("difference")
+        .textContent =
+
+        (
+            difference >= 0
+            ? "+"
+            : ""
+        ) +
+        difference +
+        "⭐";
+
+
+    $("average")
+        .textContent =
+        average.toFixed(2) +
+        "⭐ / hari";
+
+
+    /* Status */
+
+    const status =
+        $("status");
+
+
+    if (
+        difference > 0
+    ) {
+
+        status.className =
+            "status ahead";
+
+        status.textContent =
+            "🟢 Kamu " +
+            difference +
+            "⭐ lebih cepat dari target.";
+
+    }
+
+    else if (
+        difference < 0
+    ) {
+
+        status.className =
+            "status behind";
+
+        status.textContent =
+            "🔴 Kamu " +
+            Math.abs(
+                difference
+            ) +
+            "⭐ tertinggal dari target.";
+
+    }
+
+    else {
+
+        status.className =
+            "status ontime";
+
+        status.textContent =
+            "🟡 Kamu tepat di jalur target.";
+
+    }
+
+
+    /* Buffer */
+
+    if (
+        difference >= 0
+    ) {
+
+        $("buffer").className =
+            "success";
+
+        $("buffer").innerHTML =
+
+            "🟢 <strong>Buffer +" +
+            difference +
+            "⭐</strong><br>" +
+
+            "Kamu berada di depan jadwal.";
+
+    }
+
+    else {
+
+        $("buffer").className =
+            "warning";
+
+        $("buffer").innerHTML =
+
+            "🔴 <strong>Defisit " +
+            Math.abs(
+                difference
+            ) +
+            "⭐</strong><br>" +
+
+            "Kebutuhan rata-rata sekarang " +
+            average.toFixed(2) +
+            "⭐ / hari.";
+
+    }
+
+
+    /* Server */
+
+    $("timezone")
+        .textContent =
+        tz.name;
+
+
+    $("utcOffset")
+        .textContent =
+        tz.text;
+
+
+    $("localReset")
+        .textContent =
+        getLocalResetTime();
+
+
+    /* Protection */
+
+    const key =
+        new Date(
+            getServerDay(
+                Date.now()
+            )
+        )
+        .toISOString()
+        .slice(0,10);
+
+
+    $("protection")
+        .checked =
+        !!(
+            data.history[key] &&
+            data.history[key]
+                .protection
+        );
+
+
+    renderHistory();
+
+}
+
+
+/* =========================================================
+   HISTORY DISPLAY
+========================================================= */
+
+function renderHistory() {
+
+    const keys =
+        Object.keys(
+            data.history || {}
+        )
+        .sort()
+        .reverse();
+
+
+    if (
+        keys.length === 0
+    ) {
+
+        $("history").textContent =
+            "Belum ada data.";
+
+        return;
+
+    }
+
+
+    $("history").innerHTML =
+
+        keys
+        .map(
+            key => {
+
+                const item =
+                    data.history[key];
+
+
+                return `
+
+                <div class="history-item">
+
+                    <strong>
+                        ${key}
+                    </strong>
+
+                    <br>
+
+                    <span class="small">
+
+                        Perubahan:
+                        ${item.earned >= 0 ? "+" : ""}
+                        ${item.earned || 0}⭐
+
+                        ${
+                            item.protection
+                            ? " · 🛡️ Protection digunakan"
+                            : ""
+                        }
+
+                    </span>
+
+                </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =========================================================
+   SHOW APP
+========================================================= */
+
+function showApp() {
+
+    $("setup")
+        .classList
+        .add("hidden");
+
+
+    $("app")
+        .classList
+        .remove("hidden");
+
+
+    render();
+
+}
+
+
+/* =========================================================
+   CHANGE SETUP
+========================================================= */
+
+$("changeSetup").onclick =
+function() {
+
+    $("app")
+        .classList
+        .add("hidden");
+
+
+    $("setup")
+        .classList
+        .remove("hidden");
+
+
+    $("rankSelect")
+        .value =
+        data.initialRank;
+
+
+    populateDivisions();
+
+
+    $("divisionSelect")
+        .value =
+        data.initialDivision ||
+        "none";
+
+
+    $("initialStars")
+        .value =
+        data.initialStars;
+
+
+    $("daysInput")
+        .value =
+        data.days;
+
+};
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+$("resetAll").onclick =
+function() {
+
+    if (
+        confirm(
+            "Hapus seluruh progres tracker?"
+        )
+    ) {
+
+        localStorage
+            .removeItem(
+                STORAGE_KEY
+            );
+
+        location.reload();
+
+    }
+
+};
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+populateRanks();
+
+populateDivisions();
+
+
+if (
+    data.started
+) {
+
+    showApp();
+
+}
+
+
+setInterval(
+    render,
+    1000
+);
+
 </script>
+
 </body>
 </html>
