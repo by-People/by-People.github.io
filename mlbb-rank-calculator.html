@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>MLBB Smart Push Tracker</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f1f5f9;color:#0f172a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:#111827;color:#fff;padding:20px 16px}
+.container{width:100%;max-width:760px;margin:auto}
+h1{margin:0;font-size:22px}.subtitle{margin-top:5px;font-size:12px;opacity:.75}
+main{padding:14px}.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:13px;box-shadow:0 3px 12px rgba(0,0,0,.06)}
+h2{margin:0 0 12px;font-size:17px}.small{font-size:12px;color:#64748b}
+label{display:block;margin-top:12px;margin-bottom:6px;font-size:13px;font-weight:700}
+select,input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:11px;font-size:16px;background:#fff}
+button{border:0;border-radius:11px;padding:12px 15px;font-size:15px;font-weight:800;cursor:pointer}
+.primary{width:100%;margin-top:12px;background:#111827;color:#fff}.secondary{width:100%;margin-top:8px;background:#e2e8f0;color:#0f172a}
+.hidden{display:none}.position{text-align:center;padding:18px;background:#f8fafc;border-radius:14px}
+.position .rank{font-size:27px;font-weight:900}.position .stars{margin-top:5px;font-size:20px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:12px;border-radius:12px;background:#f8fafc;text-align:center}
+.stat-number{font-size:21px;font-weight:900}.stat-label{margin-top:3px;font-size:10px;color:#64748b}
+.progress{margin-top:13px;height:12px;border-radius:20px;overflow:hidden;background:#e2e8f0}.progress-bar{width:0;height:100%;background:#111827;transition:.25s}
+.progress-text{text-align:center;margin-top:5px;font-size:11px;color:#64748b}
+.star-control{display:flex;align-items:center;justify-content:center;gap:12px;margin:15px 0}
+.star-button{width:55px;height:55px;padding:0;border-radius:50%;font-size:28px;background:#e2e8f0}
+.star-number{width:90px;text-align:center;font-size:27px;font-weight:900}
+.add,.subtract{width:100%}.add{background:#166534;color:#fff}.subtract{margin-top:8px;background:#991b1b;color:#fff}
+.status{padding:13px;border-radius:12px;text-align:center;font-weight:800}.ahead{background:#dcfce7;color:#166534}
+.behind{background:#fee2e2;color:#991b1b}.ontime{background:#fef3c7;color:#92400e}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e2e8f0}.row:last-child{border-bottom:0}
+.countdown{text-align:center;font-size:30px;font-weight:900}
+.protection{display:flex;align-items:center;gap:10px;padding:12px;background:#f8fafc;border-radius:11px}
+.protection input{width:23px;height:23px}.history-item{padding:10px 0;border-bottom:1px solid #e2e8f0;font-size:13px}
+.success{padding:12px;border-radius:11px;background:#dcfce7;color:#166534;font-size:13px}
+.warning{padding:12px;border-radius:11px;background:#fff7ed;color:#9a3412;font-size:13px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="container">
+<h1>🏆 MLBB Smart Push Tracker</h1>
+<div class="subtitle">Tracker bintang, rank, target harian, dan progres menuju Mythical Immortal.</div>
+</div></header>
+
+<main class="container">
+
+<div id="setup">
+<div class="card">
+<h2>🚀 Pengaturan Awal</h2>
+<div class="small">Pilih posisi rank kamu sekarang. Setelah itu cukup masukkan jumlah bintang yang diperoleh setiap bermain.</div>
+
+<label>Rank</label><select id="rankSelect"></select>
+<label>Divisi</label><select id="divisionSelect"></select>
+<label>Bintang saat ini</label><input id="initialStars" type="number" min="0" value="0" inputmode="numeric">
+<div id="starInfo" class="small"></div>
+<label>Sisa hari menuju target</label><input id="daysInput" type="number" min="1" max="365" value="82" inputmode="numeric">
+<button class="primary" id="startButton">🚀 Mulai Tracker</button>
+</div>
+</div>
+
+<div id="app" class="hidden">
+
+<div class="card">
+<div class="countdown" id="countdown">00:00:00</div>
+<div class="small" style="text-align:center" id="resetInfo">Reset berikutnya</div>
+</div>
+
+<div class="card">
+<h2>📍 Posisi Sekarang</h2>
+<div class="position">
+<div class="rank" id="currentRank">Epic V</div>
+<div class="stars" id="currentStars">0⭐ / 5⭐</div>
+<div class="small" id="nextRank">Menuju Epic IV</div>
+</div>
+</div>
+
+<div class="card"><div id="status" class="status ontime">Tepat di jalur target.</div></div>
+
+<div class="card">
+<h2>📊 Progress Menuju Immortal</h2>
+<div class="grid">
+<div class="stat"><div class="stat-number" id="progressStars">0⭐</div><div class="stat-label">DIPEROLEH SEJAK AWAL</div></div>
+<div class="stat"><div class="stat-number" id="remainingStars">0⭐</div><div class="stat-label">SISA KE IMMORTAL</div></div>
+<div class="stat"><div class="stat-number" id="requiredStars">0⭐</div><div class="stat-label">TOTAL KEBUTUHAN</div></div>
+<div class="stat"><div class="stat-number" id="daysLeft">0</div><div class="stat-label">HARI TERSISA</div></div>
+</div>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-text" id="progressText">0%</div>
+</div>
+
+<div class="card">
+<h2>⭐ Update Bintang</h2>
+<div class="small">Masukkan jumlah bintang yang kamu peroleh. Tombol + dan − hanya mengatur jumlah input.</div>
+<div class="star-control">
+<button class="star-button" id="minusStar">−</button>
+<div class="star-number" id="addAmount">1</div>
+<button class="star-button" id="plusStar">+</button>
+</div>
+<button class="add" id="addStars">＋ Tambahkan Bintang</button>
+<button class="subtract" id="subtractStars">－ Kurangi Bintang</button>
+</div>
+
+<div class="card">
+<h2>📅 Target Hari Ini</h2>
+<div class="row"><span>Hari MLBB</span><strong id="dayNumber">1 / 82</strong></div>
+<div class="row"><span>Target sampai hari ini</span><strong id="targetToday">0⭐</strong></div>
+<div class="row"><span>Progress aktual</span><strong id="actualToday">0⭐</strong></div>
+<div class="row"><span>Selisih</span><strong id="difference">0⭐</strong></div>
+<div class="row"><span>Kebutuhan rata-rata</span><strong id="average">0.00⭐ / hari</strong></div>
+</div>
+
+<div class="card">
+<h2>📈 Buffer</h2><div id="buffer" class="warning">Memuat...</div>
+</div>
+
+<div class="card">
+<h2>🛡️ Roam Star Protection</h2>
+<div class="protection">
+<input type="checkbox" id="protection">
+<div><strong>Protection hari ini sudah digunakan</strong><div class="small">Status otomatis mengikuti hari server.</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2>🌐 Server Reset</h2>
+<div class="row"><span>Timezone perangkat</span><strong id="timezone">-</strong></div>
+<div class="row"><span>UTC</span><strong id="utcOffset">-</strong></div>
+<div class="row"><span>Reset lokal</span><strong id="localReset">-</strong></div>
+<div class="small" style="margin-top:8px">Reset harian MLBB mengikuti 08:00 UTC. Di WITA = 16:00, WIB = 15:00, WIT = 17:00. Hari tracker berkurang setelah melewati waktu reset tersebut.</div>
+</div>
+
+<div class="card">
+<h2>📚 Riwayat</h2><div id="history">Belum ada data.</div>
+</div>
+
+<div class="card">
+<button class="secondary" id="changeSetup">⚙️ Ubah Pengaturan</button>
+<button class="secondary" id="resetAll">🔄 Reset Semua Data</button>
+</div>
+
+</div>
+</main>
+
+<script>
+const RANKS=[
+{id:"warrior",name:"Warrior",divisions:["III","II","I"],starsPerDivision:3},
+{id:"elite",name:"Elite",divisions:["III","II","I"],starsPerDivision:4},
+{id:"master",name:"Master",divisions:["IV","III","II","I"],starsPerDivision:4},
+{id:"grandmaster",name:"Grandmaster",divisions:["V","IV","III","II","I"],starsPerDivision:5},
+{id:"epic",name:"Epic",divisions:["V","IV","III","II","I"],starsPerDivision:5},
+{id:"legend",name:"Legend",divisions:["V","IV","III","II","I"],starsPerDivision:5},
+{id:"mythic",name:"Mythic",divisions:null,starsPerDivision:null},
+{id:"honor",name:"Mythical Honor",divisions:null,starsPerDivision:null},
+{id:"glory",name:"Mythical Glory",divisions:null,starsPerDivision:null},
+{id:"immortal",name:"Mythical Immortal",divisions:null,starsPerDivision:null}
+];
+
+const KEY="MLBB_SMART_TRACKER_V9";
+let data={
+started:false,initialRank:null,initialDivision:null,initialStars:0,
+currentRank:null,currentDivision:null,currentStars:0,totalEarned:0,
+totalRequired:0,days:82,startServerDay:null,history:{}
+};
+
+try{const s=localStorage.getItem(KEY);if(s)data=Object.assign(data,JSON.parse(s));}catch(e){}
+const $=id=>document.getElementById(id);
+const getRank=id=>RANKS.find(r=>r.id===id);
+const NORMAL=["warrior","elite","master","grandmaster","epic","legend"];
+
+function save(){localStorage.setItem(KEY,JSON.stringify(data));}
+
+const RESET_HOUR_UTC=8;
+function getServerReset(ms){
+ const d=new Date(ms);
+ let r=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),RESET_HOUR_UTC,0,0);
+ if(ms>=r)r+=86400000;
+ return r;
+}
+function getServerDay(ms){return getServerReset(ms)-86400000;}
+
+function timezoneInfo(){
+ const name=Intl.DateTimeFormat().resolvedOptions().timeZone||"Unknown";
+ const off=-new Date().getTimezoneOffset(), sign=off>=0?"+":"-", abs=Math.abs(off);
+ return {name,text:"UTC"+sign+Math.floor(abs/60)+(abs%60?":"+String(abs%60).padStart(2,"0"):"")};
+}
+function localReset(){
+ return new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(getServerReset(Date.now())));
+}
+function countdown(ms){
+ let s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600);s%=3600;
+ let m=Math.floor(s/60);s%=60;
+ return [h,m,s].map(x=>String(x).padStart(2,"0")).join(":");
+}
+
+function positionToAbsolute(rankId,division,stars){
+ if(rankId==="immortal")return Infinity;
+ let total=0;
+ for(const r of RANKS){
+  if(r.id==="mythic")break;
+  if(r.id===rankId){
+   const di=r.divisions.indexOf(division);
+   return total+di*r.starsPerDivision+stars;
+  }
+  total+=r.divisions.length*r.starsPerDivision;
+ }
+ return total;
+}
+
+const MYTHIC_BASE=RANKS.slice(0,6).reduce((a,r)=>a+r.divisions.length*r.starsPerDivision,0);
+
+function absoluteToPosition(abs){
+ if(abs<MYTHIC_BASE){
+  let n=abs;
+  for(const r of RANKS.slice(0,6)){
+   const size=r.divisions.length*r.starsPerDivision;
+   if(n<size){
+    const di=Math.floor(n/r.starsPerDivision);
+    return {rankId:r.id,division:r.divisions[di],stars:n%r.starsPerDivision};
+   }
+   n-=size;
+  }
+ }
+ const mythicStars=abs-MYTHIC_BASE;
+ if(mythicStars<25)return {rankId:"mythic",division:null,stars:mythicStars};
+ if(mythicStars<50)return {rankId:"honor",division:null,stars:mythicStars};
+ if(mythicStars<100)return {rankId:"glory",division:null,stars:mythicStars};
+ return {rankId:"immortal",division:null,stars:mythicStars};
+}
+
+function initialAbsolute(){return positionToAbsolute(data.initialRank,data.initialDivision,data.initialStars);}
+function currentAbsolute(){return data.currentRank==="immortal"?Infinity:positionToAbsolute(data.currentRank,data.currentDivision,data.currentStars);}
+
+function calculateRequired(){
+ const start=initialAbsolute();
+ if(!Number.isFinite(start))return 0;
+ return Math.max(0,MYTHIC_BASE+100-start);
+}
+
+function restoreFromEarned(){
+ const abs=initialAbsolute()+data.totalEarned;
+ const p=absoluteToPosition(abs);
+ data.currentRank=p.rankId;data.currentDivision=p.division;data.currentStars=p.stars;
+}
+
+function populateRanks(){
+ $("rankSelect").innerHTML="";
+ RANKS.forEach(r=>{
+  const o=document.createElement("option");o.value=r.id;o.textContent=r.name;$("rankSelect").appendChild(o);
+ });
+}
+function populateDivisions(){
+ const r=getRank($("rankSelect").value);
+ $("divisionSelect").innerHTML="";
+ if(!r.divisions){
+  $("divisionSelect").disabled=true;
+  $("divisionSelect").innerHTML="<option value='none'>Tidak ada divisi</option>";
+  $("initialStars").min=0;
+  $("initialStars").max=r.id==="mythic"?24:r.id==="honor"?49:r.id==="glory"?99:1000;
+ }else{
+  $("divisionSelect").disabled=false;
+  r.divisions.forEach(d=>{
+   const o=document.createElement("option");o.value=d;o.textContent=r.name+" "+d;$("divisionSelect").appendChild(o);
+  });
+  $("initialStars").max=r.starsPerDivision-1;
+ }
+ updateStarInfo();
+}
+function updateStarInfo(){
+ const r=getRank($("rankSelect").value);
+ if(!r.divisions){
+  const t={mythic:"Mythic: 0–24⭐. Pada 25⭐ → Mythical Honor.",honor:"Mythical Honor: 25–49⭐. Pada 50⭐ → Mythical Glory.",glory:"Mythical Glory: 50–99⭐. Pada 100⭐ → Mythical Immortal.",immortal:"Mythical Immortal: 100⭐ atau lebih."};
+  $("starInfo").textContent=t[r.id];return;
+ }
+ $("starInfo").textContent=`${r.name} ${$("divisionSelect").value} memiliki ${r.starsPerDivision}⭐ untuk naik divisi.`;
+}
+
+$("rankSelect").onchange=populateDivisions;
+$("divisionSelect").onchange=updateStarInfo;
+
+$("startButton").onclick=()=>{
+ const r=getRank($("rankSelect").value),stars=Math.floor(Number($("initialStars").value)),days=Math.floor(Number($("daysInput").value));
+ if(!Number.isFinite(stars)||stars<0||days<1){alert("Masukkan data yang valid.");return;}
+ if(r.divisions&&stars>=r.starsPerDivision){alert("Bintang melebihi batas divisi.");return;}
+ data.started=true;data.initialRank=r.id;data.initialDivision=r.divisions?$("divisionSelect").value:null;
+ data.initialStars=stars;data.currentRank=r.id;data.currentDivision=data.initialDivision;data.currentStars=stars;
+ data.totalEarned=0;data.days=days;data.totalRequired=calculateRequired();data.startServerDay=getServerDay(Date.now());data.history={};
+ save();showApp();
+};
+
+let addAmount=1;
+function updateAmount(){$("addAmount").textContent=addAmount;}
+$("plusStar").onclick=()=>{addAmount++;updateAmount();};
+$("minusStar").onclick=()=>{addAmount=Math.max(1,addAmount-1);updateAmount();};
+
+function historyKey(){
+ return new Date(getServerDay(Date.now())).toISOString().slice(0,10);
+}
+function recordHistory(delta){
+ const k=historyKey();
+ if(!data.history[k])data.history[k]={earned:0,protection:false};
+ data.history[k].earned+=delta;save();
+}
+$("addStars").onclick=()=>{
+ if(data.currentRank==="immortal"){alert("Kamu sudah mencapai Mythical Immortal.");return;}
+ data.totalEarned+=addAmount;restoreFromEarned();recordHistory(addAmount);save();render();
+};
+$("subtractStars").onclick=()=>{
+ if(data.totalEarned<=0){alert("Belum ada bintang dari tracker yang bisa dikurangi.");return;}
+ const n=Math.min(addAmount,data.totalEarned);data.totalEarned-=n;restoreFromEarned();recordHistory(-n);save();render();
+};
+
+$("protection").onchange=()=>{
+ const k=historyKey();
+ if(!data.history[k])data.history[k]={earned:0,protection:false};
+ data.history[k].protection=$("protection").checked;save();
+};
+
+function currentDay(){
+ if(data.startServerDay===null)return 1;
+ const todayServerDay=getServerDay(Date.now());
+ const elapsedDays=Math.floor((todayServerDay-data.startServerDay)/86400000);
+ return Math.max(1,Math.min(data.days,elapsedDays+1));
+}
+
+function render(){
+ if(!data.started)return;
+ const now=Date.now(),day=currentDay(),target=Math.min(data.totalRequired,Math.ceil(data.totalRequired*day/data.days));
+ const actual=data.totalEarned,diff=actual-target,remaining=Math.max(0,data.totalRequired-actual),daysLeft=Math.max(0,data.days-day+1);
+ const avg=daysLeft>0?remaining/daysLeft:remaining;
+ $("countdown").textContent=countdown(getServerReset(now)-now);
+ $("resetInfo").textContent=`Reset berikutnya ${localReset()} · ${timezoneInfo().text} · Hari berikutnya dihitung setelah reset`;
+
+ const r=getRank(data.currentRank);
+ $("currentRank").textContent=r.name+(r.divisions?" "+data.currentDivision:"");
+ if(r.divisions){
+  $("currentStars").textContent=`${data.currentStars}⭐ / ${r.starsPerDivision}⭐`;
+  const di=r.divisions.indexOf(data.currentDivision);
+  if(di<r.divisions.length-1)$("nextRank").textContent=`Menuju ${r.name} ${r.divisions[di+1]} · ${r.starsPerDivision-data.currentStars}⭐ lagi`;
+  else $("nextRank").textContent=`Menuju ${RANKS[RANKS.findIndex(x=>x.id===data.currentRank)+1].name} · ${r.starsPerDivision-data.currentStars}⭐ lagi`;
+ }else{
+  $("currentStars").textContent=`${data.currentStars}⭐`;
+  if(data.currentRank==="mythic")$("nextRank").textContent=`Menuju Mythical Honor · ${25-data.currentStars}⭐ lagi`;
+  else if(data.currentRank==="honor")$("nextRank").textContent=`Menuju Mythical Glory · ${50-data.currentStars}⭐ lagi`;
+  else if(data.currentRank==="glory")$("nextRank").textContent=`Menuju Mythical Immortal · ${100-data.currentStars}⭐ lagi`;
+  else $("nextRank").textContent="🏆 Target tercapai!";
+ }
+
+ $("progressStars").textContent=actual+"⭐";
+ $("remainingStars").textContent=remaining+"⭐";
+ $("requiredStars").textContent=data.totalRequired+"⭐";
+ $("daysLeft").textContent=daysLeft;
+ const pct=data.totalRequired?Math.min(100,Math.max(0,actual/data.totalRequired*100)):100;
+ $("progressBar").style.width=pct+"%";$("progressText").textContent=Math.round(pct)+"% menuju Mythical Immortal";
+
+ $("dayNumber").textContent=`${day} / ${data.days}`;
+ $("targetToday").textContent=target+"⭐";$("actualToday").textContent=actual+"⭐";
+ $("difference").textContent=(diff>=0?"+":"")+diff+"⭐";$("average").textContent=avg.toFixed(2)+"⭐ / hari";
+
+ if(diff>0){$("status").className="status ahead";$("status").textContent=`🟢 Kamu ${diff}⭐ lebih cepat dari target.`;}
+ else if(diff<0){$("status").className="status behind";$("status").textContent=`🔴 Kamu ${Math.abs(diff)}⭐ tertinggal dari target.`;}
+ else{$("status").className="status ontime";$("status").textContent="🟡 Kamu tepat di jalur target.";}
+
+ if(diff>=0){$("buffer").className="success";$("buffer").innerHTML=`🟢 <strong>Buffer +${diff}⭐</strong><br>Kamu berada di depan jadwal.`;}
+ else{$("buffer").className="warning";$("buffer").innerHTML=`🔴 <strong>Defisit ${Math.abs(diff)}⭐</strong><br>Kebutuhan rata-rata sekarang ${avg.toFixed(2)}⭐ / hari.`;}
+
+ const tz=timezoneInfo();$("timezone").textContent=tz.name;$("utcOffset").textContent=tz.text;$("localReset").textContent=localReset();
+ const k=historyKey();$("protection").checked=!!(data.history[k]&&data.history[k].protection);
+ renderHistory();
+}
+
+function renderHistory(){
+ const keys=Object.keys(data.history||{}).sort().reverse();
+ if(!keys.length){$("history").textContent="Belum ada data.";return;}
+ $("history").innerHTML=keys.map(k=>{
+  const x=data.history[k];
+  return `<div class="history-item"><strong>${k}</strong><br><span class="small">Perubahan: ${x.earned>=0?"+":""}${x.earned||0}⭐ ${x.protection?" · 🛡️ Protection digunakan":""}</span></div>`;
+ }).join("");
+}
+
+function showApp(){$("setup").classList.add("hidden");$("app").classList.remove("hidden");render();}
+$("changeSetup").onclick=()=>{
+ $("app").classList.add("hidden");$("setup").classList.remove("hidden");
+ $("rankSelect").value=data.initialRank;populateDivisions();
+ if(data.initialDivision)$("divisionSelect").value=data.initialDivision;
+ $("initialStars").value=data.initialStars;$("daysInput").value=data.days;updateStarInfo();
+};
+$("resetAll").onclick=()=>{if(confirm("Hapus seluruh progres tracker?")){localStorage.removeItem(KEY);location.reload();}};
+
+populateRanks();populateDivisions();
+if(data.started)showApp();
+setInterval(render,1000);
+</script>
+</body>
+</html>
