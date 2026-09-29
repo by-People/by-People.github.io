@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trading Journal v13</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0f1115;color:#f2f4f7}
+header{background:#171a21;border-bottom:1px solid #2a2f3a;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+header h2{margin:0;font-size:20px}
+.container{max-width:1180px;margin:auto;padding:20px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+button{border:0;border-radius:9px;padding:10px 14px;background:#292f3a;color:#fff;cursor:pointer}
+button:hover{opacity:.9}
+nav button.active,.primary{background:#4f8cff}
+.card{background:#171a21;border:1px solid #2a2f3a;border-radius:14px;padding:18px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:#0f1115;border:1px solid #2a2f3a;border-radius:12px;padding:16px}
+.stat small{color:#9aa3b2}.stat strong{display:block;font-size:21px;margin-top:7px}
+.row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{display:block;margin:12px 0 6px;color:#cbd1dc}
+input,select,textarea{width:100%;padding:11px;border-radius:9px;border:1px solid #343b48;background:#0f1115;color:#fff}
+textarea{min-height:80px;resize:vertical}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #2a2f3a;text-align:left;font-size:14px;vertical-align:top}
+th{color:#9aa3b2}
+.hidden{display:none!important}
+.muted{color:#9aa3b2}.success{color:#5ee38a}.danger{color:#ff7272}
+.message{margin-top:10px;min-height:20px}
+.auth{max-width:420px;margin:70px auto}
+.auth button{width:100%;margin-top:10px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.toolbar>div{min-width:145px;flex:1}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.small{padding:7px 9px;font-size:12px}
+.session-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.session{background:#0f1115;border:1px solid #2a2f3a;border-radius:12px;padding:15px}
+.session .name{font-weight:700}.session .time{font-size:12px;color:#9aa3b2;margin-top:4px}.session .count{font-size:19px;font-weight:700;margin-top:10px}
+.session.open{border-color:#4f8cff}
+.cal-head{color:#9aa3b2;text-align:center;font-size:13px;padding:6px}
+.cal-day{min-height:78px;background:#0f1115;border:1px solid #2a2f3a;border-radius:8px;padding:8px;cursor:pointer}
+.cal-day:hover{border-color:#4f8cff}.cal-day.today{outline:1px solid #4f8cff}
+.cal-day.weekend{opacity:.65}.cal-day .num{font-weight:700}.cal-day .mini{font-size:12px;margin-top:6px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:20;padding:20px;overflow:auto}
+.modal-card{max-width:700px;margin:20px auto}
+.capital-positive{color:#5ee38a}.capital-negative{color:#ff7272}
+.toast{position:fixed;right:20px;top:20px;z-index:50;min-width:260px;max-width:380px;padding:13px 16px;border-radius:10px;background:#171a21;border:1px solid #2a2f3a;box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:14px}.toast.success{border-color:#3b9d63;color:#dfffea}.toast.error{border-color:#b64b4b;color:#ffdede}
+@media(max-width:700px){.row{grid-template-columns:1fr}.session-grid{grid-template-columns:1fr}.cal-day{min-height:60px;padding:6px}.cal-day .mini{font-size:10px}header{position:static}}
+</style>
+</head>
+<body>
+
+<div id="authView" class="card auth">
+<h1>Trading Journal</h1>
+<p class="muted">Login untuk mengakses jurnal trading.</p>
+<label>Email</label><input id="email" type="email">
+<label>Password</label><input id="password" type="password">
+<button class="primary" onclick="login()">Login</button>
+<button onclick="register()">Buat Akun</button>
+<div id="authMsg" class="message muted"></div>
+</div>
+
+<div id="appView" class="hidden"><div id="toast" class="toast hidden"></div>
+<header><h2>Trading Journal v13</h2><button onclick="logout()">Logout</button></header>
+<div class="container">
+
+<nav>
+<button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+<button onclick="showPage('trade',this)">Tambah Trade</button>
+<button onclick="showPage('history',this)">Riwayat</button>
+<button onclick="showPage('calendar',this)">Kalender</button>
+<button onclick="showPage('stats',this)">Statistik</button>
+<button onclick="showPage('holidays',this)">Hari Libur</button>
+</nav>
+
+<section id="dashboard" class="page">
+<div class="card">
+<h3>Jam Sesi Market</h3>
+<p class="muted">Countdown menggunakan zona waktu lokal perangkat. Jam sesi mengikuti zona waktu resmi Tokyo, London, dan New York, sehingga DST London/New York ikut menyesuaikan.</p>
+<div class="session-grid">
+<div class="session" id="asiaSession"><div class="name">Asia / Tokyo</div><div class="time">08:00–17:00 Tokyo</div><div class="count" id="asiaCount">-</div></div>
+<div class="session" id="londonSession"><div class="name">London</div><div class="time">08:00–17:00 London</div><div class="count" id="londonCount">-</div></div>
+<div class="session" id="nySession"><div class="name">New York</div><div class="time">08:00–17:00 New York</div><div class="count" id="nyCount">-</div></div>
+</div>
+</div>
+<div class="card">
+<h2>Dashboard</h2>
+<p class="muted" id="monthLabel"></p>
+<div class="grid">
+<div class="stat"><small>Modal Awal</small><strong id="initialCapital">Rp 0</strong></div>
+<div class="stat"><small>Modal Sekarang</small><strong id="currentCapital">Rp 0</strong></div>
+<div class="stat"><small>Perubahan Modal</small><strong id="capitalChange">Rp 0</strong></div>
+<div class="stat"><small>Target Bulanan</small><strong id="target">Rp 0</strong></div>
+<div class="stat"><small>Profit Bulan Ini</small><strong id="profit">Rp 0</strong></div>
+<div class="stat"><small>Sisa / Surplus Target</small><strong id="remaining">Rp 0</strong></div>
+<div class="stat"><small>Win Rate</small><strong id="winrate">0%</strong></div>
+<div class="stat"><small>Total Trade</small><strong id="total">0</strong></div>
+<div class="stat"><small>Profit Factor</small><strong id="pf">0.00</strong></div>
+</div>
+<div id="targetDailyInfo" class="muted" style="margin-top:15px"></div>
+</div>
+
+<div class="card">
+<h3>Modal Awal</h3>
+<p class="muted">Modal awal menjadi dasar untuk menghitung modal sekarang = modal awal + seluruh P/L.</p>
+<div class="row">
+<div><label>Modal Awal (Rp)</label><input id="capitalInput" type="number" min="0" step="1000"></div>
+<div style="display:flex;align-items:end"><button class="primary" onclick="saveCapital()">Simpan / Edit Modal Awal</button></div>
+</div>
+<div id="capitalMsg" class="message muted"></div>
+</div>
+
+<div class="card">
+<h3>Target Bulanan</h3>
+<p class="muted">Pilih tahun dan bulan untuk melihat atau mengedit target bulan tersebut.</p>
+<div class="row">
+<div><label>Tahun</label><select id="targetYear" onchange="syncTargetMonth();loadSelectedTarget()"></select></div>
+<div><label>Bulan</label><select id="targetMonthNum" onchange="loadSelectedTarget()"></select></div>
+</div>
+<div class="row">
+<div><label>Target Profit (Rp)</label><input id="targetValue" type="number" min="0" step="1000"></div>
+<div style="display:flex;align-items:end"><button class="primary" onclick="saveTarget()">Simpan / Edit Target</button></div>
+</div>
+<div id="targetMsg" class="message muted"></div>
+</div>
+
+
+</section>
+
+<section id="trade" class="page hidden">
+<div class="card">
+<h2>Tambah Trade</h2>
+<div class="row">
+<div><label>Tanggal</label><input id="tradeDate" type="text" inputmode="numeric" placeholder="DD/MM/YYYY" maxlength="10" autocomplete="off" readonly><div class="muted" style="font-size:12px;margin-top:5px">Otomatis menggunakan tanggal hari ini.</div></div>
+<div><label>Symbol</label><input id="symbol" value="XAUUSD"></div>
+</div>
+<div class="row">
+<div><label>Arah</label><select id="direction"><option>BUY</option><option>SELL</option></select></div>
+<div><label>Hasil</label><select id="result"><option>WIN</option><option>LOSS</option><option>BE</option></select></div>
+</div>
+<div class="row">
+<div><label>Sesi Trading</label><select id="tradeSession"><option value="Asia">Asia</option><option value="London">London</option><option value="New York">New York</option><option value="Other">Other / Di luar sesi</option></select></div>
+<div><label>Catatan singkat sesi</label><input id="sessionNote" placeholder="Contoh: NY open, volatilitas tinggi"></div>
+</div>
+<div class="row">
+<div><label>Lot</label><input id="lot" type="number" step="0.01" value="0.01"></div>
+<div><label>Nominal Profit / Loss (Rp)</label><input id="pnl" type="number" step="1000" min="0" value="0"><div class="muted" style="font-size:12px;margin-top:5px">Masukkan nominal positif. WIN otomatis +, LOSS otomatis −, BE otomatis Rp 0.</div></div>
+</div>
+<label>Setup</label>
+<select id="setup"><option value="">Pilih setup</option><option>Breakout</option><option>Breakout + Retest</option><option>Support / Resistance</option><option>Trend Following</option><option>Pullback</option><option>Momentum</option><option>Reversal</option><option>Liquidity Sweep</option><option>Price Action</option><option>Other</option></select>
+<label>Detail Setup</label><input id="setupDetail" placeholder="Contoh: H1 bullish, M5 pullback, M1 momentum">
+<label>Alasan Entry</label><textarea id="entryReason"></textarea>
+<label>Alasan Exit</label><textarea id="exitReason"></textarea>
+<label>Kondisi Market</label><textarea id="marketCondition" placeholder="Trend, volatility, news, session..."></textarea>
+<label>Kondisi Mental</label>
+<select id="mental"><option value="">Pilih kondisi mental</option><option>Tenang</option><option>Fokus</option><option>Percaya diri</option><option>Ragu-ragu</option><option>Takut</option><option>FOMO</option><option>Serakah</option><option>Emosional</option><option>Frustrasi</option><option>Terlalu percaya diri</option><option>Terburu-buru</option><option>Disiplin</option></select>
+<label>Catatan</label><textarea id="notes"></textarea>
+<button class="primary" style="margin-top:15px" onclick="saveTrade()">Simpan Trade</button>
+<div id="tradeMsg" class="message muted"></div>
+</div>
+</section>
+
+<section id="history" class="page hidden">
+<div class="card">
+<h2>Riwayat Trade</h2>
+<div class="row">
+<div><label>Tahun</label><select id="historyYear" onchange="syncHistoryMonth();loadHistory()"></select></div>
+<div><label>Bulan</label><select id="historyMonthNum" onchange="loadHistory()"></select></div>
+</div>
+<div class="row">
+<div><label>Hasil</label><select id="historyResult" onchange="loadHistory()"><option value="">Semua</option><option value="WIN">WIN</option><option value="LOSS">LOSS</option><option value="BE">BE</option></select></div>
+<div style="display:flex;align-items:end"><button class="primary" onclick="loadHistory()">Refresh</button></div>
+</div>
+<div id="historyMsg" class="message muted"></div>
+<div style="overflow:auto;margin-top:15px">
+<table><thead><tr><th>Tanggal</th><th>Symbol</th><th>Arah</th><th>Sesi</th><th>Hasil</th><th>P/L</th><th>Setup</th><th>Aksi</th></tr></thead><tbody id="tradeTable"></tbody></table>
+</div>
+</div>
+</section>
+
+<section id="calendar" class="page hidden">
+<div class="card">
+<h2>Kalender Trading</h2>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px">
+<button onclick="changeCalendarMonth(-1)">‹</button><strong id="calendarTitle"></strong><button onclick="changeCalendarMonth(1)">›</button>
+</div>
+<div id="calendarGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+</div>
+<div class="card"><h3>Detail Tanggal</h3><div id="dayDetails" class="muted">Klik tanggal pada kalender.</div></div>
+</section>
+
+<section id="stats" class="page hidden">
+<div class="card">
+<h2>Statistik Trading</h2>
+<div class="row">
+<div><label>Tahun</label><select id="statsYear" onchange="syncStatsMonth();loadStats()"></select></div>
+<div><label>Bulan</label><select id="statsMonthNum" onchange="loadStats()"></select></div>
+</div>
+<p class="muted" id="statsPeriod"></p>
+<div class="grid">
+<div class="stat"><small>Trading Days</small><strong id="sDays">0</strong></div>
+<div class="stat"><small>Win / Loss / BE</small><strong id="sWLB">0 / 0 / 0</strong></div>
+<div class="stat"><small>Win Rate</small><strong id="sWinRate">0%</strong></div>
+<div class="stat"><small>Gross Profit</small><strong id="sGrossWin">Rp 0</strong></div>
+<div class="stat"><small>Gross Loss</small><strong id="sGrossLoss">Rp 0</strong></div>
+<div class="stat"><small>Avg Win</small><strong id="sAvgWin">Rp 0</strong></div>
+<div class="stat"><small>Avg Loss</small><strong id="sAvgLoss">Rp 0</strong></div>
+<div class="stat"><small>Expectancy / Trade</small><strong id="sExpectancy">Rp 0</strong></div>
+<div class="stat"><small>Profit Factor</small><strong id="sPF">0.00</strong></div>
+<div class="stat"><small>Best Day</small><strong id="sBestDay">Rp 0</strong></div>
+<div class="stat"><small>Worst Day</small><strong id="sWorstDay">Rp 0</strong></div>
+</div>
+</div>
+<div class="card">
+<h3>Performa per Sesi</h3>
+<p class="muted">Profit/loss dihitung dari semua trade pada sesi yang dipilih di periode statistik.</p>
+<div style="overflow:auto">
+<table><thead><tr><th>Sesi</th><th>Trade</th><th>Win</th><th>Loss</th><th>BE</th><th>Win Rate</th><th>Total P/L</th></tr></thead><tbody id="sessionStatsTable"></tbody></table>
+</div>
+</div>
+</section>
+
+<section id="holidays" class="page hidden">
+<div class="card">
+<h2>Hari Libur / Non-Trading</h2>
+<p class="muted">Sabtu dan Minggu otomatis dianggap non-trading dan tidak ditampilkan di daftar. Hari libur tambahan di bawah ini bisa kamu masukkan sendiri.</p>
+<div class="row">
+<div><label>Tanggal</label><input id="holidayDate" type="text" inputmode="numeric" placeholder="DD/MM/YYYY" maxlength="10" autocomplete="off"></div>
+<div><label>Keterangan</label><input id="holidayName" placeholder="Contoh: Libur broker / pribadi"></div>
+</div>
+<button class="primary" style="margin-top:12px" onclick="saveHoliday()">Tambah / Simpan Hari Libur</button>
+<div id="holidayMsg" class="message muted"></div>
+<div style="overflow:auto;margin-top:15px">
+<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="holidayTable"></tbody></table>
+</div>
+</div>
+</section>
+
+</div>
+</div>
+
+<div id="editModal" class="modal hidden">
+<div class="card modal-card">
+<h2>Edit Trade</h2><input id="editId" type="hidden">
+<div class="row"><div><label>Tanggal</label><input id="editDate" type="text" inputmode="numeric" placeholder="DD/MM/YYYY" maxlength="10" autocomplete="off"></div><div><label>Symbol</label><input id="editSymbol"></div></div>
+<div class="row"><div><label>Arah</label><select id="editDirection"><option>BUY</option><option>SELL</option></select></div><div><label>Hasil</label><select id="editResult"><option>WIN</option><option>LOSS</option><option>BE</option></select></div></div>
+<label>Sesi Trading</label><select id="editSession"><option value="Asia">Asia</option><option value="London">London</option><option value="New York">New York</option><option value="Other">Other / Di luar sesi</option></select>
+<div class="row"><div><label>Lot</label><input id="editLot" type="number" step="0.01"></div><div><label>Profit / Loss (Rp)</label><input id="editPnl" type="number" step="1000"></div></div>
+<label>Setup</label><input id="editSetup">
+<label>Alasan Entry</label><textarea id="editEntryReason"></textarea><label>Alasan Exit</label><textarea id="editExitReason"></textarea>
+<label>Kondisi Market</label><textarea id="editMarket"></textarea>
+<label>Kondisi Mental</label><select id="editMental"><option value="">Pilih kondisi mental</option><option>Tenang</option><option>Fokus</option><option>Percaya diri</option><option>Ragu-ragu</option><option>Takut</option><option>FOMO</option><option>Serakah</option><option>Emosional</option><option>Frustrasi</option><option>Terlalu percaya diri</option><option>Terburu-buru</option><option>Disiplin</option></select>
+<label>Catatan</label><textarea id="editNotes"></textarea>
+<div class="actions" style="margin-top:12px"><button class="primary" onclick="updateTrade()">Simpan Perubahan</button><button onclick="closeEdit()">Batal</button></div>
+<div id="editMsg" class="message muted"></div>
+</div>
+</div>
+
+<script>
+const SUPABASE_URL="https://jsvrwcucjtcvskofceaf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_antKZ-_6RMaY84WrUOX2dQ_9tQgEcjn";
+const {createClient}=supabase;
+const db=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let currentUser=null,calendarDate=new Date();
+
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+function pad(n){return String(n).padStart(2,"0")}
+function localDate(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function formatDateInput(iso){
+ if(!iso)return "";
+ const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+ return m?`${m[3]}/${m[2]}/${m[1]}`:iso;
+}
+function parseDateInput(value){
+ const v=String(value||"").trim();
+ if(!v)return "";
+ let m=v.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
+ if(m){
+   const d=Number(m[1]),mo=Number(m[2]),y=Number(m[3]);
+   const dt=new Date(y,mo-1,d);
+   if(dt.getFullYear()===y&&dt.getMonth()===mo-1&&dt.getDate()===d)return `${y}-${pad(mo)}-${pad(d)}`;
+   return "";
+ }
+ m=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+ if(m){
+   const y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]),dt=new Date(y,mo-1,d);
+   if(dt.getFullYear()===y&&dt.getMonth()===mo-1&&dt.getDate()===d)return `${y}-${pad(mo)}-${pad(d)}`;
+ }
+ return "";
+}
+function setDateField(id,iso){document.getElementById(id).value=formatDateInput(iso);}
+function getDateField(id){return parseDateInput(document.getElementById(id).value);}
+function validateDateField(id){
+ const el=document.getElementById(id),iso=parseDateInput(el.value);
+ if(!iso){el.setCustomValidity("Masukkan tanggal yang valid dengan format DD/MM/YYYY, contoh 29/09/2026.");return false;}
+ el.setCustomValidity("");
+ el.value=formatDateInput(iso);
+ return true;
+}
+function currentYear(){return new Date().getFullYear()}
+function currentMonth(){return new Date().getMonth()+1}
+function ym(y,m){return `${y}-${pad(m)}`}
+function range(y,m){const last=new Date(y,m,0).getDate();return {start:`${y}-${pad(m)}-01`,end:`${y}-${pad(m)}-${pad(last)}`}}
+function setAuth(t){document.getElementById("authMsg").textContent=t}
+
+async function register(){
+ const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
+ if(!email||!password)return setAuth("Isi email dan password.");
+ const {error}=await db.auth.signUp({email,password});
+ setAuth(error?error.message:"Akun berhasil dibuat. Jika verifikasi email aktif, cek email lalu login.");
+}
+async function login(){
+ const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
+ if(!email||!password)return setAuth("Isi email dan password.");
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+ if(error)return setAuth(error.message);
+ enterApp(data.user);
+}
+async function logout(){await db.auth.signOut();location.reload()}
+
+function fillYearSelect(id,selected){
+ const el=document.getElementById(id); if(!el)return;
+ const now=currentYear(),min=now-10,max=now+15;
+ el.innerHTML="";
+ for(let y=min;y<=max;y++){
+   const o=document.createElement("option"); o.value=String(y); o.textContent=String(y); el.appendChild(o);
+ }
+ const wanted=Number(selected)||now;
+ el.value=String(wanted);
+ if(!el.value)el.value=String(now);
+}
+function fillMonthSelect(id,selected){
+ const el=document.getElementById(id); if(!el)return;
+ const names=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+ el.innerHTML="";
+ names.forEach((n,i)=>{const o=document.createElement("option");o.value=String(i+1);o.textContent=n;el.appendChild(o)});
+ const wanted=Number(selected)||currentMonth();
+ el.value=String(wanted);
+ if(!el.value)el.value=String(currentMonth());
+}
+function setupSelectors(){
+ const y=currentYear(),m=currentMonth();
+ fillYearSelect("targetYear",y);fillMonthSelect("targetMonthNum",m);
+ fillYearSelect("historyYear",y);fillMonthSelect("historyMonthNum",m);
+ fillYearSelect("statsYear",y);fillMonthSelect("statsMonthNum",m);
+}
+function validYearMonth(yearId,monthId){
+ const ys=document.getElementById(yearId),ms=document.getElementById(monthId);
+ let y=Number(ys?.value),m=Number(ms?.value);
+ if(!Number.isInteger(y)||y<1900||y>2200){y=currentYear();if(ys)ys.value=String(y)}
+ if(!Number.isInteger(m)||m<1||m>12){m=currentMonth();if(ms)ms.value=String(m)}
+ return {y,m};
+}
+function syncTargetMonth(){}
+function syncHistoryMonth(){}
+function syncStatsMonth(){}
+
+function enterApp(user){
+ currentUser=user;
+ document.getElementById("authView").classList.add("hidden");
+ document.getElementById("appView").classList.remove("hidden");
+ setupSelectors();
+ setDateField("tradeDate",localDate());
+ setDateField("holidayDate",localDate());
+ ["tradeDate","holidayDate","editDate"].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener("blur",()=>{if(el.value)validateDateField(id);});}});
+ ensureProfile();
+ loadCapital();
+ loadSelectedTarget();
+ loadDashboard();loadHistory();loadStats();loadHolidays();renderCalendar();
+ updateSessions();setInterval(updateSessions,1000);
+}
+function showPage(id,btn){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ if(id==="dashboard"){loadCapital();loadSelectedTarget();loadDashboard()}
+ if(id==="trade"){setDateField("tradeDate",localDate());document.getElementById("tradeMsg").textContent="";}
+ if(id==="history")loadHistory();
+ if(id==="calendar")renderCalendar();
+ if(id==="stats")loadStats();
+ if(id==="holidays")loadHolidays();
+}
+
+async function ensureProfile(){
+ const {error}=await db.from("profiles").upsert({id:currentUser.id},{onConflict:"id"});
+ if(error)console.warn("Profile:",error.message);
+}
+async function loadCapital(){
+ const {data,error}=await db.from("profiles").select("initial_capital").eq("id",currentUser.id).maybeSingle();
+ if(error){
+   document.getElementById("capitalMsg").innerHTML="Kolom <b>initial_capital</b> belum tersedia. Jalankan SQL ini di Supabase SQL Editor:<br><code>alter table profiles add column if not exists initial_capital numeric(15,2) default 0;</code><br>Setelah itu refresh halaman.";
+   return;
+ }
+ const cap=Number(data?.initial_capital||0);
+ document.getElementById("capitalInput").value=cap||"";
+ document.getElementById("initialCapital").textContent=rupiah(cap);
+ await updateCapitalDisplay(cap);
+}
+async function updateCapitalDisplay(initial){
+ const {data}=await db.from("trades").select("profit_loss").eq("user_id",currentUser.id);
+ const total=(data||[]).reduce((a,t)=>a+Number(t.profit_loss||0),0);
+ const change=total,current=initial+total;
+ document.getElementById("currentCapital").textContent=rupiah(current);
+ const el=document.getElementById("capitalChange");
+ el.textContent=(change>0?"+":"")+rupiah(change);
+ el.className=change>0?"capital-positive":change<0?"capital-negative":"";
+}
+async function saveCapital(){
+ const value=Math.max(0,Number(document.getElementById("capitalInput").value||0));
+ const {error}=await db.from("profiles").update({initial_capital:value}).eq("id",currentUser.id);
+ if(error){
+   document.getElementById("capitalMsg").textContent=error.message;
+   showToast("Modal awal gagal disimpan. Pastikan kolom initial_capital sudah dibuat di Supabase.","error");
+   return;
+ }
+ document.getElementById("capitalMsg").textContent="Modal awal berhasil disimpan / diperbarui.";
+ showToast("Modal awal berhasil disimpan.","success");
+ await loadCapital();
+}
+
+function selectedTarget(){return validYearMonth("targetYear","targetMonthNum")}
+async function loadSelectedTarget(){
+ if(!currentUser)return;
+ const {y,m}=selectedTarget(),r=range(y,m);
+ const {data,error}=await db.from("monthly_targets").select("target_profit").eq("user_id",currentUser.id).eq("month",r.start).maybeSingle();
+ document.getElementById("targetValue").value=data?Number(data.target_profit):"";
+ document.getElementById("targetMsg").textContent=error?`Gagal membaca target: ${error.message}`:(data?"Target sudah tersimpan. Kamu bisa mengubahnya.":"Belum ada target untuk bulan ini.");
+}
+async function saveTarget(){
+ const {y,m}=selectedTarget(),r=range(y,m),value=Number(document.getElementById("targetValue").value||0);
+ if(!Number.isFinite(value)||value<0){document.getElementById("targetMsg").textContent="Target harus berupa angka 0 atau lebih.";return;}
+ const {error}=await db.from("monthly_targets").upsert({user_id:currentUser.id,month:r.start,target_profit:value},{onConflict:"user_id,month"});
+ document.getElementById("targetMsg").textContent=error?error.message:"Target berhasil disimpan / diperbarui.";
+ if(!error){showToast("Target bulanan berhasil disimpan.","success");loadDashboard();}
+}
+
+function normalizedPnl(result,value){
+ const amount=Math.abs(Number(value)||0);
+ if(result==="LOSS") return -amount;
+ if(result==="WIN") return amount;
+ return 0;
+}
+function showToast(message,type="success"){
+ const el=document.getElementById("toast");
+ if(!el)return;
+ el.textContent=message;
+ el.className=`toast ${type}`;
+ clearTimeout(window.__toastTimer);
+ window.__toastTimer=setTimeout(()=>el.className="toast hidden",2800);
+}
+async function saveTrade(){
+ if(!validateDateField("tradeDate")){document.getElementById("tradeMsg").textContent="Tanggal tidak valid. Gunakan format DD/MM/YYYY.";showToast("Tanggal trade tidak valid.","error");return;}
+ const result=document.getElementById("result").value;
+ const p={user_id:currentUser.id,trade_date:getDateField("tradeDate"),symbol:document.getElementById("symbol").value.trim()||"XAUUSD",direction:document.getElementById("direction").value,result,trade_session:document.getElementById("tradeSession").value,lot:Number(document.getElementById("lot").value)||0,profit_loss:normalizedPnl(result,document.getElementById("pnl").value),setup:document.getElementById("setup").value+(document.getElementById("setupDetail").value?" — "+document.getElementById("setupDetail").value:""),entry_reason:document.getElementById("entryReason").value,exit_reason:document.getElementById("exitReason").value,market_condition:document.getElementById("marketCondition").value,mental_state:document.getElementById("mental").value,notes:(document.getElementById("sessionNote").value.trim()?"Sesi: "+document.getElementById("sessionNote").value.trim()+"\n":"")+document.getElementById("notes").value};
+ const {error}=await db.from("trades").insert(p);
+ if(error){
+   document.getElementById("tradeMsg").innerHTML=error.message.includes("trade_session")?`${error.message}<br><small>Jalankan SQL: <code>alter table trades add column if not exists trade_session text default 'Other';</code></small>`:error.message;
+   showToast(error.message.includes("trade_session")?"Trade gagal: kolom sesi belum dibuat di Supabase.":"Trade gagal disimpan.","error");
+   return;
+ }
+ document.getElementById("tradeMsg").textContent="Trade berhasil disimpan.";
+ showToast(`Trade ${result} berhasil disimpan. P/L: ${rupiah(p.profit_loss)}`,"success");
+ document.getElementById("pnl").value=0;
+ document.getElementById("notes").value="";
+ document.getElementById("sessionNote").value="";
+ document.getElementById("tradeSession").value="Asia";
+ setDateField("tradeDate",localDate());
+ document.getElementById("setupDetail").value="";
+ loadDashboard();loadCapital();loadHistory();loadStats();renderCalendar();
+}
+
+async function loadDashboard(){
+ const y=currentYear(),m=currentMonth(),r=range(y,m);
+ const [tr,tar,hol]=await Promise.all([
+  db.from("trades").select("trade_date,result,profit_loss").eq("user_id",currentUser.id).gte("trade_date",r.start).lte("trade_date",r.end),
+  db.from("monthly_targets").select("target_profit").eq("user_id",currentUser.id).eq("month",r.start).maybeSingle(),
+  db.from("market_holidays").select("holiday_date").eq("user_id",currentUser.id).gte("holiday_date",r.start).lte("holiday_date",r.end)
+ ]);
+ const ts=tr.data||[],profit=ts.reduce((a,t)=>a+Number(t.profit_loss||0),0),wins=ts.filter(t=>t.result==="WIN").length;
+ const gw=ts.filter(t=>Number(t.profit_loss)>0).reduce((a,t)=>a+Number(t.profit_loss),0);
+ const gl=Math.abs(ts.filter(t=>Number(t.profit_loss)<0).reduce((a,t)=>a+Number(t.profit_loss),0));
+ const target=Number(tar.data?.target_profit||0),difference=target-profit;
+ document.getElementById("monthLabel").textContent=`Bulan: ${new Intl.DateTimeFormat("id-ID",{month:"long",year:"numeric"}).format(new Date(y,m-1,1))}`;
+ document.getElementById("target").textContent=rupiah(target);
+ document.getElementById("profit").textContent=rupiah(profit);
+ const rem=document.getElementById("remaining");
+ rem.textContent=difference>0?`-${rupiah(difference)}`:difference<0?`+${rupiah(Math.abs(difference))}`:rupiah(0);
+ rem.className=difference<0?"success":difference>0?"danger":"";
+ document.getElementById("winrate").textContent=(ts.length?wins/ts.length*100:0).toFixed(1)+"%";
+ document.getElementById("total").textContent=ts.length;
+ document.getElementById("pf").textContent=gl?(gw/gl).toFixed(2):gw?"∞":"0.00";
+
+ const hs=new Set((hol.data||[]).map(x=>x.holiday_date));let days=0,left=0,today=localDate();
+ for(let d=new Date(r.start+"T00:00:00");d<=new Date(r.end+"T00:00:00");d.setDate(d.getDate()+1)){
+  const ds=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  if(d.getDay()!==0&&d.getDay()!==6&&!hs.has(ds)){days++;if(ds>=today)left++}
+ }
+ document.getElementById("targetDailyInfo").textContent=`Hari trading bulan ini: ${days} • Hari trading tersisa: ${left} • Kebutuhan rata-rata: ${rupiah(left?Math.max(difference,0)/left:0)}/hari`;
+}
+
+function selectedHistory(){return validYearMonth("historyYear","historyMonthNum")}
+async function loadHistory(){
+ const {y,m}=selectedHistory(),r=range(y,m),result=document.getElementById("historyResult").value;
+ let q=db.from("trades").select("*").eq("user_id",currentUser.id).gte("trade_date",r.start).lte("trade_date",r.end).order("trade_date",{ascending:false}).order("created_at",{ascending:false});
+ if(result)q=q.eq("result",result);
+ const {data,error}=await q,tbody=document.getElementById("tradeTable");
+ if(error){tbody.innerHTML=`<tr><td colspan="7">${error.message}</td></tr>`;return}
+ tbody.innerHTML=(data||[]).map(t=>`<tr><td>${formatDateInput(t.trade_date)}</td><td>${t.symbol}</td><td>${t.direction}</td><td>${t.trade_session||"Belum diisi"}</td><td>${t.result}</td><td>${rupiah(t.profit_loss)}</td><td>${t.setup||"-"}</td><td><div class="actions"><button class="small" onclick="openEdit(${t.id})">Edit</button><button class="small" onclick="deleteTrade(${t.id})">Hapus</button></div></td></tr>`).join("")||"<tr><td colspan='8'>Tidak ada trade pada periode ini.</td></tr>";
+}
+async function deleteTrade(id){
+ if(!confirm("Hapus trade ini? Data yang dihapus tidak bisa dikembalikan."))return;
+ const {error}=await db.from("trades").delete().eq("id",id).eq("user_id",currentUser.id);
+ if(error)alert(error.message);else{loadHistory();loadDashboard();loadCapital();loadStats();renderCalendar()}
+}
+async function openEdit(id){
+ const {data,error}=await db.from("trades").select("*").eq("id",id).eq("user_id",currentUser.id).single();
+ if(error)return alert(error.message);
+ for(const [id,val] of Object.entries({editId:data.id,editDate:formatDateInput(data.trade_date),editSymbol:data.symbol||"XAUUSD",editDirection:data.direction||"BUY",editResult:data.result||"WIN",editSession:data.trade_session||"Other",editLot:data.lot||0,editPnl:Math.abs(Number(data.profit_loss)||0),editSetup:data.setup||"",editEntryReason:data.entry_reason||"",editExitReason:data.exit_reason||"",editMarket:data.market_condition||"",editMental:data.mental_state||"",editNotes:data.notes||""}))document.getElementById(id).value=val;
+ document.getElementById("editModal").classList.remove("hidden");
+}
+function closeEdit(){document.getElementById("editModal").classList.add("hidden")}
+async function updateTrade(){
+ const id=document.getElementById("editId").value,result=document.getElementById("editResult").value;
+ if(!validateDateField("editDate")){document.getElementById("editMsg")&&(document.getElementById("editMsg").textContent="Tanggal tidak valid. Gunakan format DD/MM/YYYY.");return;}
+ const p={trade_date:getDateField("editDate"),symbol:document.getElementById("editSymbol").value.trim()||"XAUUSD",direction:document.getElementById("editDirection").value,result,trade_session:document.getElementById("editSession").value,lot:Number(document.getElementById("editLot").value)||0,profit_loss:normalizedPnl(result,document.getElementById("editPnl").value),setup:document.getElementById("editSetup").value,entry_reason:document.getElementById("editEntryReason").value,exit_reason:document.getElementById("editExitReason").value,market_condition:document.getElementById("editMarket").value,mental_state:document.getElementById("editMental").value,notes:document.getElementById("editNotes").value};
+ const {error}=await db.from("trades").update(p).eq("id",id).eq("user_id",currentUser.id);
+ if(error)document.getElementById("editMsg").textContent=error.message;else{showToast(`Trade ${result} berhasil diperbarui. P/L: ${rupiah(p.profit_loss)}`,"success");closeEdit();loadHistory();loadDashboard();loadCapital();loadStats();renderCalendar()}
+}
+
+function selectedStats(){return validYearMonth("statsYear","statsMonthNum")}
+async function loadStats(){
+ const {y,m}=selectedStats(),r=range(y,m);
+ const [tr,hol]=await Promise.all([db.from("trades").select("trade_date,result,profit_loss,trade_session").eq("user_id",currentUser.id).gte("trade_date",r.start).lte("trade_date",r.end),db.from("market_holidays").select("holiday_date").eq("user_id",currentUser.id).gte("holiday_date",r.start).lte("holiday_date",r.end)]);
+ if(tr.error){document.getElementById("statsPeriod").innerHTML=`<span class="danger">${tr.error.message}</span><br><small>Jalankan SQL migrasi <code>alter table trades add column if not exists trade_session text default 'Other';</code> di Supabase SQL Editor, lalu refresh.</small>`; return}
+ const ts=tr.data||[],wins=ts.filter(t=>t.result==="WIN"),losses=ts.filter(t=>t.result==="LOSS"),bes=ts.filter(t=>t.result==="BE");
+ const gw=ts.filter(t=>Number(t.profit_loss)>0).reduce((a,t)=>a+Number(t.profit_loss),0),gl=Math.abs(ts.filter(t=>Number(t.profit_loss)<0).reduce((a,t)=>a+Number(t.profit_loss),0));
+ const avgW=wins.length?gw/wins.length:0,avgL=losses.length?gl/losses.length:0,exp=ts.length?ts.reduce((a,t)=>a+Number(t.profit_loss||0),0)/ts.length:0,daily={};
+ ts.forEach(t=>daily[t.trade_date]=(daily[t.trade_date]||0)+Number(t.profit_loss||0));
+ const vals=Object.values(daily),best=vals.length?Math.max(...vals):0,negativeDays=vals.filter(v=>v<0),worst=negativeDays.length?Math.min(...negativeDays):0;
+ const hs=new Set((hol.data||[]).map(x=>x.holiday_date));let days=0;
+ for(let d=new Date(r.start+"T00:00:00");d<=new Date(r.end+"T00:00:00");d.setDate(d.getDate()+1)){const ds=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;if(d.getDay()!==0&&d.getDay()!==6&&!hs.has(ds))days++}
+ document.getElementById("statsPeriod").textContent=`Periode: ${new Intl.DateTimeFormat("id-ID",{month:"long",year:"numeric"}).format(new Date(y,m-1,1))}`;
+ document.getElementById("sDays").textContent=days;document.getElementById("sWLB").textContent=`${wins.length} / ${losses.length} / ${bes.length}`;
+ document.getElementById("sWinRate").textContent=(ts.length?wins.length/ts.length*100:0).toFixed(1)+"%";document.getElementById("sGrossWin").textContent=rupiah(gw);document.getElementById("sGrossLoss").textContent=rupiah(gl);document.getElementById("sAvgWin").textContent=rupiah(avgW);document.getElementById("sAvgLoss").textContent=rupiah(avgL);document.getElementById("sExpectancy").textContent=rupiah(exp);document.getElementById("sPF").textContent=gl?(gw/gl).toFixed(2):gw?"∞":"0.00";document.getElementById("sBestDay").textContent=rupiah(best);document.getElementById("sWorstDay").textContent=worst?rupiah(worst):"Rp 0";
+ const sessionNames=["Asia","London","New York","Other"],tbody=document.getElementById("sessionStatsTable");
+ tbody.innerHTML=sessionNames.map(name=>{const a=ts.filter(t=>(t.trade_session||"Other")===name),w=a.filter(t=>t.result==="WIN").length,l=a.filter(t=>t.result==="LOSS").length,b=a.filter(t=>t.result==="BE").length,p=a.reduce((sum,t)=>sum+Number(t.profit_loss||0),0),wr=a.length?w/a.length*100:0;return `<tr><td>${name}</td><td>${a.length}</td><td>${w}</td><td>${l}</td><td>${b}</td><td>${wr.toFixed(1)}%</td><td class="${p>0?"success":p<0?"danger":""}">${p>0?"+":""}${rupiah(p)}</td></tr>`}).join("");
+}
+
+async function renderCalendar(){
+ const y=calendarDate.getFullYear(),m=calendarDate.getMonth()+1,r=range(y,m),{data,error}=await db.from("trades").select("trade_date,result,profit_loss").eq("user_id",currentUser.id).gte("trade_date",r.start).lte("trade_date",r.end);
+ document.getElementById("calendarTitle").textContent=new Intl.DateTimeFormat("id-ID",{month:"long",year:"numeric"}).format(new Date(y,m-1,1));
+ if(error)return document.getElementById("calendarGrid").textContent=error.message;
+ const by={};(data||[]).forEach(t=>(by[t.trade_date]??=[]).push(t));const grid=document.getElementById("calendarGrid"),heads=["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
+ grid.innerHTML=heads.map(h=>`<div class="cal-head">${h}</div>`).join("");const first=new Date(y,m-1,1);for(let i=0;i<first.getDay();i++)grid.innerHTML+="<div></div>";
+ const last=new Date(y,m,0).getDate();
+ for(let d=1;d<=last;d++){const date=`${y}-${pad(m)}-${pad(d)}`,arr=by[date]||[],p=arr.reduce((a,t)=>a+Number(t.profit_loss||0),0),w=arr.filter(t=>t.result==="WIN").length,l=arr.filter(t=>t.result==="LOSS").length,wd=new Date(y,m-1,d).getDay();grid.innerHTML+=`<div class="cal-day ${date===localDate()?"today":""} ${wd===0||wd===6?"weekend":""}" onclick="showDayDetails('${date}')"><div class="num">${d}</div>${arr.length?`<div class="mini">${arr.length} trade<br>${w}W / ${l}L<br>${rupiah(p)}</div>`:wd===0||wd===6?`<div class="mini">Market libur</div>`:""}</div>`}
+}
+function changeCalendarMonth(delta){calendarDate.setMonth(calendarDate.getMonth()+delta);renderCalendar()}
+async function showDayDetails(date){
+ const {data,error}=await db.from("trades").select("*").eq("user_id",currentUser.id).eq("trade_date",date).order("created_at",{ascending:true}),box=document.getElementById("dayDetails");
+ if(error)return box.textContent=error.message;if(!data?.length)return box.innerHTML=`<strong>${date}</strong><p class="muted">Tidak ada trade.</p>`;
+ box.innerHTML=`<strong>${date} — ${data.length} trade</strong>`+data.map((t,i)=>`<div style="margin-top:12px;padding:12px;background:#0f1115;border:1px solid #2a2f3a;border-radius:10px"><b>Trade ${i+1}: ${t.symbol} ${t.direction}</b><br>Hasil: ${t.result} | P/L: ${rupiah(t.profit_loss)} | Lot: ${t.lot||0}<br>Sesi: ${t.trade_session||"Belum diisi"}<br>Setup: ${t.setup||"-"}<br>Mental: ${t.mental_state||"-"}<br><span class="muted">${t.notes||""}</span></div>`).join("");
+}
+
+function isWeekend(ds){const d=new Date(ds+"T00:00:00").getDay();return d===0||d===6}
+async function loadHolidays(){
+ const {data,error}=await db.from("market_holidays").select("*").eq("user_id",currentUser.id).order("holiday_date",{ascending:true}),tbody=document.getElementById("holidayTable");
+ if(error)return tbody.innerHTML=`<tr><td colspan="4">${error.message}</td></tr>`;
+ const custom=data||[];
+ tbody.innerHTML=custom.length
+   ? custom.map(h=>`<tr><td>${h.holiday_date}</td><td>${h.name||"-"}</td><td>Tambahan</td><td><button class="small" onclick="deleteHoliday(${h.id})">Hapus</button></td></tr>`).join("")
+   : "<tr><td colspan='4'>Belum ada hari libur tambahan.</td></tr>";
+}
+async function saveHoliday(){
+ if(!validateDateField("holidayDate")){document.getElementById("holidayMsg").textContent="Tanggal tidak valid. Gunakan format DD/MM/YYYY.";showToast("Tanggal hari libur tidak valid.","error");return;}
+ const date=getDateField("holidayDate"),name=document.getElementById("holidayName").value.trim();
+ if(!date)return document.getElementById("holidayMsg").textContent="Pilih tanggal.";
+ if(isWeekend(date)){document.getElementById("holidayMsg").textContent="Sabtu/Minggu sudah otomatis dihitung sebagai libur.";return}
+ const {error}=await db.from("market_holidays").upsert({user_id:currentUser.id,holiday_date:date,name},{onConflict:"user_id,holiday_date"});
+ document.getElementById("holidayMsg").textContent=error?error.message:"Hari libur berhasil disimpan.";
+ if(!error){document.getElementById("holidayName").value="";loadHolidays();loadDashboard();loadStats()}
+}
+async function deleteHoliday(id){if(!confirm("Hapus hari libur ini?"))return;const {error}=await db.from("market_holidays").delete().eq("id",id).eq("user_id",currentUser.id);if(error)alert(error.message);else{loadHolidays();loadDashboard();loadStats()}}
+
+function zonedParts(tz,date){
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",weekday:"short",hourCycle:"h23"}).formatToParts(date);
+ const get=k=>parts.find(p=>p.type===k)?.value;
+ return {year:Number(get("year")),month:Number(get("month")),day:Number(get("day")),hour:Number(get("hour")),minute:Number(get("minute")),second:Number(get("second")),weekday:get("weekday")};
+}
+function offsetMinutes(tz,utcDate){
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:tz,timeZoneName:"longOffset",hour:"2-digit",hourCycle:"h23"}).formatToParts(utcDate);
+ const z=parts.find(p=>p.type==="timeZoneName")?.value||"GMT";
+ const m=z.match(/GMT([+-])(\d{2})(?::?(\d{2}))?/);
+ if(!m)return 0;
+ return (m[1]==="-"?-1:1)*(Number(m[2])*60+Number(m[3]||0));
+}
+function localToUtc(tz,y,mo,d,h,mi=0,s=0){
+ let guess=new Date(Date.UTC(y,mo-1,d,h,mi,s));
+ let off=offsetMinutes(tz,guess);
+ return new Date(guess.getTime()-off*60000);
+}
+function sessionInfo(tz,hour){
+ const now=new Date(),p=zonedParts(tz,now);
+ let targetDate={y:p.year,m:p.month,d:p.day};
+ let day=new Date(Date.UTC(p.year,p.month-1,p.day)).getUTCDay();
+ const currentSeconds=p.hour*3600+p.minute*60+p.second;
+ const startSeconds=hour*3600,endSeconds=(hour+9)*3600;
+ let targetStart,targetEnd,open=false,label="";
+ if(day!==0&&day!==6&&currentSeconds>=startSeconds&&currentSeconds<endSeconds){
+   open=true;
+   targetEnd=localToUtc(tz,p.year,p.month,p.day,hour+9);
+   return {open,delta:Math.max(0,Math.floor((targetEnd-now)/1000)),label:"Buka sekarang • tutup dalam "};
+ }
+ // Find next weekday session start.
+ let add=0;
+ if(day===6)add=2;
+ else if(day===0)add=1;
+ else if(currentSeconds<startSeconds)add=0;
+ else add=(day===5)?3:1;
+ const base=new Date(Date.UTC(p.year,p.month-1,p.day+add));
+ targetStart=localToUtc(tz,base.getUTCFullYear(),base.getUTCMonth()+1,base.getUTCDate(),hour);
+ return {open:false,delta:Math.max(0,Math.floor((targetStart-now)/1000)),label:"Buka dalam "};
+}
+function fmtCountdown(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;return `${h}j ${pad(m)}m ${pad(s)}d`}
+function updateSessionCard(card,count,tz,hour){
+ const x=sessionInfo(tz,hour);document.getElementById(count).textContent=x.label+fmtCountdown(x.delta);document.getElementById(card).classList.toggle("open",x.open);
+}
+function updateSessions(){updateSessionCard("asiaSession","asiaCount","Asia/Tokyo",8);updateSessionCard("londonSession","londonCount","Europe/London",8);updateSessionCard("nySession","nyCount","America/New_York",8)}
+
+db.auth.getSession().then(({data})=>{if(data.session)enterApp(data.session.user)});
+</script>
+</body>
+</html>
