@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2P Chat</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+}
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    min-height: 100vh;
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 5px;
+}
+.subtitle {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+.card {
+    background: #1e293b;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 15px;
+}
+label {
+    display: block;
+    margin-bottom: 7px;
+    color: #cbd5e1;
+}
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #475569;
+    background: #0f172a;
+    color: white;
+    outline: none;
+}
+textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-size: 11px;
+}
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.primary {
+    background: #3b82f6;
+    color: white;
+}
+.secondary {
+    background: #475569;
+    color: white;
+}
+.success {
+    background: #22c55e;
+    color: white;
+}
+.danger {
+    background: #ef4444;
+    color: white;
+}
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.chat {
+    height: 350px;
+    overflow-y: auto;
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 12px;
+}
+.message {
+    margin-bottom: 10px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: #1e293b;
+}
+.message.me {
+    background: #2563eb;
+}
+.message-name {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 3px;
+}
+.status {
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #334155;
+    margin-bottom: 15px;
+}
+.row {
+    display: flex;
+    gap: 8px;
+}
+.row input {
+    flex: 1;
+}
+.hidden {
+    display: none;
+}
+.small {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>💬 P2P Chat</h1>
+    <div class="subtitle">WebRTC • Direct Browser Connection</div>
+    <div class="card">
+        <label>Nama</label>
+        <input id="name" placeholder="Masukkan nama">
+        <div class="row">
+            <button class="primary" onclick="createConnection()">
+                Buat Koneksi
+            </button>
+            <button class="secondary" onclick="prepareAnswer()">
+                Gabung
+            </button>
+        </div>
+    </div>
+    <div id="connectionPanel" class="card">
+        <div class="status" id="status">
+            Belum terhubung
+        </div>
+        <div id="offerSection">
+            <label>1. Kode dari kamu</label>
+            <textarea
+                id="localDescription"
+                readonly
+                placeholder="Kode akan muncul di sini..."
+            ></textarea>
+            <button class="secondary" onclick="copyLocal()">
+                📋 Copy Kode
+            </button>
+            <p class="small">
+                Kirim kode ini kepada teman melalui WhatsApp,
+                Telegram, atau media lain.
+            </p>
+        </div>
+        <div id="answerSection">
+            <label>Masukkan kode dari teman</label>
+            <textarea
+                id="remoteDescription"
+                placeholder="Paste kode teman di sini..."
+            ></textarea>
+            <button class="success" onclick="connectPeer()">
+                🔗 Hubungkan
+            </button>
+        </div>
+    </div>
+    <div class="card">
+        <div id="chat" class="chat"></div>
+        <div class="row" style="margin-top:10px">
+            <input
+                id="message"
+                placeholder="Tulis pesan..."
+                onkeydown="handleEnter(event)"
+            >
+            <button
+                class="primary"
+                onclick="sendMessage()"
+            >
+                Kirim
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+let peer;
+let channel;
+const nameInput = document.getElementById("name");
+const statusText = document.getElementById("status");
+function getName() {
+    const name = nameInput.value.trim();
+    if (!name) {
+        alert("Masukkan nama terlebih dahulu.");
+        return null;
+    }
+    return name;
+}
+// ===============================
+// HOST
+// ===============================
+async function createConnection() {
+    const name = getName();
+    if (!name) return;
+    peer = new RTCPeerConnection({
+        iceServers: [
+            {
+                urls: "stun:stun.l.google.com:19302"
+            }
+        ]
+    });
+    channel = peer.createDataChannel("chat");
+    setupChannel();
+    peer.onicecandidate = event => {
+        if (!event.candidate) {
+            document.getElementById("localDescription").value =
+                JSON.stringify(peer.localDescription);
+            statusText.textContent =
+                "Kode siap. Kirim ke teman.";
+        }
+    };
+    const offer = await peer.createOffer();
+    await peer.setLocalDescription(offer);
+    statusText.textContent =
+        "Membuat kode koneksi...";
+}
+// ===============================
+// JOIN
+// ===============================
+function prepareAnswer() {
+    const name = getName();
+    if (!name) return;
+    peer = new RTCPeerConnection({
+        iceServers: [
+            {
+                urls: "stun:stun.l.google.com:19302"
+            }
+        ]
+    });
+    peer.ondatachannel = event => {
+        channel = event.channel;
+        setupChannel();
+    };
+    peer.onicecandidate = event => {
+        if (!event.candidate) {
+            document.getElementById("localDescription").value =
+                JSON.stringify(peer.localDescription);
+            statusText.textContent =
+                "Balasan siap. Kirim kembali ke host.";
+        }
+    };
+    statusText.textContent =
+        "Paste kode dari host lalu klik Hubungkan.";
+}
+// ===============================
+// CONNECT
+// ===============================
+async function connectPeer() {
+    if (!peer) {
+        alert("Klik Buat Koneksi atau Gabung terlebih dahulu.");
+        return;
+    }
+    const remoteText =
+        document.getElementById("remoteDescription").value.trim();
+    if (!remoteText) {
+        alert("Masukkan kode terlebih dahulu.");
+        return;
+    }
+    try {
+        const remote =
+            JSON.parse(remoteText);
+        await peer.setRemoteDescription(remote);
+        if (remote.type === "offer") {
+            const answer =
+                await peer.createAnswer();
+            await peer.setLocalDescription(answer);
+        }
+        statusText.textContent =
+            "Menghubungkan...";
+    } catch (error) {
+        console.error(error);
+        alert("Kode koneksi tidak valid.");
+    }
+}
+// ===============================
+// DATA CHANNEL
+// ===============================
+function setupChannel() {
+    channel.onopen = () => {
+        statusText.textContent =
+            "🟢 Terhubung langsung P2P";
+        addSystemMessage(
+            "Koneksi P2P berhasil."
+        );
+        channel.send(
+            JSON.stringify({
+                type: "join",
+                name: nameInput.value
+            })
+        );
+    };
+    channel.onclose = () => {
+        statusText.textContent =
+            "🔴 Koneksi terputus";
+    };
+    channel.onerror = error => {
+        console.error(error);
+    };
+    channel.onmessage = event => {
+        try {
+            const data =
+                JSON.parse(event.data);
+            if (data.type === "message") {
+                addMessage(
+                    data.name,
+                    data.message,
+                    false
+                );
+            }
+            if (data.type === "join") {
+                addSystemMessage(
+                    data.name + " bergabung."
+                );
+            }
+        } catch {
+            console.log(event.data);
+        }
+    };
+}
+// ===============================
+// SEND MESSAGE
+// ===============================
+function sendMessage() {
+    if (!channel ||
+        channel.readyState !== "open") {
+        alert("Belum terhubung.");
+        return;
+    }
+    const message =
+        document.getElementById("message").value.trim();
+    const name =
+        nameInput.value.trim();
+    if (!message) return;
+    const data = {
+        type: "message",
+        name: name,
+        message: message
+    };
+    channel.send(
+        JSON.stringify(data)
+    );
+    addMessage(
+        name,
+        message,
+        true
+    );
+    document.getElementById("message").value = "";
+}
+// ===============================
+// UI
+// ===============================
+function addMessage(
+    name,
+    message,
+    mine
+) {
+    const chat =
+        document.getElementById("chat");
+    const div =
+        document.createElement("div");
+    div.className =
+        "message" +
+        (mine ? " me" : "");
+    div.innerHTML = `
+        <div class="message-name">
+            ${escapeHTML(name)}
+        </div>
+        <div>
+            ${escapeHTML(message)}
+        </div>
+    `;
+    chat.appendChild(div);
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+function addSystemMessage(message) {
+    const chat =
+        document.getElementById("chat");
+    const div =
+        document.createElement("div");
+    div.style.textAlign =
+        "center";
+    div.style.color =
+        "#94a3b8";
+    div.style.fontSize =
+        "12px";
+    div.style.margin =
+        "10px 0";
+    div.textContent =
+        message;
+    chat.appendChild(div);
+}
+function escapeHTML(text) {
+    const div =
+        document.createElement("div");
+    div.textContent =
+        text;
+    return div.innerHTML;
+}
+function handleEnter(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+}
+async function copyLocal() {
+    const text =
+        document.getElementById("localDescription").value;
+    if (!text) return;
+    await navigator.clipboard.writeText(text);
+    alert("Kode berhasil disalin.");
+}
+</script>
+</body>
+</html>
