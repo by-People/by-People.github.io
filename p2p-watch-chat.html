@@ -2,213 +2,1100 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>P2P Watch Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WatchP2P - Nonton Bareng</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff}
-.wrap{max-width:650px;margin:auto;padding:20px;min-height:100vh}
-h1{text-align:center;margin:10px 0 4px}.sub{text-align:center;color:#94a3b8;margin-bottom:20px}
-.card{background:#1e293b;border-radius:14px;padding:16px;margin:12px 0}
-label{display:block;color:#cbd5e1;margin:10px 0 6px}
-input,button{font:inherit}input{width:100%;padding:12px;border:1px solid #475569;border-radius:9px;background:#0f172a;color:#fff}
-button{border:0;border-radius:9px;padding:11px 14px;font-weight:700;cursor:pointer;margin-top:10px}
-.primary{background:#2563eb;color:white}.secondary{background:#475569;color:white}.success{background:#22c55e;color:#052e16}
-.row{display:flex;gap:8px}.row>*{flex:1}
-.status{padding:10px;border-radius:9px;background:#334155;text-align:center}
-.link{font-size:12px;word-break:break-all;color:#93c5fd;margin-top:8px}
-.chat{height:330px;overflow:auto;background:#0f172a;border-radius:10px;padding:10px}
-.msg{background:#1e293b;padding:9px 11px;border-radius:10px;margin:7px 0}
-.msg.me{background:#2563eb}.name{font-size:11px;color:#cbd5e1;margin-bottom:3px}
-.system{text-align:center;color:#94a3b8;font-size:12px;margin:8px}
-.small{font-size:12px;color:#94a3b8;line-height:1.5}
-.hidden{display:none}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: #0b1120;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+.app {
+    max-width: 1100px;
+    margin: auto;
+    padding: 16px;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+.logo span {
+    color: #3b82f6;
+}
+.status {
+    background: #1e293b;
+    color: #94a3b8;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+.status.ok {
+    color: #86efac;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 330px;
+    gap: 15px;
+}
+.card {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.video {
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    position: relative;
+}
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+.placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #94a3b8;
+    text-align: center;
+}
+.placeholder b {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+.controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+button {
+    border: none;
+    border-radius: 9px;
+    padding: 10px 14px;
+    background: #334155;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+button:hover {
+    filter: brightness(1.15);
+}
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+.primary {
+    background: #2563eb;
+}
+.green {
+    background: #22c55e;
+    color: #052e16;
+}
+.red {
+    background: #ef4444;
+}
+input {
+    width: 100%;
+    padding: 11px;
+    border-radius: 9px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: white;
+    outline: none;
+}
+label {
+    display: block;
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+}
+.row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+.row > * {
+    flex: 1;
+}
+.room-link {
+    color: #93c5fd;
+    font-size: 12px;
+    word-break: break-all;
+    margin: 10px 0;
+}
+.chat {
+    height: 330px;
+    overflow-y: auto;
+    background: #0b1220;
+    border-radius: 10px;
+    padding: 10px;
+}
+.message {
+    background: #1e293b;
+    padding: 8px 10px;
+    border-radius: 10px;
+    margin: 6px 0;
+    word-break: break-word;
+}
+.message.me {
+    background: #2563eb;
+}
+.name {
+    font-size: 11px;
+    color: #cbd5e1;
+    margin-bottom: 3px;
+}
+.system {
+    text-align: center;
+    color: #64748b;
+    font-size: 11px;
+    margin: 8px;
+}
+.people {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.person {
+    background: #1e293b;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+}
+.small {
+    color: #94a3b8;
+    font-size: 11px;
+    line-height: 1.5;
+}
+.hidden {
+    display: none !important;
+}
+@media (max-width: 800px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    .chat {
+        height: 250px;
+    }
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-<h1>💬 P2P Watch Chat</h1>
-<div class="sub">Chat langsung antar-browser</div>
-
+<div class="app">
+<header>
+    <div class="logo">
+        🎬 Watch<span>P2P</span>
+    </div>
+    <div id="status" class="status">
+        Belum terhubung
+    </div>
+</header>
+<div class="grid">
+<main>
+<!-- VIDEO -->
 <div class="card">
-<label>Nama</label>
-<input id="name" placeholder="Nama kamu">
-<div class="row">
-<button class="primary" onclick="createRoom()">Buat Room</button>
-<button class="secondary" onclick="joinRoom()">Gabung Room</button>
+    <div class="video">
+        <video
+            id="screen"
+            autoplay
+            playsinline
+            controls>
+        </video>
+        <div
+            id="placeholder"
+            class="placeholder">
+            <b>Belum ada video</b>
+            <span>
+                Host dapat membagikan tab browser
+                menggunakan tombol di bawah.
+            </span>
+        </div>
+    </div>
+    <div class="controls">
+        <button
+            id="shareBtn"
+            class="green"
+            onclick="startShare()">
+            🖥️ Share Tab + Audio
+        </button>
+        <button
+            id="stopBtn"
+            class="red"
+            onclick="stopShare()"
+            disabled>
+            ⏹ Stop Share
+        </button>
+        <button onclick="fullscreen()">
+            ⛶ Fullscreen
+        </button>
+    </div>
 </div>
-</div>
-
+<!-- PESERTA -->
 <div class="card">
-<div id="status" class="status">Belum terhubung</div>
-<div id="roomInfo" class="hidden">
-<label>Link Room</label>
-<div id="roomLink" class="link"></div>
-<button class="secondary" onclick="copyRoomLink()">📋 Copy Link</button>
+    <b>👥 Peserta</b>
+    <div
+        id="people"
+        class="people"
+        style="margin-top:10px">
+    </div>
 </div>
-</div>
-
+<!-- ROOM -->
 <div class="card">
-<div id="chat" class="chat"></div>
-<div class="row">
-<input id="message" placeholder="Tulis pesan..." onkeydown="enterSend(event)">
-<button class="primary" onclick="sendMessage()">Kirim</button>
+    <b>🔗 Room</b>
+    <div class="row">
+        <input
+            id="roomInput"
+            placeholder="Nama room">
+        <button
+            class="primary"
+            onclick="createRoom()">
+            Buat
+        </button>
+    </div>
+    <div
+        id="roomLink"
+        class="room-link">
+    </div>
+    <button onclick="copyLink()">
+        📋 Copy Link
+    </button>
 </div>
+</main>
+<aside>
+<!-- IDENTITAS -->
+<div class="card">
+    <b>👤 Identitas</b>
+    <label style="margin-top:12px">
+        Nama
+    </label>
+    <input
+        id="name"
+        placeholder="Masukkan nama">
+    <div class="row">
+        <button
+            class="primary"
+            onclick="createRoom()">
+            Buat Room
+        </button>
+        <button
+            onclick="joinRoom()">
+            Gabung
+        </button>
+    </div>
 </div>
-
+<!-- CHAT -->
+<div class="card">
+    <b>💬 Chat</b>
+    <div
+        id="chat"
+        class="chat"
+        style="margin-top:10px">
+    </div>
+    <div class="row">
+        <input
+            id="message"
+            placeholder="Tulis pesan..."
+            onkeydown="if(event.key==='Enter')sendMessage()">
+        <button
+            class="primary"
+            onclick="sendMessage()">
+            Kirim
+        </button>
+    </div>
+</div>
 <div class="card small">
-<b>Catatan:</b> Versi ini memakai PeerJS Cloud untuk signaling.
-Pesan dikirim melalui koneksi WebRTC setelah peer terhubung.
-Room dibuat berdasarkan ID di URL.
+    <b>Cara menggunakan:</b>
+    <br><br>
+    1. Host masukkan nama.
+    <br>
+    2. Klik <b>Buat Room</b>.
+    <br>
+    3. Copy link room.
+    <br>
+    4. Kirim link kepada teman.
+    <br>
+    5. Teman membuka link tersebut.
+    <br>
+    6. Teman masukkan nama lalu klik
+    <b>Gabung</b>.
+    <br>
+    7. Host klik
+    <b>Share Tab + Audio</b>.
+    <br>
+    8. Pilih tab browser yang sedang
+    memutar video.
+    <br><br>
+    Untuk audio, aktifkan
+    <b>Share tab audio</b>
+    jika browser menampilkan opsi tersebut.
+</div>
+</aside>
 </div>
 </div>
-
+<!-- PEERJS -->
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-let peer=null;
-let conn=null;
-let roomId=null;
-let myName="";
-let isHost=false;
-
-const $=id=>document.getElementById(id);
-
-function cleanId(){
-  return "watch-" + Math.random().toString(36).slice(2,10);
+let peer = null;
+let roomId = null;
+let myName = "";
+let isHost = false;
+let connections = [];
+let localStream = null;
+/* =========================
+   ELEMENT
+========================= */
+const status =
+    document.getElementById("status");
+const screen =
+    document.getElementById("screen");
+const placeholder =
+    document.getElementById("placeholder");
+const chat =
+    document.getElementById("chat");
+const people =
+    document.getElementById("people");
+/* =========================
+   STATUS
+========================= */
+function setStatus(text, ok = false) {
+    status.textContent = text;
+    status.className =
+        "status" + (ok ? " ok" : "");
 }
-
-function getName(){
-  const n=$("name").value.trim();
-  if(!n){alert("Masukkan nama terlebih dahulu.");return null;}
-  localStorage.setItem("watch_name",n);
-  return n;
+/* =========================
+   NAME
+========================= */
+function getName() {
+    const name =
+        document.getElementById("name")
+        .value
+        .trim();
+    if (!name) {
+        alert("Masukkan nama terlebih dahulu.");
+        return null;
+    }
+    localStorage.setItem(
+        "watchp2p_name",
+        name
+    );
+    return name;
 }
-
-function setStatus(t){$("status").textContent=t;}
-
-function addSystem(t){
-  const d=document.createElement("div");
-  d.className="system"; d.textContent=t;
-  $("chat").appendChild(d);
-  $("chat").scrollTop=$("chat").scrollHeight;
+/* =========================
+   ROOM ID
+========================= */
+function generateRoom() {
+    const input =
+        document.getElementById("roomInput")
+        .value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "-");
+    if (input) {
+        return input.slice(0, 30);
+    }
+    return (
+        "room-" +
+        Math.random()
+            .toString(36)
+            .substring(2, 9)
+    );
 }
-
-function addMessage(name,msg,me=false){
-  const d=document.createElement("div");
-  d.className="msg"+(me?" me":"");
-  const n=document.createElement("div");
-  n.className="name"; n.textContent=name;
-  const m=document.createElement("div");
-  m.textContent=msg;
-  d.append(n,m);
-  $("chat").appendChild(d);
-  $("chat").scrollTop=$("chat").scrollHeight;
+/* =========================
+   ROOM URL
+========================= */
+function roomURL() {
+    return (
+        location.origin +
+        location.pathname +
+        "?room=" +
+        encodeURIComponent(roomId)
+    );
 }
-
-function showRoom(){
-  const url=location.origin+location.pathname+"?room="+encodeURIComponent(roomId);
-  $("roomInfo").classList.remove("hidden");
-  $("roomLink").textContent=url;
-  history.replaceState(null,"","?room="+encodeURIComponent(roomId));
+function showRoom() {
+    document.getElementById(
+        "roomLink"
+    ).textContent = roomURL();
+    history.replaceState(
+        null,
+        "",
+        "?room=" +
+        encodeURIComponent(roomId)
+    );
 }
-
-async function copyRoomLink(){
-  const url=location.origin+location.pathname+"?room="+encodeURIComponent(roomId);
-  await navigator.clipboard.writeText(url);
-  alert("Link room berhasil disalin.");
+/* =========================
+   CREATE ROOM
+========================= */
+function createRoom() {
+    myName = getName();
+    if (!myName)
+        return;
+    if (peer) {
+        alert("Kamu sudah berada di room.");
+        return;
+    }
+    roomId = generateRoom();
+    isHost = true;
+    showRoom();
+    setStatus(
+        "Membuat room..."
+    );
+    peer = new Peer(roomId);
+    peer.on(
+        "open",
+        function(id) {
+            setStatus(
+                "🟢 Room siap — menunggu teman",
+                true
+            );
+            addSystem(
+                "Room berhasil dibuat."
+            );
+        }
+    );
+    peer.on(
+        "connection",
+        function(connection) {
+            setupConnection(connection);
+        }
+    );
+    peer.on(
+        "call",
+        function(call) {
+            /*
+            Host tidak menerima
+            media dari penonton.
+            */
+            call.close();
+        }
+    );
+    peer.on(
+        "error",
+        function(error) {
+            console.error(error);
+            setStatus(
+                "🔴 " +
+                error.type
+            );
+        }
+    );
 }
-
-function setupConn(c){
-  conn=c;
-  c.on("open",()=>{
-    setStatus("🟢 Terhubung P2P");
-    addSystem("Terhubung langsung.");
-    c.send(JSON.stringify({type:"join",name:myName}));
-  });
-  c.on("data",raw=>{
-    try{
-      const d=JSON.parse(raw);
-      if(d.type==="join"){
-        addSystem(d.name+" bergabung.");
-      }else if(d.type==="message"){
-        addMessage(d.name,d.message,false);
-      }
-    }catch(e){}
-  });
-  c.on("close",()=>{
-    setStatus("🟠 Peer terputus");
-    addSystem("Koneksi terputus.");
-  });
-  c.on("error",e=>{
-    console.error(e);
-    setStatus("🔴 Error koneksi");
-  });
+/* =========================
+   JOIN ROOM
+========================= */
+function joinRoom() {
+    myName = getName();
+    if (!myName)
+        return;
+    if (peer) {
+        alert("Kamu sudah berada di room.");
+        return;
+    }
+    const params =
+        new URLSearchParams(
+            location.search
+        );
+    roomId =
+        params.get("room") ||
+        document.getElementById(
+            "roomInput"
+        ).value.trim();
+    if (!roomId) {
+        alert(
+            "Buka link room dari host terlebih dahulu."
+        );
+        return;
+    }
+    isHost = false;
+    showRoom();
+    setStatus(
+        "Menghubungkan ke host..."
+    );
+    peer = new Peer();
+    peer.on(
+        "open",
+        function() {
+            const connection =
+                peer.connect(
+                    roomId,
+                    {
+                        reliable: true
+                    }
+                );
+            setupConnection(
+                connection
+            );
+        }
+    );
+    peer.on(
+        "call",
+        function(call) {
+            /*
+            Penonton menerima
+            stream dari host.
+            */
+            call.answer();
+            call.on(
+                "stream",
+                function(stream) {
+                    screen.srcObject =
+                        stream;
+                    placeholder.classList
+                        .add("hidden");
+                    setStatus(
+                        "🟢 Menerima screen host",
+                        true
+                    );
+                }
+            );
+            call.on(
+                "close",
+                function() {
+                    screen.srcObject =
+                        null;
+                    placeholder.classList
+                        .remove("hidden");
+                }
+            );
+            call.on(
+                "error",
+                function(error) {
+                    console.error(
+                        error
+                    );
+                }
+            );
+        }
+    );
+    peer.on(
+        "error",
+        function(error) {
+            console.error(error);
+            setStatus(
+                "🔴 Room tidak ditemukan",
+            );
+        }
+    );
 }
-
-function createRoom(){
-  myName=getName(); if(!myName)return;
-  roomId=cleanId(); isHost=true; showRoom();
-  setStatus("Membuat room...");
-  peer=new Peer(roomId);
-  peer.on("open",id=>{
-    setStatus("🟢 Room siap — tunggu teman");
-    addSystem("Room "+id+" dibuat.");
-  });
-  peer.on("connection",c=>setupConn(c));
-  peer.on("error",e=>{
-    console.error(e);
-    setStatus("🔴 "+e.type);
-  });
+/* =========================
+   CONNECTION
+========================= */
+function setupConnection(
+    connection
+) {
+    connections.push(
+        connection
+    );
+    connection.on(
+        "open",
+        function() {
+            setStatus(
+                "🟢 Terhubung P2P",
+                true
+            );
+            connection.send(
+                JSON.stringify({
+                    type: "hello",
+                    name: myName
+                })
+            );
+            addSystem(
+                "Peer berhasil terhubung."
+            );
+            /*
+            Jika host sudah
+            melakukan share,
+            kirim stream ke peer baru.
+            */
+            if (
+                isHost &&
+                localStream
+            ) {
+                setTimeout(
+                    function() {
+                        callPeer(
+                            connection
+                        );
+                    },
+                    500
+                );
+            }
+        }
+    );
+    connection.on(
+        "data",
+        function(raw) {
+            let data;
+            try {
+                data =
+                    JSON.parse(raw);
+            } catch {
+                return;
+            }
+            if (
+                data.type ===
+                "hello"
+            ) {
+                addPerson(
+                    data.name
+                );
+                /*
+                Beritahu peserta
+                lain bahwa user
+                baru masuk.
+                */
+                broadcast(
+                    {
+                        type: "user",
+                        name: data.name
+                    },
+                    connection
+                );
+            }
+            if (
+                data.type ===
+                "user"
+            ) {
+                addPerson(
+                    data.name
+                );
+            }
+            if (
+                data.type ===
+                "message"
+            ) {
+                addMessage(
+                    data.name,
+                    data.message,
+                    false
+                );
+            }
+        }
+    );
+    connection.on(
+        "close",
+        function() {
+            connections =
+                connections.filter(
+                    c =>
+                    c !== connection
+                );
+            if (
+                connections.length
+            ) {
+                setStatus(
+                    "🟢 Terhubung",
+                    true
+                );
+            } else {
+                setStatus(
+                    "🟠 Menunggu koneksi"
+                );
+            }
+        }
+    );
 }
-
-function joinRoom(){
-  myName=getName(); if(!myName)return;
-  const params=new URLSearchParams(location.search);
-  roomId=params.get("room");
-  if(!roomId){
-    alert("Buka link room dari host terlebih dahulu.");
-    return;
-  }
-  isHost=false; showRoom();
-  setStatus("Menghubungkan ke host...");
-  peer=new Peer();
-  peer.on("open",()=>{
-    const c=peer.connect(roomId,{reliable:true});
-    setupConn(c);
-  });
-  peer.on("error",e=>{
-    console.error(e);
-    setStatus("🔴 Room tidak ditemukan / koneksi gagal");
-  });
+/* =========================
+   CALL PEER
+========================= */
+function callPeer(
+    connection
+) {
+    if (
+        !localStream ||
+        !connection ||
+        !connection.peer
+    ) {
+        return;
+    }
+    const call =
+        peer.call(
+            connection.peer,
+            localStream
+        );
+    call.on(
+        "error",
+        function(error) {
+            console.error(
+                error
+            );
+        }
+    );
 }
-
-function sendMessage(){
-  if(!conn||conn.open!==true){
-    alert("Belum terhubung ke peer.");
-    return;
-  }
-  const msg=$("message").value.trim();
-  if(!msg)return;
-  const data={type:"message",name:myName,message:msg};
-  conn.send(JSON.stringify(data));
-  addMessage(myName,msg,true);
-  $("message").value="";
+/* =========================
+   SHARE SCREEN
+========================= */
+async function startShare() {
+    if (!isHost) {
+        alert(
+            "Hanya host yang dapat membagikan tab."
+        );
+        return;
+    }
+    if (!peer) {
+        alert(
+            "Buat room terlebih dahulu."
+        );
+        return;
+    }
+    try {
+        localStream =
+            await navigator
+            .mediaDevices
+            .getDisplayMedia({
+                video: {
+                    frameRate: {
+                        ideal: 30,
+                        max: 60
+                    }
+                },
+                audio: true
+            });
+        screen.srcObject =
+            localStream;
+        placeholder.classList
+            .add("hidden");
+        document.getElementById(
+            "shareBtn"
+        ).disabled = true;
+        document.getElementById(
+            "stopBtn"
+        ).disabled = false;
+        setStatus(
+            "🟢 Kamu sedang share tab",
+            true
+        );
+        const videoTrack =
+            localStream
+            .getVideoTracks()[0];
+        videoTrack.addEventListener(
+            "ended",
+            stopShare
+        );
+        /*
+        Kirim stream
+        ke semua peserta.
+        */
+        connections.forEach(
+            function(connection) {
+                callPeer(
+                    connection
+                );
+            }
+        );
+        addSystem(
+            "Host mulai membagikan layar."
+        );
+    } catch (error) {
+        console.error(error);
+        alert(
+            "Share screen dibatalkan atau browser tidak mendukung fitur ini."
+        );
+    }
 }
-
-function enterSend(e){
-  if(e.key==="Enter")sendMessage();
+/* =========================
+   STOP SHARE
+========================= */
+function stopShare() {
+    if (!localStream)
+        return;
+    localStream
+        .getTracks()
+        .forEach(
+            track =>
+            track.stop()
+        );
+    localStream = null;
+    screen.srcObject =
+        null;
+    placeholder.classList
+        .remove("hidden");
+    document.getElementById(
+        "shareBtn"
+    ).disabled = false;
+    document.getElementById(
+        "stopBtn"
+    ).disabled = true;
+    setStatus(
+        connections.length
+        ? "🟢 Terhubung"
+        : "🟠 Menunggu koneksi",
+        !!connections.length
+    );
+    addSystem(
+        "Host menghentikan share."
+    );
 }
-
-window.addEventListener("load",()=>{
-  const saved=localStorage.getItem("watch_name");
-  if(saved)$("name").value=saved;
-  const params=new URLSearchParams(location.search);
-  if(params.get("room")){
-    roomId=params.get("room");
-    $("roomInfo").classList.remove("hidden");
-    $("roomLink").textContent=location.href;
-    setStatus("Room ditemukan — masukkan nama lalu klik Gabung Room");
-  }
-});
+/* =========================
+   CHAT
+========================= */
+function sendMessage() {
+    if (
+        !connections.some(
+            connection =>
+            connection.open
+        )
+    ) {
+        alert(
+            "Belum ada peserta terhubung."
+        );
+        return;
+    }
+    const input =
+        document.getElementById(
+            "message"
+        );
+    const text =
+        input.value.trim();
+    if (!text)
+        return;
+    const data = {
+        type: "message",
+        name: myName,
+        message: text
+    };
+    broadcast(
+        data
+    );
+    addMessage(
+        myName,
+        text,
+        true
+    );
+    input.value = "";
+}
+/* =========================
+   BROADCAST
+========================= */
+function broadcast(
+    data,
+    except = null
+) {
+    const raw =
+        JSON.stringify(data);
+    connections.forEach(
+        function(connection) {
+            if (
+                connection !== except &&
+                connection.open
+            ) {
+                connection.send(
+                    raw
+                );
+            }
+        }
+    );
+}
+/* =========================
+   CHAT UI
+========================= */
+function addMessage(
+    name,
+    text,
+    mine
+) {
+    const div =
+        document.createElement(
+            "div"
+        );
+    div.className =
+        "message" +
+        (
+            mine
+            ? " me"
+            : ""
+        );
+    const nameDiv =
+        document.createElement(
+            "div"
+        );
+    nameDiv.className =
+        "name";
+    nameDiv.textContent =
+        name;
+    const messageDiv =
+        document.createElement(
+            "div"
+        );
+    messageDiv.textContent =
+        text;
+    div.appendChild(
+        nameDiv
+    );
+    div.appendChild(
+        messageDiv
+    );
+    chat.appendChild(
+        div
+    );
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+function addSystem(
+    text
+) {
+    const div =
+        document.createElement(
+            "div"
+        );
+    div.className =
+        "system";
+    div.textContent =
+        text;
+    chat.appendChild(
+        div
+    );
+    chat.scrollTop =
+        chat.scrollHeight;
+}
+/* =========================
+   PEOPLE
+========================= */
+function addPerson(
+    name
+) {
+    const id =
+        "person-" +
+        btoa(
+            unescape(
+                encodeURIComponent(name)
+            )
+        )
+        .replace(
+            /[^a-z0-9]/gi,
+            ""
+        )
+        .slice(0, 10);
+    if (
+        document.getElementById(id)
+    ) {
+        return;
+    }
+    const div =
+        document.createElement(
+            "div"
+        );
+    div.className =
+        "person";
+    div.id =
+        id;
+    div.textContent =
+        "👤 " + name;
+    people.appendChild(
+        div
+    );
+}
+/* =========================
+   COPY LINK
+========================= */
+async function copyLink() {
+    if (!roomId) {
+        alert(
+            "Buat atau gabung room terlebih dahulu."
+        );
+        return;
+    }
+    try {
+        await navigator
+            .clipboard
+            .writeText(
+                roomURL()
+            );
+        alert(
+            "Link room berhasil disalin."
+        );
+    } catch {
+        alert(
+            roomURL()
+        );
+    }
+}
+/* =========================
+   FULLSCREEN
+========================= */
+function fullscreen() {
+    if (
+        screen.requestFullscreen
+    ) {
+        screen.requestFullscreen();
+    }
+}
+/* =========================
+   LOAD
+========================= */
+window.addEventListener(
+    "load",
+    function() {
+        const saved =
+            localStorage.getItem(
+                "watchp2p_name"
+            );
+        if (saved) {
+            document.getElementById(
+                "name"
+            ).value = saved;
+        }
+        const params =
+            new URLSearchParams(
+                location.search
+            );
+        const room =
+            params.get("room");
+        if (room) {
+            roomId = room;
+            document.getElementById(
+                "roomInput"
+            ).value = room;
+            document.getElementById(
+                "roomLink"
+            ).textContent =
+                roomURL();
+            setStatus(
+                "Room ditemukan — masukkan nama lalu Gabung"
+            );
+        }
+    }
+);
+/* =========================
+   RECONNECT PEER
+========================= */
+window.addEventListener(
+    "online",
+    function() {
+        if (
+            peer &&
+            peer.disconnected
+        ) {
+            try {
+                peer.reconnect();
+            } catch {}
+        }
+    }
+);
 </script>
 </body>
 </html>
