@@ -3,44 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
 <title>Watch Party P2P</title>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 html,body{
     margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#080a0d;
-    color:#fff;
+    background:#090b0f;
+    color:white;
     font-family:Arial,Helvetica,sans-serif;
 }
 
 button{
     border:0;
     border-radius:8px;
-    padding:9px 12px;
-    background:#252b34;
-    color:#fff;
+    padding:9px 11px;
+    background:#252a32;
+    color:white;
     cursor:pointer;
-    font-size:13px;
+    font-size:12px;
 }
 
-button:hover{background:#343c48}
-button:disabled{opacity:.4;cursor:not-allowed}
+button:hover{
+    background:#353c48;
+}
+
+button:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
 
 input{
-    border:1px solid #343a44;
+    border:1px solid #353b45;
     background:#171a20;
-    color:#fff;
+    color:white;
     border-radius:8px;
-    padding:10px;
+    padding:9px;
     outline:none;
 }
+
+/* ==================================================
+   APP
+================================================== */
 
 .app{
     width:100%;
@@ -48,7 +61,9 @@ input{
     display:flex;
 }
 
-/* ================= STAGE ================= */
+/* ==================================================
+   STAGE
+================================================== */
 
 .stage{
     position:relative;
@@ -74,28 +89,31 @@ input{
     display:flex;
     align-items:center;
     justify-content:center;
+    color:#858c96;
     text-align:center;
-    color:#8b929c;
-    font-size:18px;
     pointer-events:none;
 }
 
-.no-screen.hidden{display:none}
+.no-screen.hidden{
+    display:none;
+}
 
-/* ================= STAGE BUTTON ================= */
+/* ==================================================
+   STAGE CONTROLS
+================================================== */
 
 .stage-controls{
     position:absolute;
     top:12px;
     left:12px;
-    z-index:100;
+    z-index:1000;
     display:flex;
-    gap:7px;
+    gap:6px;
     flex-wrap:wrap;
 }
 
-.stage-btn{
-    background:rgba(20,24,30,.85);
+.stage-button{
+    background:rgba(20,24,30,.86);
     backdrop-filter:blur(10px);
 }
 
@@ -103,37 +121,48 @@ input{
     position:absolute;
     top:12px;
     right:12px;
-    z-index:100;
-    padding:8px 11px;
+    z-index:1000;
+    padding:8px 10px;
     border-radius:8px;
-    background:rgba(20,24,30,.85);
-    backdrop-filter:blur(10px);
-    color:#c3c9d1;
+    background:rgba(20,24,30,.86);
+    color:#b8bec8;
     font-size:11px;
 }
 
-/* ================= BUBBLES ================= */
+/* ==================================================
+   CAMERA BUBBLES
+================================================== */
 
 .bubbles{
     position:absolute;
     inset:0;
-    z-index:80;
+    z-index:900;
     pointer-events:none;
 }
 
 .bubble{
     position:absolute;
     left:15px;
-    bottom:15px;
+    top:15px;
+
     width:145px;
     height:105px;
-    background:#11151b;
-    border:2px solid #424a56;
+
+    background:#11151a;
+
+    border:2px solid #454d59;
+
     border-radius:12px;
+
     overflow:hidden;
-    box-shadow:0 6px 25px rgba(0,0,0,.55);
+
+    box-shadow:
+        0 6px 25px rgba(0,0,0,.55);
+
     pointer-events:auto;
+
     touch-action:none;
+
     user-select:none;
 }
 
@@ -141,20 +170,26 @@ input{
     width:100%;
     height:100%;
     object-fit:cover;
-    background:#101216;
+    background:#111;
 }
 
 .bubble-name{
     position:absolute;
     left:5px;
     bottom:5px;
-    max-width:85%;
+
+    max-width:82%;
+
     overflow:hidden;
     white-space:nowrap;
     text-overflow:ellipsis;
-    background:rgba(0,0,0,.65);
-    border-radius:5px;
+
     padding:4px 6px;
+
+    background:rgba(0,0,0,.65);
+
+    border-radius:5px;
+
     font-size:10px;
 }
 
@@ -162,47 +197,62 @@ input{
     position:absolute;
     right:5px;
     top:5px;
-    background:rgba(0,0,0,.7);
-    border-radius:5px;
+
     padding:4px 5px;
+
+    border-radius:5px;
+
+    background:rgba(0,0,0,.7);
+
     font-size:10px;
 }
 
 .bubble-off{
     position:absolute;
     inset:0;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#14171c;
-    font-size:27px;
+
+    background:#15181d;
+
+    font-size:28px;
 }
 
-.bubble-size{
+.bubble-resize{
     position:absolute;
     right:0;
     bottom:0;
-    width:22px;
-    height:22px;
-    cursor:nwse-resize;
-    background:rgba(255,255,255,.18);
+
+    width:24px;
+    height:24px;
+
+    background:rgba(255,255,255,.2);
+
     border-radius:8px 0 0 0;
-    z-index:5;
+
+    cursor:nwse-resize;
 }
 
-/* ================= SIDEBAR ================= */
+/* ==================================================
+   SIDEBAR
+================================================== */
 
 .sidebar{
     width:360px;
     height:100%;
+
     display:flex;
     flex-direction:column;
+
     background:#15181e;
-    border-left:1px solid #2b3038;
+
+    border-left:1px solid #292e36;
 }
 
 .header{
-    padding:13px;
+    padding:12px;
     border-bottom:1px solid #292e36;
 }
 
@@ -213,33 +263,41 @@ input{
 
 .connection{
     margin-top:4px;
+    color:#858d98;
     font-size:11px;
-    color:#89919d;
 }
 
-/* ================= CHAT ================= */
+/* ==================================================
+   CHAT
+================================================== */
 
 .chat{
-    order:1;
     height:37%;
-    min-height:220px;
+    min-height:210px;
+
     display:flex;
     flex-direction:column;
+
     border-bottom:1px solid #292e36;
 }
 
 .section-title{
     padding:9px 12px;
+
+    border-bottom:1px solid #292e36;
+
+    color:#adb4be;
+
     font-size:12px;
     font-weight:bold;
-    color:#adb4be;
-    border-bottom:1px solid #292e36;
 }
 
 .messages{
     flex:1;
     min-height:0;
+
     overflow-y:auto;
+
     padding:10px;
 }
 
@@ -248,25 +306,36 @@ input{
 }
 
 .message-name{
-    color:#858e9b;
-    font-size:10px;
     margin-bottom:3px;
+
+    color:#858e9b;
+
+    font-size:10px;
 }
 
 .message-text{
     display:inline-block;
+
     max-width:92%;
+
     padding:7px 9px;
-    background:#252a33;
+
+    background:#252a32;
+
     border-radius:8px;
+
     font-size:12px;
+
     word-break:break-word;
 }
 
 .chat-input{
     display:flex;
+
     gap:6px;
+
     padding:8px;
+
     border-top:1px solid #292e36;
 }
 
@@ -275,25 +344,35 @@ input{
     min-width:0;
 }
 
-/* ================= OTHER PANELS ================= */
+/* ==================================================
+   SIDEBAR SCROLL
+================================================== */
 
-.scroll-area{
+.sidebar-scroll{
     flex:1;
     min-height:0;
+
     overflow-y:auto;
 }
 
 .panel{
     padding:11px 12px;
+
     border-bottom:1px solid #292e36;
 }
 
 .panel-title{
+    margin-bottom:7px;
+
     color:#adb4be;
+
     font-size:12px;
     font-weight:bold;
-    margin-bottom:7px;
 }
+
+/* ==================================================
+   IDENTITY
+================================================== */
 
 .name-row{
     display:flex;
@@ -305,60 +384,64 @@ input{
     min-width:0;
 }
 
+/* ==================================================
+   CONTROLS
+================================================== */
+
 .controls{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:6px;
 }
 
+/* ==================================================
+   ROOM
+================================================== */
+
 .room-row{
     display:flex;
-    gap:5px;
+    gap:6px;
 }
 
 .room-row input{
     flex:1;
     min-width:0;
+
     font-size:10px;
 }
 
-/* ================= HOST ================= */
+/* ==================================================
+   HOST
+================================================== */
 
 .host-user{
-    background:#1e2229;
-    border-radius:8px;
     padding:8px;
     margin-bottom:6px;
-}
 
-.host-user-top{
-    display:flex;
-    align-items:center;
-    gap:7px;
-}
+    background:#1e2229;
 
-.host-user-info{
-    flex:1;
-    min-width:0;
+    border-radius:8px;
 }
 
 .host-user-name{
     font-size:12px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
+    font-weight:bold;
 }
 
 .host-user-state{
     margin-top:3px;
-    font-size:10px;
+
     color:#858e9b;
+
+    font-size:10px;
 }
 
 .host-actions{
     display:flex;
     gap:4px;
-    margin-top:6px;
+
+    margin-top:7px;
+
     flex-wrap:wrap;
 }
 
@@ -368,20 +451,25 @@ input{
 }
 
 .kick{
-    background:#7d2730;
+    background:#78262e;
 }
 
 .kick:hover{
-    background:#a5313c;
+    background:#a3323c;
 }
 
-/* ================= FULLSCREEN ================= */
+/* ==================================================
+   FULLSCREEN
+================================================== */
 
 .stage.fullscreen{
     position:fixed;
+
     inset:0;
+
     width:100vw;
     height:100vh;
+
     z-index:999999;
 }
 
@@ -390,12 +478,9 @@ input{
     height:92px;
 }
 
-.stage.fullscreen .stage-controls{
-    top:15px;
-    left:15px;
-}
-
-/* ================= MOBILE ================= */
+/* ==================================================
+   MOBILE
+================================================== */
 
 @media(max-width:850px){
 
@@ -411,6 +496,7 @@ input{
     .sidebar{
         width:100%;
         height:42vh;
+
         border-left:0;
         border-top:1px solid #292e36;
     }
@@ -432,6 +518,10 @@ input{
 
 <div class="app">
 
+<!-- ==================================================
+     STAGE
+================================================== -->
+
 <main class="stage" id="stage">
 
     <video
@@ -440,49 +530,96 @@ input{
         playsinline>
     </video>
 
-    <div class="no-screen" id="noScreen">
+    <div
+        class="no-screen"
+        id="noScreen">
+
         <div>
-            <div style="font-size:40px">🎬</div>
-            <div>Belum ada yang membagikan layar</div>
+            <div style="font-size:42px">
+                🎬
+            </div>
+
+            <div>
+                Belum ada screen share
+            </div>
         </div>
+
     </div>
+
 
     <div class="stage-controls">
 
-        <button class="stage-btn" id="fullscreenBtn">
+        <button
+            class="stage-button"
+            id="fullscreenBtn">
+
             ⛶ Fullscreen
+
         </button>
 
-        <button class="stage-btn" id="shareBtn">
+
+        <button
+            class="stage-button"
+            id="shareBtn">
+
             🖥️ Share Screen
+
         </button>
 
-        <button class="stage-btn" id="stopShareBtn" style="display:none">
+
+        <button
+            class="stage-button"
+            id="stopShareBtn"
+            style="display:none">
+
             ⛔ Stop Share
+
         </button>
 
     </div>
 
-    <div class="screen-status" id="screenStatus">
+
+    <div
+        class="screen-status"
+        id="screenStatus">
+
         Tidak ada screen share
+
     </div>
 
-    <div class="bubbles" id="bubbles"></div>
+
+    <div
+        class="bubbles"
+        id="bubbles">
+    </div>
 
 </main>
 
 
+<!-- ==================================================
+     SIDEBAR
+================================================== -->
+
 <aside class="sidebar">
 
     <div class="header">
-        <div class="title">🎬 Watch Party</div>
-        <div class="connection" id="connectionStatus">
-            Menghubungkan...
+
+        <div class="title">
+            🎬 Watch Party
         </div>
+
+        <div
+            class="connection"
+            id="connectionStatus">
+
+            Menghubungkan...
+
+        </div>
+
     </div>
 
 
-    <!-- CHAT DI ATAS -->
+    <!-- ================= CHAT ================= -->
 
     <div class="chat">
 
@@ -490,9 +627,13 @@ input{
             💬 Chat
         </div>
 
-        <div class="messages" id="messages"></div>
+        <div
+            class="messages"
+            id="messages">
+        </div>
 
         <div class="chat-input">
+
             <input
                 id="chatInput"
                 maxlength="300"
@@ -501,14 +642,16 @@ input{
             <button id="sendBtn">
                 Kirim
             </button>
+
         </div>
 
     </div>
 
 
-    <div class="scroll-area">
+    <div class="sidebar-scroll">
 
-        <!-- IDENTITAS -->
+
+        <!-- ================= IDENTITY ================= -->
 
         <div class="panel">
 
@@ -520,8 +663,7 @@ input{
 
                 <input
                     id="nameInput"
-                    maxlength="25"
-                    placeholder="Nama kamu">
+                    maxlength="25">
 
                 <button id="saveNameBtn">
                     Simpan
@@ -532,7 +674,7 @@ input{
         </div>
 
 
-        <!-- CAMERA MIC -->
+        <!-- ================= CAMERA ================= -->
 
         <div class="panel">
 
@@ -563,7 +705,7 @@ input{
         </div>
 
 
-        <!-- ROOM -->
+        <!-- ================= ROOM ================= -->
 
         <div class="panel">
 
@@ -586,7 +728,7 @@ input{
         </div>
 
 
-        <!-- HOST -->
+        <!-- ================= HOST ================= -->
 
         <div
             class="panel"
@@ -597,16 +739,20 @@ input{
                 👑 Kontrol Host
             </div>
 
-            <div style="
+            <div
+                style="
                 color:#858e9b;
                 font-size:10px;
                 margin-bottom:8px">
-                Kelola mic, kamera, izin share screen dan peserta.
+
+                Host dapat mengontrol peserta.
+
             </div>
 
             <div id="hostUsers"></div>
 
         </div>
+
 
     </div>
 
@@ -617,17 +763,21 @@ input{
 
 <script>
 
-/* =====================================================
-   BASIC
-===================================================== */
+/* =========================================================
+   ROOM
+========================================================= */
 
-const params =
-    new URLSearchParams(location.search);
+const urlParams =
+    new URLSearchParams(
+        location.search
+    );
 
 let roomId =
-    params.get("room");
+    urlParams.get("room");
+
 
 let isHost = false;
+
 
 if(!roomId){
 
@@ -639,45 +789,55 @@ if(!roomId){
 
     isHost = true;
 
+
     history.replaceState(
         {},
         "",
         location.pathname +
         "?room=" +
-        encodeURIComponent(roomId)
+        roomId
     );
 
 }else{
 
     isHost = false;
+
 }
 
 
-/* =====================================================
+/* =========================================================
    PEER
-===================================================== */
+========================================================= */
 
 let peer;
 
+
 if(isHost){
 
-    peer = new Peer(roomId);
+    peer =
+        new Peer(roomId);
 
 }else{
 
-    peer = new Peer();
+    peer =
+        new Peer();
 
 }
 
 
-/* =====================================================
+/* =========================================================
    STATE
-===================================================== */
+========================================================= */
 
 let myName =
-    localStorage.getItem("watchparty_name") ||
+    localStorage.getItem(
+        "watchparty_name"
+    ) ||
     "User-" +
-    Math.floor(Math.random()*9999);
+    Math.floor(
+        Math.random()*9999
+    );
+
 
 let cameraEnabled = false;
 let micEnabled = false;
@@ -688,290 +848,520 @@ let localCameraStream = null;
 let localScreenStream = null;
 
 let screenOwner = null;
-let screenPermission = null;
+
+let screenPermission =
+    null;
+
 
 const participants = {};
 const connections = {};
+
 const cameraCalls = {};
 const screenCalls = {};
 
-let kicked = false;
 
-
-/* =====================================================
+/* =========================================================
    ELEMENTS
-===================================================== */
+========================================================= */
 
 const stage =
-    document.getElementById("stage");
+    document.getElementById(
+        "stage"
+    );
 
 const screenVideo =
-    document.getElementById("screenVideo");
+    document.getElementById(
+        "screenVideo"
+    );
 
 const noScreen =
-    document.getElementById("noScreen");
+    document.getElementById(
+        "noScreen"
+    );
 
 const bubbles =
-    document.getElementById("bubbles");
+    document.getElementById(
+        "bubbles"
+    );
 
 const messages =
-    document.getElementById("messages");
+    document.getElementById(
+        "messages"
+    );
 
 const chatInput =
-    document.getElementById("chatInput");
+    document.getElementById(
+        "chatInput"
+    );
 
 const nameInput =
-    document.getElementById("nameInput");
+    document.getElementById(
+        "nameInput"
+    );
 
 const roomUrl =
-    document.getElementById("roomUrl");
+    document.getElementById(
+        "roomUrl"
+    );
 
 const hostPanel =
-    document.getElementById("hostPanel");
+    document.getElementById(
+        "hostPanel"
+    );
 
 const hostUsers =
-    document.getElementById("hostUsers");
+    document.getElementById(
+        "hostUsers"
+    );
 
 const shareBtn =
-    document.getElementById("shareBtn");
+    document.getElementById(
+        "shareBtn"
+    );
 
 const stopShareBtn =
-    document.getElementById("stopShareBtn");
+    document.getElementById(
+        "stopShareBtn"
+    );
 
 const cameraBtn =
-    document.getElementById("cameraBtn");
+    document.getElementById(
+        "cameraBtn"
+    );
 
 const micBtn =
-    document.getElementById("micBtn");
+    document.getElementById(
+        "micBtn"
+    );
 
 const switchCameraBtn =
-    document.getElementById("switchCameraBtn");
+    document.getElementById(
+        "switchCameraBtn"
+    );
 
 const connectionStatus =
-    document.getElementById("connectionStatus");
+    document.getElementById(
+        "connectionStatus"
+    );
 
 
-nameInput.value = myName;
-roomUrl.value = location.href;
+nameInput.value =
+    myName;
+
+roomUrl.value =
+    location.href;
 
 
-/* =====================================================
-   PARTICIPANT SELF
-===================================================== */
+/* =========================================================
+   LOCAL PARTICIPANT
+========================================================= */
 
 function updateSelf(){
 
-    if(!peer || !peer.id) return;
+    if(!peer || !peer.id)
+        return;
+
 
     participants[peer.id] = {
+
+        ...(participants[peer.id] || {}),
+
+        id:peer.id,
+
         name:myName,
+
         camera:cameraEnabled,
+
         mic:micEnabled,
+
         cameraLocked:
-            participants[peer.id]?.cameraLocked || false,
+            participants[peer.id]
+            ?.cameraLocked || false,
+
         micLocked:
-            participants[peer.id]?.micLocked || false,
+            participants[peer.id]
+            ?.micLocked || false,
+
         connected:true,
+
         self:true
+
     };
+
 
     cameraBtn.textContent =
         cameraEnabled
         ? "📷 Kamera OFF"
         : "📷 Kamera ON";
 
+
     micBtn.textContent =
         micEnabled
         ? "🎤 Mic OFF"
         : "🔇 Mic ON";
 
+
     renderBubbles();
+
     updateHostUsers();
+
 }
 
 
-/* =====================================================
+/* =========================================================
    PEER OPEN
-===================================================== */
+========================================================= */
 
 peer.on("open", id => {
+
+    console.log(
+        "Peer connected:",
+        id
+    );
+
 
     connectionStatus.textContent =
         isHost
         ? "👑 Host • Online"
         : "🟢 Online";
 
+
     updateSelf();
 
+
     if(isHost){
+
+        /*
+           Host mempunyai izin share
+           secara default.
+        */
+
+        screenPermission =
+            peer.id;
+
 
         hostPanel.style.display =
             "block";
 
-        screenPermission =
-            id;
+
+        /*
+           Tidak langsung menyembunyikan host panel.
+        */
+
+        updateHostUsers();
 
     }else{
 
-        connectToPeer(roomId);
+        /*
+           Peserta connect ke host.
+        */
+
+        connectToPeer(
+            roomId
+        );
 
     }
 
 });
 
 
-/* =====================================================
+/* =========================================================
    PEER ERROR
-===================================================== */
+========================================================= */
 
 peer.on("error", error => {
 
-    console.error(error);
-
-    if(error.type === "unavailable-id"){
-
-        alert(
-            "Room sedang digunakan. Refresh halaman untuk membuat room baru."
-        );
-
-    }else{
-
-        connectionStatus.textContent =
-            "⚠️ " + error.type;
-
-    }
-
-});
+    console.error(
+        "PeerJS error:",
+        error
+    );
 
 
-/* =====================================================
-   CONNECTION
-===================================================== */
-
-function connectToPeer(id){
-
-    if(!peer || id === peer.id) return;
-
-    if(connections[id]) return;
-
-    const conn =
-        peer.connect(id,{
-            reliable:true
-        });
-
-    setupConnection(conn);
-}
+    connectionStatus.textContent =
+        "⚠️ " +
+        error.type;
 
 
-function setupConnection(conn){
-
-    if(connections[conn.peer]){
-        return;
-    }
-
-    connections[conn.peer] =
-        conn;
-
-    conn.on("open",() => {
-
-        sendTo(conn,{
-            type:"hello",
-            name:myName,
-            camera:cameraEnabled,
-            mic:micEnabled
-        });
+    if(
+        error.type ===
+        "unavailable-id"
+    ){
 
         if(isHost){
 
-            sendTo(conn,{
-                type:"permission",
-                permission:screenPermission,
-                owner:screenOwner
-            });
+            alert(
+                "Room ID sedang digunakan. Refresh untuk membuat room baru."
+            );
 
         }
 
-        /*
-           Jika kamera kita sudah aktif,
-           kirim ke peserta baru.
-        */
-
-        if(cameraEnabled &&
-           localCameraStream){
-
-            startCameraCall(conn.peer);
-
-        }
-
-    });
-
-
-    conn.on("data",data => {
-
-        handleData(
-            conn.peer,
-            data
-        );
-
-    });
-
-
-    conn.on("close",() => {
-
-        removeParticipant(
-            conn.peer
-        );
-
-    });
-
-
-    conn.on("error",error => {
-
-        console.warn(error);
-
-    });
-
-}
-
-
-/* =====================================================
-   INCOMING CONNECTION
-===================================================== */
-
-peer.on("connection",conn => {
-
-    setupConnection(conn);
+    }
 
 });
 
 
-/* =====================================================
-   DATA
-===================================================== */
+/* =========================================================
+   CONNECT
+========================================================= */
 
-function handleData(from,data){
+function connectToPeer(id){
 
-    if(!data || !data.type)
+    if(!peer)
+        return;
+
+    if(id === peer.id)
+        return;
+
+    if(connections[id])
         return;
 
 
-    /* HELLO */
+    console.log(
+        "Connecting to:",
+        id
+    );
 
-    if(data.type === "hello"){
+
+    const conn =
+        peer.connect(
+            id,
+            {
+                reliable:true
+            }
+        );
+
+
+    setupConnection(
+        conn
+    );
+
+}
+
+
+/* =========================================================
+   INCOMING CONNECTION
+========================================================= */
+
+peer.on(
+    "connection",
+    conn => {
+
+        console.log(
+            "Incoming connection:",
+            conn.peer
+        );
+
+
+        setupConnection(
+            conn
+        );
+
+    }
+);
+
+
+/* =========================================================
+   SETUP CONNECTION
+========================================================= */
+
+function setupConnection(conn){
+
+    if(!conn)
+        return;
+
+
+    /*
+       Jangan menolak connection yang sedang
+       berbeda instance secara tidak sengaja.
+    */
+
+    connections[
+        conn.peer
+    ] = conn;
+
+
+    conn.on(
+        "open",
+        () => {
+
+            console.log(
+                "Connection open:",
+                conn.peer
+            );
+
+
+            /*
+               KIRIM HELLO KE DUA ARAH
+            */
+
+            sendTo(
+                conn,
+                {
+                    type:"hello",
+
+                    id:peer.id,
+
+                    name:myName,
+
+                    camera:cameraEnabled,
+
+                    mic:micEnabled,
+
+                    isHost:isHost
+                }
+            );
+
+
+            /*
+               Host kirim status permission.
+            */
+
+            if(isHost){
+
+                sendTo(
+                    conn,
+                    {
+                        type:"permission",
+
+                        permission:
+                            screenPermission,
+
+                        owner:
+                            screenOwner
+                    }
+                );
+
+            }
+
+
+            /*
+               Kalau kita sudah menyalakan kamera,
+               kirim ke peer baru.
+            */
+
+            if(
+                cameraEnabled &&
+                localCameraStream
+            ){
+
+                startCameraCall(
+                    conn.peer
+                );
+
+            }
+
+        }
+    );
+
+
+    conn.on(
+        "data",
+        data => {
+
+            handleData(
+                conn.peer,
+                data
+            );
+
+        }
+    );
+
+
+    conn.on(
+        "close",
+        () => {
+
+            console.log(
+                "Connection closed:",
+                conn.peer
+            );
+
+
+            removeParticipant(
+                conn.peer
+            );
+
+        }
+    );
+
+
+    conn.on(
+        "error",
+        error => {
+
+            console.warn(
+                "Connection error:",
+                error
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DATA HANDLER
+========================================================= */
+
+function handleData(
+    from,
+    data
+){
+
+    if(
+        !data ||
+        !data.type
+    )
+        return;
+
+
+    /* ================= HELLO ================= */
+
+    if(
+        data.type ===
+        "hello"
+    ){
 
         participants[from] = {
+
             ...(participants[from] || {}),
-            name:data.name || "User",
-            camera:!!data.camera,
-            mic:!!data.mic,
-            connected:true
+
+            id:from,
+
+            name:
+                data.name ||
+                "User",
+
+            camera:
+                !!data.camera,
+
+            mic:
+                !!data.mic,
+
+            connected:true,
+
+            isHost:
+                !!data.isHost,
+
+            cameraLocked:
+                participants[from]
+                ?.cameraLocked || false,
+
+            micLocked:
+                participants[from]
+                ?.micLocked || false
+
         };
 
+
         renderBubbles();
+
         updateHostUsers();
 
+
         /*
-           Host membalas status permission.
+           Kirim balik informasi host.
         */
 
         if(isHost){
@@ -979,81 +1369,125 @@ function handleData(from,data){
             sendTo(
                 connections[from],
                 {
-                    type:"permission",
-                    permission:screenPermission,
-                    owner:screenOwner
+                    type:"hello",
+
+                    id:peer.id,
+
+                    name:myName,
+
+                    camera:cameraEnabled,
+
+                    mic:micEnabled,
+
+                    isHost:true
                 }
             );
 
         }
 
+
         return;
     }
 
 
-    /* NAME */
+    /* ================= NAME ================= */
 
-    if(data.type === "name"){
+    if(
+        data.type ===
+        "name"
+    ){
 
-        if(participants[from]){
+        if(
+            participants[from]
+        ){
 
             participants[from].name =
                 data.name;
 
         }
 
+
         renderBubbles();
+
         updateHostUsers();
 
         return;
     }
 
 
-    /* CAMERA */
+    /* ================= CAMERA ================= */
 
-    if(data.type === "cameraState"){
+    if(
+        data.type ===
+        "cameraState"
+    ){
 
-        if(!participants[from])
+        if(
+            !participants[from]
+        ){
+
             participants[from] = {};
+
+        }
+
 
         participants[from].camera =
             !!data.enabled;
 
+
         renderBubbles();
+
         updateHostUsers();
 
         return;
     }
 
 
-    /* MIC */
+    /* ================= MIC ================= */
 
-    if(data.type === "micState"){
+    if(
+        data.type ===
+        "micState"
+    ){
 
-        if(!participants[from])
+        if(
+            !participants[from]
+        ){
+
             participants[from] = {};
+
+        }
+
 
         participants[from].mic =
             !!data.enabled;
 
+
         renderBubbles();
+
         updateHostUsers();
 
         return;
     }
 
 
-    /* CHAT */
+    /* ================= CHAT ================= */
 
-    if(data.type === "chat"){
+    if(
+        data.type ===
+        "chat"
+    ){
 
         addMessage(
-            data.name,
+            data.name ||
+            "User",
+
             data.text
         );
 
+
         /*
-           Forward supaya chat tersebar.
+           Forward ke peserta lain.
         */
 
         broadcast(
@@ -1061,19 +1495,26 @@ function handleData(from,data){
             from
         );
 
+
         return;
     }
 
 
-    /* PERMISSION */
+    /* ================= PERMISSION ================= */
 
-    if(data.type === "permission"){
+    if(
+        data.type ===
+        "permission"
+    ){
 
         screenPermission =
-            data.permission;
+            data.permission ||
+            null;
 
         screenOwner =
-            data.owner || null;
+            data.owner ||
+            null;
+
 
         updateScreenUI();
 
@@ -1081,49 +1522,69 @@ function handleData(from,data){
     }
 
 
-    /* SCREEN START */
+    /* ================= SCREEN START ================= */
 
-    if(data.type === "screenStarted"){
+    if(
+        data.type ===
+        "screenStarted"
+    ){
 
         screenOwner =
             data.owner;
 
+
         updateScreenUI();
 
         return;
     }
 
 
-    /* SCREEN STOP */
+    /* ================= SCREEN STOP ================= */
 
-    if(data.type === "screenStopped"){
+    if(
+        data.type ===
+        "screenStopped"
+    ){
 
-        if(screenOwner === data.owner){
+        if(
+            screenOwner ===
+            data.owner
+        ){
 
-            screenOwner = null;
+            screenOwner =
+                null;
+
 
             screenVideo.srcObject =
                 null;
 
+
             noScreen.classList.remove(
                 "hidden"
             );
+
 
             document.getElementById(
                 "screenStatus"
             ).textContent =
                 "Tidak ada screen share";
 
+
             updateScreenUI();
+
         }
+
 
         return;
     }
 
 
-    /* HOST COMMAND */
+    /* ================= HOST COMMAND ================= */
 
-    if(data.type === "hostCommand"){
+    if(
+        data.type ===
+        "hostCommand"
+    ){
 
         handleHostCommand(
             data.command
@@ -1133,64 +1594,26 @@ function handleData(from,data){
     }
 
 
-    /* KICK */
+    /* ================= KICK ================= */
 
-    if(data.type === "kick"){
+    if(
+        data.type ===
+        "kick"
+    ){
 
-        if(data.target === peer.id){
+        if(
+            data.target ===
+            peer.id
+        ){
 
-            kicked = true;
-
-            if(localCameraStream){
-
-                localCameraStream
-                .getTracks()
-                .forEach(t=>t.stop());
-
-            }
-
-            if(localScreenStream){
-
-                localScreenStream
-                .getTracks()
-                .forEach(t=>t.stop());
-
-            }
-
-            alert(
-                "Kamu telah dikeluarkan oleh host."
-            );
-
-            try{
-                peer.destroy();
-            }catch(e){}
-
-            document.body.innerHTML = `
-                <div style="
-                    width:100vw;
-                    height:100vh;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    background:#0b0d10;
-                    color:white;
-                    font-family:Arial;
-                    text-align:center">
-                    <div>
-                        <div style="font-size:50px">🚫</div>
-                        <h2>Kamu dikeluarkan dari room</h2>
-                        <p style="color:#888">
-                        Hubungi host jika ingin bergabung kembali.
-                        </p>
-                    </div>
-                </div>
-            `;
+            kickedOut();
 
             return;
         }
 
+
         /*
-           Peserta lain mendapat update.
+           Peserta lain menghapus user.
         */
 
         removeParticipant(
@@ -1203,57 +1626,81 @@ function handleData(from,data){
 }
 
 
-/* =====================================================
+/* =========================================================
    SEND
-===================================================== */
+========================================================= */
 
-function sendTo(conn,data){
+function sendTo(
+    conn,
+    data
+){
 
     try{
 
-        if(conn && conn.open){
+        if(
+            conn &&
+            conn.open
+        ){
 
-            conn.send(data);
+            conn.send(
+                data
+            );
 
         }
 
-    }catch(e){
+    }catch(error){
 
-        console.warn(e);
+        console.warn(
+            error
+        );
 
     }
+
 }
 
+
+/* =========================================================
+   BROADCAST
+========================================================= */
 
 function broadcast(
     data,
     exclude=null
 ){
 
-    Object.keys(connections)
-    .forEach(id => {
+    Object.keys(
+        connections
+    ).forEach(
+        id => {
 
-        if(id === exclude)
-            return;
+            if(
+                id === exclude
+            )
+                return;
 
-        sendTo(
-            connections[id],
-            data
-        );
 
-    });
+            sendTo(
+                connections[id],
+                data
+            );
+
+        }
+    );
 
 }
 
 
-/* =====================================================
-   CAMERA
-===================================================== */
+/* =========================================================
+   CAMERA START
+========================================================= */
 
 async function startCamera(){
 
-    if(!isHost &&
-       participants[peer.id]?.cameraLocked){
+    if(
+        !isHost &&
+        participants[peer.id]
+        ?.cameraLocked
+    ){
 
         alert(
             "Host sedang memblokir kamera kamu."
@@ -1269,23 +1716,29 @@ async function startCamera(){
 
     try{
 
-        /*
-           Jika mic sedang aktif,
-           ambil audio juga.
-        */
-
         const stream =
             await navigator.mediaDevices
             .getUserMedia({
 
                 video:{
-                    facingMode:cameraFacing,
-                    width:{ideal:1280},
-                    height:{ideal:720},
-                    frameRate:{ideal:30}
+                    facingMode:
+                        cameraFacing,
+
+                    width:{
+                        ideal:1280
+                    },
+
+                    height:{
+                        ideal:720
+                    },
+
+                    frameRate:{
+                        ideal:30
+                    }
                 },
 
-                audio:micEnabled
+                audio:
+                    micEnabled
 
             });
 
@@ -1293,28 +1746,41 @@ async function startCamera(){
         localCameraStream =
             stream;
 
-        cameraEnabled = true;
+
+        cameraEnabled =
+            true;
 
 
-        stream.getVideoTracks()
-        .forEach(track => {
+        stream
+        .getVideoTracks()
+        .forEach(
+            track => {
 
-            track.contentHint =
-                "motion";
+                try{
 
-        });
+                    track.contentHint =
+                        "motion";
+
+                }catch(e){}
+
+            }
+        );
 
 
-        stream.getAudioTracks()
-        .forEach(track => {
+        stream
+        .getAudioTracks()
+        .forEach(
+            track => {
 
-            track.enabled =
-                micEnabled;
+                track.enabled =
+                    micEnabled;
 
-        });
+            }
+        );
 
 
         updateSelf();
+
 
         broadcast({
             type:"cameraState",
@@ -1322,19 +1788,29 @@ async function startCamera(){
         });
 
 
-        Object.keys(connections)
-        .forEach(id => {
+        Object.keys(
+            connections
+        ).forEach(
+            id => {
 
-            startCameraCall(id);
+                startCameraCall(
+                    id
+                );
 
-        });
+            }
+        );
+
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            error
+        );
+
 
         alert(
-            "Tidak bisa mengakses kamera. Pastikan izin kamera diberikan."
+            "Tidak bisa mengakses kamera.\n\n" +
+            "Pastikan izin kamera sudah diberikan."
         );
 
     }
@@ -1342,33 +1818,60 @@ async function startCamera(){
 }
 
 
+/* =========================================================
+   CAMERA STOP
+========================================================= */
+
 function stopCamera(){
 
-    if(!localCameraStream)
+    if(
+        !localCameraStream
+    )
         return;
 
 
-    /*
-       Jangan matikan audio kalau mic masih
-       ingin digunakan.
-    */
-
     localCameraStream
     .getVideoTracks()
-    .forEach(track => {
+    .forEach(
+        track => {
 
-        track.stop();
+            track.stop();
 
-    });
+        }
+    );
 
 
     localCameraStream =
         null;
 
-    cameraEnabled = false;
+
+    cameraEnabled =
+        false;
+
+
+    /*
+       Tutup camera calls supaya
+       remote benar-benar berhenti menerima.
+    */
+
+    Object.keys(
+        cameraCalls
+    ).forEach(
+        id => {
+
+            try{
+
+                cameraCalls[id]
+                    .close();
+
+            }catch(e){}
+
+        }
+    );
 
 
     updateSelf();
+
 
     broadcast({
         type:"cameraState",
@@ -1378,23 +1881,39 @@ function stopCamera(){
 }
 
 
-/* =====================================================
+/* =========================================================
    CAMERA CALL
-===================================================== */
+========================================================= */
 
-function startCameraCall(id){
+function startCameraCall(
+    id
+){
 
-    if(!localCameraStream)
+    if(
+        !localCameraStream
+    )
         return;
 
-    if(!connections[id])
+
+    if(
+        !connections[id]
+    )
         return;
 
 
-    if(cameraCalls[id]){
+    /*
+       Tutup call sebelumnya.
+    */
+
+    if(
+        cameraCalls[id]
+    ){
 
         try{
-            cameraCalls[id].close();
+
+            cameraCalls[id]
+                .close();
+
         }catch(e){}
 
     }
@@ -1405,11 +1924,15 @@ function startCameraCall(id){
         const call =
             peer.call(
                 id,
+
                 localCameraStream,
+
                 {
                     metadata:{
                         kind:"camera",
-                        name:myName
+
+                        name:
+                            myName
                     }
                 }
             );
@@ -1419,161 +1942,215 @@ function startCameraCall(id){
             call;
 
 
-        call.on("stream",stream => {
+        call.on(
+            "stream",
+            stream => {
 
-            attachRemoteCamera(
-                id,
-                stream
-            );
+                attachRemoteCamera(
+                    id,
+                    stream
+                );
 
-        });
+            }
+        );
 
 
-        call.on("error",e => {
+        call.on(
+            "error",
+            error => {
 
-            console.warn(
-                "Camera:",
-                e
-            );
+                console.warn(
+                    "Camera call:",
+                    error
+                );
 
-        });
+            }
+        );
 
-    }catch(e){
 
-        console.warn(e);
+    }catch(error){
+
+        console.warn(
+            error
+        );
 
     }
 
 }
 
 
-/* =====================================================
-   INCOMING CALL
-===================================================== */
+/* =========================================================
+   INCOMING MEDIA CALL
+========================================================= */
 
-peer.on("call",call => {
+peer.on(
+    "call",
+    call => {
 
-    const kind =
-        call.metadata?.kind;
-
-
-    /* CAMERA */
-
-    if(kind === "camera"){
-
-        call.answer(
-            localCameraStream || undefined
-        );
+        const kind =
+            call.metadata
+            ?.kind;
 
 
-        cameraCalls[call.peer] =
-            call;
-
-
-        call.on("stream",stream => {
-
-            attachRemoteCamera(
-                call.peer,
-                stream
-            );
-
-        });
-
-        return;
-    }
-
-
-    /* SCREEN */
-
-    if(kind === "screen"){
-
-        /*
-           Hanya terima screen dari
-           permission holder.
-        */
+        /* ================= CAMERA ================= */
 
         if(
-            screenPermission &&
-            call.peer !== screenPermission &&
-            !isHost
+            kind ===
+            "camera"
         ){
 
-            call.close();
-            return;
+            /*
+               Jawab dengan kamera sendiri
+               jika tersedia.
+            */
 
+            call.answer(
+                localCameraStream ||
+                undefined
+            );
+
+
+            cameraCalls[
+                call.peer
+            ] = call;
+
+
+            call.on(
+                "stream",
+                stream => {
+
+                    attachRemoteCamera(
+                        call.peer,
+                        stream
+                    );
+
+                }
+            );
+
+
+            return;
         }
 
 
-        call.answer();
+        /* ================= SCREEN ================= */
+
+        if(
+            kind ===
+            "screen"
+        ){
+
+            /*
+               Hanya izinkan pemilik permission.
+            */
+
+            if(
+                screenPermission &&
+                call.peer !==
+                    screenPermission
+            ){
+
+                call.close();
+
+                return;
+            }
 
 
-        screenCalls[call.peer] =
-            call;
+            call.answer();
 
 
-        call.on("stream",stream => {
+            screenCalls[
+                call.peer
+            ] = call;
 
-            screenOwner =
-                call.peer;
 
-            screenVideo.srcObject =
-                stream;
+            call.on(
+                "stream",
+                stream => {
 
-            noScreen.classList.add(
-                "hidden"
+                    screenOwner =
+                        call.peer;
+
+
+                    screenVideo
+                        .srcObject =
+                        stream;
+
+
+                    noScreen
+                        .classList
+                        .add(
+                            "hidden"
+                        );
+
+
+                    const sharerName =
+                        participants[
+                            call.peer
+                        ]?.name ||
+                        "Peserta";
+
+
+                    document.getElementById(
+                        "screenStatus"
+                    ).textContent =
+                        "🖥️ " +
+                        sharerName +
+                        " sedang share screen";
+
+
+                    updateScreenUI();
+
+                }
             );
 
 
-            const name =
-                participants[call.peer]?.name ||
-                "Peserta";
+            call.on(
+                "close",
+                () => {
+
+                    if(
+                        screenOwner ===
+                        call.peer
+                    ){
+
+                        screenOwner =
+                            null;
 
 
-            document.getElementById(
-                "screenStatus"
-            ).textContent =
-                "🖥️ " +
-                name +
-                " sedang share screen";
+                        screenVideo
+                            .srcObject =
+                            null;
 
 
-            updateScreenUI();
+                        noScreen
+                            .classList
+                            .remove(
+                                "hidden"
+                            );
 
-        });
+
+                        document.getElementById(
+                            "screenStatus"
+                        ).textContent =
+                            "Tidak ada screen share";
 
 
-        call.on("close",() => {
+                        updateScreenUI();
 
-            if(screenOwner === call.peer){
+                    }
 
-                screenOwner = null;
+                }
+            );
 
-                screenVideo.srcObject =
-                    null;
-
-                noScreen.classList.remove(
-                    "hidden"
-                );
-
-                document.getElementById(
-                    "screenStatus"
-                ).textContent =
-                    "Tidak ada screen share";
-
-                updateScreenUI();
-
-            }
-
-        });
+        }
 
     }
+);
 
-});
 
-
-/* =====================================================
+/* =========================================================
    REMOTE CAMERA
-===================================================== */
+========================================================= */
 
 function attachRemoteCamera(
     id,
@@ -1582,22 +2159,28 @@ function attachRemoteCamera(
 
     let bubble =
         document.getElementById(
-            "bubble-" + id
+            "bubble-" +
+            id
         );
 
 
     if(!bubble){
 
         bubble =
-            createBubble(id);
+            createBubble(
+                id
+            );
+
 
         bubbles.appendChild(
             bubble
         );
 
+
         enableBubbleDrag(
             bubble
         );
+
 
         enableBubbleResize(
             bubble
@@ -1607,107 +2190,160 @@ function attachRemoteCamera(
 
 
     const video =
-        bubble.querySelector("video");
-
-
-    if(video.srcObject !== stream){
-
-        video.srcObject =
-            stream;
-
-        video.play().catch(()=>{});
-
-    }
-
-
-    const off =
         bubble.querySelector(
-            ".bubble-off"
+            "video"
         );
 
-    off.style.display =
+
+    video.srcObject =
+        stream;
+
+
+    video.play()
+        .catch(
+            () => {}
+        );
+
+
+    bubble
+        .querySelector(
+            ".bubble-off"
+        )
+        .style.display =
         "none";
 
 }
 
 
-/* =====================================================
+/* =========================================================
    CREATE BUBBLE
-===================================================== */
+========================================================= */
 
-function createBubble(id){
+function createBubble(
+    id
+){
 
     const bubble =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     bubble.className =
         "bubble";
 
+
     bubble.id =
-        "bubble-" + id;
+        "bubble-" +
+        id;
 
-
-    /*
-       Posisi default dibuat berbeda
-       supaya tidak bertumpuk.
-    */
 
     const index =
-        Object.keys(participants)
-        .indexOf(id);
+        Math.max(
+            0,
+            Object.keys(
+                participants
+            ).indexOf(id)
+        );
+
 
     bubble.style.left =
-        (15 + Math.max(index,0)*12) +
+        (
+            15 +
+            (index * 12)
+        ) +
         "px";
 
-    bubble.style.bottom =
-        (15 + Math.max(index,0)*8) +
+
+    bubble.style.top =
+        (
+            15 +
+            (index * 8)
+        ) +
         "px";
 
 
     const video =
-        document.createElement("video");
+        document.createElement(
+            "video"
+        );
 
-    video.autoplay = true;
-    video.playsInline = true;
+
+    video.autoplay =
+        true;
+
+
+    video.playsInline =
+        true;
 
 
     const off =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     off.className =
         "bubble-off";
 
-    off.innerHTML =
+
+    off.textContent =
         "📷";
 
 
     const name =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     name.className =
         "bubble-name";
 
 
     const mic =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     mic.className =
         "bubble-mic";
 
 
     const resize =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     resize.className =
-        "bubble-size";
+        "bubble-resize";
 
 
-    bubble.appendChild(video);
-    bubble.appendChild(off);
-    bubble.appendChild(name);
-    bubble.appendChild(mic);
-    bubble.appendChild(resize);
+    bubble.appendChild(
+        video
+    );
+
+
+    bubble.appendChild(
+        off
+    );
+
+
+    bubble.appendChild(
+        name
+    );
+
+
+    bubble.appendChild(
+        mic
+    );
+
+
+    bubble.appendChild(
+        resize
+    );
 
 
     return bubble;
@@ -1715,143 +2351,182 @@ function createBubble(id){
 }
 
 
-/* =====================================================
+/* =========================================================
    RENDER BUBBLES
-===================================================== */
+========================================================= */
 
 function renderBubbles(){
 
-    Object.keys(participants)
-    .forEach(id => {
+    Object.keys(
+        participants
+    ).forEach(
+        id => {
 
-        const user =
-            participants[id];
-
-
-        let bubble =
-            document.getElementById(
-                "bubble-" + id
-            );
+            const user =
+                participants[id];
 
 
-        if(!bubble){
-
-            bubble =
-                createBubble(id);
-
-            bubbles.appendChild(
-                bubble
-            );
-
-            enableBubbleDrag(
-                bubble
-            );
-
-            enableBubbleResize(
-                bubble
-            );
-
-        }
+            let bubble =
+                document.getElementById(
+                    "bubble-" +
+                    id
+                );
 
 
-        const video =
-            bubble.querySelector("video");
+            if(!bubble){
 
-        const off =
-            bubble.querySelector(
-                ".bubble-off"
-            );
-
-        const name =
-            bubble.querySelector(
-                ".bubble-name"
-            );
-
-        const mic =
-            bubble.querySelector(
-                ".bubble-mic"
-            );
+                bubble =
+                    createBubble(
+                        id
+                    );
 
 
-        name.textContent =
-            user.name ||
-            "User";
+                bubbles.appendChild(
+                    bubble
+                );
 
 
-        mic.textContent =
-            user.mic
-            ? "🎤"
-            : "🔇";
+                enableBubbleDrag(
+                    bubble
+                );
 
 
-        if(id === peer.id){
-
-            if(localCameraStream &&
-               cameraEnabled){
-
-                video.srcObject =
-                    localCameraStream;
-
-                video.muted = true;
-
-                off.style.display =
-                    "none";
-
-            }else{
-
-                video.srcObject =
-                    null;
-
-                off.style.display =
-                    "flex";
+                enableBubbleResize(
+                    bubble
+                );
 
             }
 
-        }else{
 
-            off.style.display =
-                user.camera
-                ? "none"
-                : "flex";
+            const video =
+                bubble.querySelector(
+                    "video"
+                );
+
+
+            const off =
+                bubble.querySelector(
+                    ".bubble-off"
+                );
+
+
+            const name =
+                bubble.querySelector(
+                    ".bubble-name"
+                );
+
+
+            const mic =
+                bubble.querySelector(
+                    ".bubble-mic"
+                );
+
+
+            name.textContent =
+                user.name ||
+                "User";
+
+
+            mic.textContent =
+                user.mic
+                ? "🎤"
+                : "🔇";
+
+
+            /*
+               SELF
+            */
+
+            if(
+                id ===
+                peer.id
+            ){
+
+                if(
+                    localCameraStream &&
+                    cameraEnabled
+                ){
+
+                    video.srcObject =
+                        localCameraStream;
+
+
+                    video.muted =
+                        true;
+
+
+                    off.style.display =
+                        "none";
+
+                }else{
+
+                    video.srcObject =
+                        null;
+
+
+                    off.style.display =
+                        "flex";
+
+                }
+
+
+            }else{
+
+                off.style.display =
+                    user.camera
+                    ? "none"
+                    : "flex";
+
+            }
 
         }
-
-    });
+    );
 
 
     /*
-       Hapus bubble peserta yang sudah keluar.
+       Hapus bubble yang tidak punya participant.
     */
 
-    [...bubbles.children]
-    .forEach(bubble => {
+    [
+        ...bubbles.children
+    ].forEach(
+        bubble => {
 
-        const id =
-            bubble.id.replace(
-                "bubble-",
-                ""
-            );
+            const id =
+                bubble.id.replace(
+                    "bubble-",
+                    ""
+                );
 
-        if(!participants[id]){
 
-            bubble.remove();
+            if(
+                !participants[id]
+            ){
+
+                bubble.remove();
+
+            }
 
         }
-
-    });
+    );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    DRAG BUBBLE
-===================================================== */
+========================================================= */
 
-function enableBubbleDrag(bubble){
+function enableBubbleDrag(
+    bubble
+){
 
-    let dragging = false;
+    let dragging =
+        false;
+
     let startX = 0;
     let startY = 0;
+
     let startLeft = 0;
     let startTop = 0;
 
@@ -1861,15 +2536,19 @@ function enableBubbleDrag(bubble){
         e => {
 
             if(
-                e.target.classList.contains(
-                    "bubble-size"
+                e.target.classList
+                .contains(
+                    "bubble-resize"
                 )
             ){
+
                 return;
             }
 
 
-            dragging = true;
+            dragging =
+                true;
+
 
             bubble.setPointerCapture(
                 e.pointerId
@@ -1877,18 +2556,27 @@ function enableBubbleDrag(bubble){
 
 
             const rect =
-                bubble.getBoundingClientRect();
+                bubble
+                .getBoundingClientRect();
+
 
             const stageRect =
-                stage.getBoundingClientRect();
+                stage
+                .getBoundingClientRect();
 
 
-            startX = e.clientX;
-            startY = e.clientY;
+            startX =
+                e.clientX;
+
+
+            startY =
+                e.clientY;
+
 
             startLeft =
                 rect.left -
                 stageRect.left;
+
 
             startTop =
                 rect.top -
@@ -1911,10 +2599,13 @@ function enableBubbleDrag(bubble){
 
 
             const stageRect =
-                stage.getBoundingClientRect();
+                stage
+                .getBoundingClientRect();
+
 
             const width =
                 bubble.offsetWidth;
+
 
             const height =
                 bubble.offsetHeight;
@@ -1922,23 +2613,23 @@ function enableBubbleDrag(bubble){
 
             let left =
                 startLeft +
-                (e.clientX-startX);
+                e.clientX -
+                startX;
+
 
             let top =
                 startTop +
-                (e.clientY-startY);
+                e.clientY -
+                startY;
 
-
-            /*
-               Batas stage
-            */
 
             left =
                 Math.max(
                     0,
                     Math.min(
                         left,
-                        stageRect.width-width
+                        stageRect.width -
+                        width
                     )
                 );
 
@@ -1948,16 +2639,20 @@ function enableBubbleDrag(bubble){
                     0,
                     Math.min(
                         top,
-                        stageRect.height-height
+                        stageRect.height -
+                        height
                     )
                 );
 
 
             bubble.style.left =
-                left + "px";
+                left +
+                "px";
+
 
             bubble.style.top =
-                top + "px";
+                top +
+                "px";
 
         }
     );
@@ -1965,9 +2660,18 @@ function enableBubbleDrag(bubble){
 
     bubble.addEventListener(
         "pointerup",
-        () => {
+        e => {
 
-            dragging = false;
+            dragging =
+                false;
+
+            try{
+
+                bubble.releasePointerCapture(
+                    e.pointerId
+                );
+
+            }catch(error){}
 
         }
     );
@@ -1975,18 +2679,23 @@ function enableBubbleDrag(bubble){
 }
 
 
-/* =====================================================
+/* =========================================================
    RESIZE BUBBLE
-===================================================== */
+========================================================= */
 
-function enableBubbleResize(bubble){
+function enableBubbleResize(
+    bubble
+){
 
     const handle =
         bubble.querySelector(
-            ".bubble-size"
+            ".bubble-resize"
         );
 
-    let resizing = false;
+
+    let resizing =
+        false;
+
 
     let startX;
     let startY;
@@ -2001,7 +2710,10 @@ function enableBubbleResize(bubble){
 
             e.stopPropagation();
 
-            resizing = true;
+
+            resizing =
+                true;
+
 
             handle.setPointerCapture(
                 e.pointerId
@@ -2011,11 +2723,14 @@ function enableBubbleResize(bubble){
             startX =
                 e.clientX;
 
+
             startY =
                 e.clientY;
 
+
             startW =
                 bubble.offsetWidth;
+
 
             startH =
                 bubble.offsetHeight;
@@ -2033,27 +2748,26 @@ function enableBubbleResize(bubble){
 
 
             const diff =
-                e.clientX-startX;
+                e.clientX -
+                startX;
 
 
             let width =
-                startW + diff;
+                startW +
+                diff;
 
-
-            /*
-               Aspect ratio kira-kira 16:9
-            */
 
             let height =
-                width * .72;
+                width *
+                .72;
 
 
             width =
                 Math.max(
                     80,
                     Math.min(
-                        width,
-                        400
+                        400,
+                        width
                     )
                 );
 
@@ -2062,17 +2776,20 @@ function enableBubbleResize(bubble){
                 Math.max(
                     60,
                     Math.min(
-                        height,
-                        300
+                        300,
+                        height
                     )
                 );
 
 
             bubble.style.width =
-                width + "px";
+                width +
+                "px";
+
 
             bubble.style.height =
-                height + "px";
+                height +
+                "px";
 
         }
     );
@@ -2080,9 +2797,19 @@ function enableBubbleResize(bubble){
 
     handle.addEventListener(
         "pointerup",
-        () => {
+        e => {
 
-            resizing = false;
+            resizing =
+                false;
+
+
+            try{
+
+                handle.releasePointerCapture(
+                    e.pointerId
+                );
+
+            }catch(error){}
 
         }
     );
@@ -2090,63 +2817,78 @@ function enableBubbleResize(bubble){
 }
 
 
-/* =====================================================
+/* =========================================================
    MIC
-===================================================== */
+========================================================= */
 
 async function toggleMic(){
 
-    if(!isHost &&
-       participants[peer.id]?.micLocked){
+    if(
+        !isHost &&
+        participants[peer.id]
+        ?.micLocked
+    ){
 
         alert(
             "Host sedang memblokir microphone kamu."
         );
 
         return;
-
     }
 
 
     /*
-       Jika belum ada stream,
-       ambil audio saja.
+       Jika belum punya stream,
+       ambil audio.
     */
 
-    if(!localCameraStream){
+    if(
+        !localCameraStream
+    ){
 
         try{
 
             localCameraStream =
-                await navigator.mediaDevices
+                await navigator
+                .mediaDevices
                 .getUserMedia({
+
                     video:false,
+
                     audio:true
+
                 });
 
-            micEnabled = true;
+
+            micEnabled =
+                true;
+
 
             updateSelf();
+
 
             broadcast({
                 type:"micState",
                 enabled:true
             });
 
-            /*
-               Kirim audio melalui camera call.
-            */
 
-            Object.keys(connections)
-            .forEach(id => {
+            Object.keys(
+                connections
+            ).forEach(
+                id => {
 
-                startCameraCall(id);
+                    startCameraCall(
+                        id
+                    );
 
-            });
+                }
+            );
+
 
             return;
 
-        }catch(e){
+        }catch(error){
 
             alert(
                 "Tidak bisa mengakses microphone."
@@ -2158,40 +2900,49 @@ async function toggleMic(){
     }
 
 
-    const tracks =
+    const audioTracks =
         localCameraStream
         .getAudioTracks();
 
 
-    if(!tracks.length){
+    /*
+       Kalau stream tidak punya audio,
+       tambahkan audio track.
+    */
 
-        /*
-           Tambahkan audio track jika
-           stream awal hanya video.
-        */
+    if(
+        audioTracks.length === 0
+    ){
 
         try{
 
             const audioStream =
-                await navigator.mediaDevices
+                await navigator
+                .mediaDevices
                 .getUserMedia({
+
                     audio:true
+
                 });
 
 
             const track =
-                audioStream.getAudioTracks()[0];
+                audioStream
+                .getAudioTracks()[0];
 
 
-            localCameraStream.addTrack(
-                track
-            );
+            localCameraStream
+                .addTrack(
+                    track
+                );
 
 
-            micEnabled = true;
+            micEnabled =
+                true;
 
 
             updateSelf();
+
 
             broadcast({
                 type:"micState",
@@ -2199,23 +2950,29 @@ async function toggleMic(){
             });
 
 
-            Object.keys(connections)
-            .forEach(id => {
+            Object.keys(
+                connections
+            ).forEach(
+                id => {
 
-                startCameraCall(id);
+                    startCameraCall(
+                        id
+                    );
 
-            });
+                }
+            );
 
 
             return;
 
-        }catch(e){
+        }catch(error){
 
             alert(
                 "Microphone tidak tersedia."
             );
 
             return;
+
         }
 
     }
@@ -2225,15 +2982,18 @@ async function toggleMic(){
         !micEnabled;
 
 
-    tracks.forEach(track => {
+    audioTracks.forEach(
+        track => {
 
-        track.enabled =
-            micEnabled;
+            track.enabled =
+                micEnabled;
 
-    });
+        }
+    );
 
 
     updateSelf();
+
 
     broadcast({
         type:"micState",
@@ -2243,22 +3003,22 @@ async function toggleMic(){
 }
 
 
-/* =====================================================
+/* =========================================================
    SWITCH CAMERA
-===================================================== */
+========================================================= */
 
 async function switchCamera(){
 
-    if(!cameraEnabled ||
-       !localCameraStream){
-
+    if(
+        !cameraEnabled ||
+        !localCameraStream
+    )
         return;
-
-    }
 
 
     cameraFacing =
-        cameraFacing === "user"
+        cameraFacing ===
+        "user"
         ? "environment"
         : "user";
 
@@ -2266,13 +3026,21 @@ async function switchCamera(){
     try{
 
         const stream =
-            await navigator.mediaDevices
+            await navigator
+            .mediaDevices
             .getUserMedia({
 
                 video:{
-                    facingMode:cameraFacing,
-                    width:{ideal:1280},
-                    height:{ideal:720}
+                    facingMode:
+                        cameraFacing,
+
+                    width:{
+                        ideal:1280
+                    },
+
+                    height:{
+                        ideal:720
+                    }
                 },
 
                 audio:false
@@ -2281,7 +3049,9 @@ async function switchCamera(){
 
 
         const newTrack =
-            stream.getVideoTracks()[0];
+            stream
+            .getVideoTracks()[0];
+
 
         const oldTrack =
             localCameraStream
@@ -2292,34 +3062,36 @@ async function switchCamera(){
 
             oldTrack.stop();
 
-            localCameraStream.removeTrack(
-                oldTrack
-            );
+            localCameraStream
+                .removeTrack(
+                    oldTrack
+                );
 
         }
 
 
-        localCameraStream.addTrack(
-            newTrack
+        localCameraStream
+            .addTrack(
+                newTrack
+            );
+
+
+        Object.keys(
+            connections
+        ).forEach(
+            id => {
+
+                startCameraCall(
+                    id
+                );
+
+            }
         );
-
-
-        newTrack.contentHint =
-            "motion";
-
-
-        Object.keys(connections)
-        .forEach(id => {
-
-            startCameraCall(id);
-
-        });
 
 
         renderBubbles();
 
-
-    }catch(e){
+    }catch(error){
 
         alert(
             "Kamera depan/belakang tidak tersedia."
@@ -2330,18 +3102,21 @@ async function switchCamera(){
 }
 
 
-/* =====================================================
+/* =========================================================
    SCREEN SHARE
-===================================================== */
+========================================================= */
 
 async function startScreenShare(){
 
     /*
-       Cek permission.
+       Host selalu punya akses.
     */
 
-    if(!isHost &&
-       screenPermission !== peer.id){
+    if(
+        !isHost &&
+        screenPermission !==
+            peer.id
+    ){
 
         alert(
             "Host belum memberikan izin screen share."
@@ -2353,12 +3128,13 @@ async function startScreenShare(){
 
 
     /*
-       Satu screen share saja.
+       Satu orang saja.
     */
 
     if(
         screenOwner &&
-        screenOwner !== peer.id
+        screenOwner !==
+            peer.id
     ){
 
         alert(
@@ -2370,18 +3146,21 @@ async function startScreenShare(){
     }
 
 
-    if(localScreenStream)
+    if(
+        localScreenStream
+    )
         return;
 
 
     if(
         !navigator.mediaDevices ||
-        !navigator.mediaDevices.getDisplayMedia
+        !navigator.mediaDevices
+        .getDisplayMedia
     ){
 
         alert(
-            "Perangkat/browser ini tidak mendukung screen sharing.\n\n" +
-            "Coba Chrome atau Edge di laptop/PC."
+            "Browser/perangkat ini tidak mendukung screen sharing.\n\n" +
+            "Coba gunakan Chrome/Edge/Firefox di PC atau laptop."
         );
 
         return;
@@ -2392,13 +3171,13 @@ async function startScreenShare(){
     try{
 
         /*
-           Meminta kualitas tinggi.
-           Browser dapat mengabaikan sebagian
-           constraint jika perangkat tidak mampu.
+           Audio sengaja dibuat false
+           agar kompatibilitas lebih baik.
         */
 
         const stream =
-            await navigator.mediaDevices
+            await navigator
+            .mediaDevices
             .getDisplayMedia({
 
                 video:{
@@ -2418,11 +3197,8 @@ async function startScreenShare(){
                     }
                 },
 
-                audio:{
-                    echoCancellation:false,
-                    noiseSuppression:false,
-                    autoGainControl:false
-                }
+                audio:false
+
             });
 
 
@@ -2430,37 +3206,39 @@ async function startScreenShare(){
             stream;
 
 
-        const videoTrack =
-            stream.getVideoTracks()[0];
+        const track =
+            stream
+            .getVideoTracks()[0];
 
 
         /*
-           Sangat penting untuk konten bergerak
-           seperti video/game/transisi cepat.
+           Prioritas untuk video bergerak.
         */
 
         try{
 
-            videoTrack.contentHint =
+            track.contentHint =
                 "motion";
 
-        }catch(e){}
+        }catch(error){}
 
 
         /*
-           Coba set 60 FPS.
+           Coba 60 FPS.
         */
 
         try{
 
-            await videoTrack.applyConstraints({
+            await track.applyConstraints({
+
                 frameRate:{
                     ideal:60,
                     max:60
                 }
+
             });
 
-        }catch(e){}
+        }catch(error){}
 
 
         screenOwner =
@@ -2469,6 +3247,7 @@ async function startScreenShare(){
 
         screenVideo.srcObject =
             stream;
+
 
         noScreen.classList.add(
             "hidden"
@@ -2484,20 +3263,26 @@ async function startScreenShare(){
         shareBtn.style.display =
             "none";
 
+
         stopShareBtn.style.display =
             "inline-block";
 
 
         /*
-           Kirim ke semua peserta.
+           Kirim screen ke semua peserta.
         */
 
-        Object.keys(connections)
-        .forEach(id => {
+        Object.keys(
+            connections
+        ).forEach(
+            id => {
 
-            startScreenCall(id);
+                startScreenCall(
+                    id
+                );
 
-        });
+            }
+        );
 
 
         broadcast({
@@ -2507,11 +3292,11 @@ async function startScreenShare(){
 
 
         /*
-           Deteksi user menekan
-           "Stop sharing" dari browser.
+           Jika user menekan
+           Stop Sharing dari browser.
         */
 
-        videoTrack.onended =
+        track.onended =
             () => {
 
                 stopScreenShare();
@@ -2519,9 +3304,13 @@ async function startScreenShare(){
             };
 
 
-    }catch(e){
+    }catch(error){
 
-        console.error(e);
+        console.error(
+            "Screen share error:",
+            error
+        );
+
 
         alert(
             "Screen share dibatalkan atau browser tidak mendukung fitur ini."
@@ -2532,24 +3321,36 @@ async function startScreenShare(){
 }
 
 
-/* =====================================================
+/* =========================================================
    SCREEN CALL
-===================================================== */
+========================================================= */
 
-function startScreenCall(id){
+function startScreenCall(
+    id
+){
 
-    if(!localScreenStream)
+    if(
+        !localScreenStream
+    )
         return;
 
-    if(!connections[id])
+
+    if(
+        !connections[id]
+    )
         return;
 
 
-    if(screenCalls[id]){
+    if(
+        screenCalls[id]
+    ){
 
         try{
-            screenCalls[id].close();
-        }catch(e){}
+
+            screenCalls[id]
+                .close();
+
+        }catch(error){}
 
     }
 
@@ -2558,14 +3359,21 @@ function startScreenCall(id){
 
         const call =
             peer.call(
+
                 id,
+
                 localScreenStream,
+
                 {
                     metadata:{
-                        kind:"screen",
-                        name:myName
+                        kind:
+                            "screen",
+
+                        name:
+                            myName
                     }
                 }
+
             );
 
 
@@ -2574,32 +3382,39 @@ function startScreenCall(id){
 
 
         /*
-           PeerJS menggunakan RTCPeerConnection
-           di balik call.
-
-           Kita coba menaikkan bitrate dan FPS.
+           Coba optimasi bitrate.
         */
 
         setTimeout(
-            () => optimizeCall(call),
+            () => {
+
+                optimizeScreenCall(
+                    call
+                );
+
+            },
             1000
         );
 
 
-    }catch(e){
+    }catch(error){
 
-        console.warn(e);
+        console.warn(
+            error
+        );
 
     }
 
 }
 
 
-/* =====================================================
-   OPTIMIZE WEBRTC CALL
-===================================================== */
+/* =========================================================
+   WEBRTC OPTIMIZATION
+========================================================= */
 
-async function optimizeCall(call){
+async function optimizeScreenCall(
+    call
+){
 
     try{
 
@@ -2616,46 +3431,53 @@ async function optimizeCall(call){
             pc.getSenders();
 
 
-        for(const sender of senders){
+        for(
+            const sender
+            of senders
+        ){
 
             if(
                 sender.track &&
-                sender.track.kind === "video"
+                sender.track.kind ===
+                "video"
             ){
 
                 const params =
                     sender.getParameters();
 
 
-                if(!params.encodings)
-                    params.encodings = [{}];
+                if(
+                    !params.encodings
+                ){
+
+                    params.encodings =
+                        [{}];
+
+                }
 
 
-                /*
-                   Bitrate 8 Mbps.
-                   Browser bisa menurunkannya sendiri
-                   jika koneksi tidak mampu.
-                */
-
-                params.encodings[0].maxBitrate =
+                params.encodings[0]
+                    .maxBitrate =
                     8000000;
 
 
-                params.encodings[0].maxFramerate =
+                params.encodings[0]
+                    .maxFramerate =
                     60;
 
 
                 try{
 
-                    await sender.setParameters(
-                        params
-                    );
+                    await sender
+                        .setParameters(
+                            params
+                        );
 
-                }catch(e){
+                }catch(error){
 
                     console.warn(
-                        "setParameters:",
-                        e
+                        "Bitrate optimization:",
+                        error
                     );
 
                 }
@@ -2664,11 +3486,11 @@ async function optimizeCall(call){
 
         }
 
-    }catch(e){
+    }catch(error){
 
         console.warn(
             "WebRTC optimization:",
-            e
+            error
         );
 
     }
@@ -2676,27 +3498,32 @@ async function optimizeCall(call){
 }
 
 
-/* =====================================================
-   STOP SCREEN
-===================================================== */
+/* =========================================================
+   STOP SCREEN SHARE
+========================================================= */
 
 function stopScreenShare(){
 
-    if(!localScreenStream)
+    if(
+        !localScreenStream
+    )
         return;
 
 
     localScreenStream
     .getTracks()
-    .forEach(track => {
+    .forEach(
+        track => {
 
-        track.stop();
+            track.stop();
 
-    });
+        }
+    );
 
 
     localScreenStream =
         null;
+
 
     screenOwner =
         null;
@@ -2704,6 +3531,7 @@ function stopScreenShare(){
 
     screenVideo.srcObject =
         null;
+
 
     noScreen.classList.remove(
         "hidden"
@@ -2719,20 +3547,25 @@ function stopScreenShare(){
     shareBtn.style.display =
         "inline-block";
 
+
     stopShareBtn.style.display =
         "none";
 
 
-    Object.keys(screenCalls)
-    .forEach(id => {
+    Object.keys(
+        screenCalls
+    ).forEach(
+        id => {
 
-        try{
+            try{
 
-            screenCalls[id].close();
+                screenCalls[id]
+                    .close();
 
-        }catch(e){}
+            }catch(error){}
 
-    });
+        }
+    );
 
 
     broadcast({
@@ -2746,9 +3579,9 @@ function stopScreenShare(){
 }
 
 
-/* =====================================================
+/* =========================================================
    SCREEN UI
-===================================================== */
+========================================================= */
 
 function updateScreenUI(){
 
@@ -2756,21 +3589,28 @@ function updateScreenUI(){
 
         shareBtn.disabled =
             !!screenOwner &&
-            screenOwner !== peer.id;
+            screenOwner !==
+                peer.id;
 
     }else{
 
         shareBtn.disabled =
-            screenPermission !== peer.id ||
+            screenPermission !==
+                peer.id ||
+
             (
                 !!screenOwner &&
-                screenOwner !== peer.id
+                screenOwner !==
+                    peer.id
             );
 
     }
 
 
-    if(screenOwner === peer.id){
+    if(
+        screenOwner ===
+        peer.id
+    ){
 
         shareBtn.style.display =
             "none";
@@ -2791,139 +3631,160 @@ function updateScreenUI(){
 }
 
 
-/* =====================================================
+/* =========================================================
    HOST COMMAND
-===================================================== */
+========================================================= */
 
 function sendHostCommand(
     id,
     command
 ){
 
-    if(!connections[id])
+    if(
+        !connections[id]
+    )
         return;
 
 
     sendTo(
         connections[id],
         {
-            type:"hostCommand",
-            command:command
+            type:
+                "hostCommand",
+
+            command:
+                command
         }
     );
 
 }
 
 
-function handleHostCommand(command){
+function handleHostCommand(
+    command
+){
 
-    /*
-       MIC OFF
-    */
+    /* MIC OFF */
 
-    if(command === "micOff"){
+    if(
+        command ===
+        "micOff"
+    ){
 
-        if(localCameraStream){
+        if(
+            localCameraStream
+        ){
 
             localCameraStream
             .getAudioTracks()
-            .forEach(track => {
+            .forEach(
+                track => {
 
-                track.enabled =
-                    false;
+                    track.enabled =
+                        false;
 
-            });
-
-        }
-
-        micEnabled = false;
-
-        if(participants[peer.id]){
-
-            participants[peer.id].micLocked =
-                true;
+                }
+            );
 
         }
+
+
+        micEnabled =
+            false;
+
+
+        participants[peer.id]
+            .micLocked =
+            true;
+
 
         updateSelf();
+
 
         broadcast({
             type:"micState",
             enabled:false
         });
 
-        return;
-    }
-
-
-    /*
-       MIC UNLOCK
-    */
-
-    if(command === "micUnlock"){
-
-        if(participants[peer.id]){
-
-            participants[peer.id].micLocked =
-                false;
-
-        }
 
         return;
     }
 
 
-    /*
-       CAMERA OFF
-    */
+    /* MIC UNLOCK */
 
-    if(command === "cameraOff"){
+    if(
+        command ===
+        "micUnlock"
+    ){
 
-        if(localCameraStream){
+        participants[peer.id]
+            .micLocked =
+            false;
+
+
+        return;
+    }
+
+
+    /* CAMERA OFF */
+
+    if(
+        command ===
+        "cameraOff"
+    ){
+
+        if(
+            localCameraStream
+        ){
 
             localCameraStream
             .getVideoTracks()
-            .forEach(track => {
+            .forEach(
+                track => {
 
-                track.enabled =
-                    false;
+                    track.enabled =
+                        false;
 
-            });
-
-        }
-
-        cameraEnabled = false;
-
-        if(participants[peer.id]){
-
-            participants[peer.id].cameraLocked =
-                true;
+                }
+            );
 
         }
+
+
+        cameraEnabled =
+            false;
+
+
+        participants[peer.id]
+            .cameraLocked =
+            true;
+
 
         updateSelf();
+
 
         broadcast({
             type:"cameraState",
             enabled:false
         });
 
+
         return;
     }
 
 
-    /*
-       CAMERA UNLOCK
-    */
+    /* CAMERA UNLOCK */
 
-    if(command === "cameraUnlock"){
+    if(
+        command ===
+        "cameraUnlock"
+    ){
 
-        if(participants[peer.id]){
+        participants[peer.id]
+            .cameraLocked =
+            false;
 
-            participants[peer.id].cameraLocked =
-                false;
-
-        }
 
         return;
     }
@@ -2931,9 +3792,9 @@ function handleHostCommand(command){
 }
 
 
-/* =====================================================
-   HOST UI
-===================================================== */
+/* =========================================================
+   HOST PANEL
+========================================================= */
 
 function updateHostUsers(){
 
@@ -2941,320 +3802,491 @@ function updateHostUsers(){
         return;
 
 
-    hostUsers.innerHTML = "";
-
-
-    Object.keys(participants)
-    .forEach(id => {
-
-        if(id === peer.id)
-            return;
-
-
-        const user =
-            participants[id];
-
-
-        const box =
-            document.createElement("div");
-
-        box.className =
-            "host-user";
-
-
-        const top =
-            document.createElement("div");
-
-        top.className =
-            "host-user-top";
-
-
-        const info =
-            document.createElement("div");
-
-        info.className =
-            "host-user-info";
-
-
-        const name =
-            document.createElement("div");
-
-        name.className =
-            "host-user-name";
-
-        name.textContent =
-            user.name ||
-            "User";
-
-
-        const state =
-            document.createElement("div");
-
-        state.className =
-            "host-user-state";
-
-        state.textContent =
-            "Mic " +
-            (user.mic ? "ON" : "OFF") +
-            " • Kamera " +
-            (user.camera ? "ON" : "OFF");
-
-
-        info.appendChild(name);
-        info.appendChild(state);
-
-
-        top.appendChild(info);
-
-
-        const actions =
-            document.createElement("div");
-
-        actions.className =
-            "host-actions";
-
-
-        /*
-           MIC
-        */
-
-        const mic =
-            document.createElement("button");
-
-        mic.textContent =
-            user.micLocked
-            ? "🔓 Buka Mic"
-            : "🔇 Matikan Mic";
-
-
-        mic.onclick =
-            () => {
-
-                if(user.micLocked){
-
-                    user.micLocked =
-                        false;
-
-                    sendHostCommand(
-                        id,
-                        "micUnlock"
-                    );
-
-                }else{
-
-                    user.micLocked =
-                        true;
-
-                    sendHostCommand(
-                        id,
-                        "micOff"
-                    );
-
-                }
-
-                updateHostUsers();
-
-            };
-
-
-        /*
-           CAMERA
-        */
-
-        const cam =
-            document.createElement("button");
-
-        cam.textContent =
-            user.cameraLocked
-            ? "🔓 Buka Cam"
-            : "📷 Matikan Cam";
-
-
-        cam.onclick =
-            () => {
-
-                if(user.cameraLocked){
-
-                    user.cameraLocked =
-                        false;
-
-                    sendHostCommand(
-                        id,
-                        "cameraUnlock"
-                    );
-
-                }else{
-
-                    user.cameraLocked =
-                        true;
-
-                    sendHostCommand(
-                        id,
-                        "cameraOff"
-                    );
-
-                }
-
-                updateHostUsers();
-
-            };
-
-
-        /*
-           SCREEN PERMISSION
-        */
-
-        const share =
-            document.createElement("button");
-
-
-        share.textContent =
-            screenPermission === id
-            ? "🖥️ Izin ✓"
-            : "🖥️ Beri Izin";
-
-
-        share.onclick =
-            () => {
-
-                if(
-                    screenOwner &&
-                    screenOwner !== id
-                ){
-
-                    alert(
-                        "Hentikan screen share yang sedang aktif terlebih dahulu."
-                    );
-
-                    return;
-
-                }
-
-
-                screenPermission =
-                    id;
-
-
-                broadcast({
-                    type:"permission",
-                    permission:id,
-                    owner:screenOwner
-                });
-
-
-                updateScreenUI();
-                updateHostUsers();
-
-            };
-
-
-        /*
-           KICK
-        */
-
-        const kick =
-            document.createElement("button");
-
-        kick.className =
-            "kick";
-
-        kick.textContent =
-            "🚫 Kick";
-
-
-        kick.onclick =
-            () => {
-
-                const ok =
-                    confirm(
-                        "Keluarkan " +
-                        (user.name || "peserta") +
-                        " dari room?"
-                    );
-
-
-                if(!ok)
-                    return;
-
-
-                /*
-                   Kirim perintah kick
-                */
-
-                sendTo(
-                    connections[id],
-                    {
-                        type:"kick",
-                        target:id
-                    }
-                );
-
-
-                /*
-                   Hapus dari host
-                */
-
-                setTimeout(
-                    () => {
-
-                        try{
-                            connections[id].close();
-                        }catch(e){}
-
-                        removeParticipant(id);
-
-                    },
-                    300
-                );
-
-            };
-
-
-        actions.appendChild(mic);
-        actions.appendChild(cam);
-        actions.appendChild(share);
-        actions.appendChild(kick);
-
-
-        box.appendChild(top);
-        box.appendChild(actions);
-
-
-        hostUsers.appendChild(box);
-
-    });
+    hostUsers.innerHTML =
+        "";
+
+
+    const ids =
+        Object.keys(
+            participants
+        ).filter(
+            id =>
+                id !==
+                peer.id
+        );
 
 
     if(
-        Object.keys(participants)
-        .filter(id => id !== peer.id)
-        .length === 0
+        ids.length === 0
     ){
 
         const empty =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         empty.style.cssText =
             "font-size:10px;color:#707985";
 
+
         empty.textContent =
             "Belum ada peserta.";
 
-        hostUsers.appendChild(empty);
 
+        hostUsers.appendChild(
+            empty
+        );
+
+
+        return;
     }
+
+
+    ids.forEach(
+        id => {
+
+            const user =
+                participants[id];
+
+
+            const box =
+                document.createElement(
+                    "div"
+                );
+
+
+            box.className =
+                "host-user";
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+
+            name.className =
+                "host-user-name";
+
+
+            name.textContent =
+                user.name ||
+                "User";
+
+
+            const state =
+                document.createElement(
+                    "div"
+                );
+
+
+            state.className =
+                "host-user-state";
+
+
+            state.textContent =
+                "Mic " +
+                (
+                    user.mic
+                    ? "ON"
+                    : "OFF"
+                ) +
+                " • Kamera " +
+                (
+                    user.camera
+                    ? "ON"
+                    : "OFF"
+                );
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+
+            actions.className =
+                "host-actions";
+
+
+            /*
+               MIC
+            */
+
+            const mic =
+                document.createElement(
+                    "button"
+                );
+
+
+            mic.textContent =
+                user.micLocked
+                ? "🔓 Buka Mic"
+                : "🔇 Matikan Mic";
+
+
+            mic.onclick =
+                () => {
+
+                    if(
+                        user.micLocked
+                    ){
+
+                        user.micLocked =
+                            false;
+
+
+                        sendHostCommand(
+                            id,
+                            "micUnlock"
+                        );
+
+                    }else{
+
+                        user.micLocked =
+                            true;
+
+
+                        sendHostCommand(
+                            id,
+                            "micOff"
+                        );
+
+                    }
+
+
+                    updateHostUsers();
+
+                };
+
+
+            /*
+               CAMERA
+            */
+
+            const cam =
+                document.createElement(
+                    "button"
+                );
+
+
+            cam.textContent =
+                user.cameraLocked
+                ? "🔓 Buka Cam"
+                : "📷 Matikan Cam";
+
+
+            cam.onclick =
+                () => {
+
+                    if(
+                        user.cameraLocked
+                    ){
+
+                        user.cameraLocked =
+                            false;
+
+
+                        sendHostCommand(
+                            id,
+                            "cameraUnlock"
+                        );
+
+                    }else{
+
+                        user.cameraLocked =
+                            true;
+
+
+                        sendHostCommand(
+                            id,
+                            "cameraOff"
+                        );
+
+                    }
+
+
+                    updateHostUsers();
+
+                };
+
+
+            /*
+               SCREEN
+            */
+
+            const screen =
+                document.createElement(
+                    "button"
+                );
+
+
+            screen.textContent =
+                screenPermission ===
+                id
+                ? "🖥️ Izin ✓"
+                : "🖥️ Beri Izin";
+
+
+            screen.onclick =
+                () => {
+
+                    /*
+                       Jangan transfer permission
+                       ketika orang lain sedang share.
+                    */
+
+                    if(
+                        screenOwner &&
+                        screenOwner !==
+                            id
+                    ){
+
+                        alert(
+                            "Hentikan screen share yang sedang aktif terlebih dahulu."
+                        );
+
+                        return;
+
+                    }
+
+
+                    screenPermission =
+                        id;
+
+
+                    broadcast({
+                        type:
+                            "permission",
+
+                        permission:
+                            id,
+
+                        owner:
+                            screenOwner
+                    });
+
+
+                    updateScreenUI();
+                    updateHostUsers();
+
+                };
+
+
+            /*
+               KICK
+            */
+
+            const kick =
+                document.createElement(
+                    "button"
+                );
+
+
+            kick.className =
+                "kick";
+
+
+            kick.textContent =
+                "🚫 Kick";
+
+
+            kick.onclick =
+                () => {
+
+                    const ok =
+                        confirm(
+                            "Keluarkan " +
+                            (
+                                user.name ||
+                                "peserta"
+                            ) +
+                            " dari room?"
+                        );
+
+
+                    if(!ok)
+                        return;
+
+
+                    /*
+                       Kirim kick.
+                    */
+
+                    sendTo(
+                        connections[id],
+                        {
+                            type:
+                                "kick",
+
+                            target:
+                                id
+                        }
+                    );
+
+
+                    /*
+                       Hapus lokal.
+                    */
+
+                    setTimeout(
+                        () => {
+
+                            removeParticipant(
+                                id
+                            );
+
+                        },
+                        250
+                    );
+
+                };
+
+
+            actions.appendChild(
+                mic
+            );
+
+            actions.appendChild(
+                cam
+            );
+
+            actions.appendChild(
+                screen
+            );
+
+            actions.appendChild(
+                kick
+            );
+
+
+            box.appendChild(
+                name
+            );
+
+            box.appendChild(
+                state
+            );
+
+            box.appendChild(
+                actions
+            );
+
+
+            hostUsers.appendChild(
+                box
+            );
+
+        }
+    );
 
 }
 
 
-/* =====================================================
+/* =========================================================
+   KICKED
+========================================================= */
+
+function kickedOut(){
+
+    /*
+       Matikan media.
+    */
+
+    if(
+        localCameraStream
+    ){
+
+        localCameraStream
+        .getTracks()
+        .forEach(
+            track =>
+                track.stop()
+        );
+
+    }
+
+
+    if(
+        localScreenStream
+    ){
+
+        localScreenStream
+        .getTracks()
+        .forEach(
+            track =>
+                track.stop()
+        );
+
+    }
+
+
+    try{
+
+        peer.destroy();
+
+    }catch(error){}
+
+
+    document.body.innerHTML = `
+
+        <div style="
+            width:100vw;
+            height:100vh;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            background:#090b0f;
+
+            color:white;
+
+            font-family:Arial;
+
+            text-align:center;
+        ">
+
+            <div>
+
+                <div style="
+                    font-size:55px;
+                    margin-bottom:15px">
+
+                    🚫
+
+                </div>
+
+                <h2>
+                    Kamu dikeluarkan dari room
+                </h2>
+
+                <p style="
+                    color:#858d98">
+
+                    Host telah mengeluarkan kamu dari room.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
    CHAT
-===================================================== */
+========================================================= */
 
 function sendChat(){
 
     const text =
         chatInput.value.trim();
+
 
     if(!text)
         return;
@@ -3264,9 +4296,11 @@ function sendChat(){
 
         type:"chat",
 
-        name:myName,
+        name:
+            myName,
 
-        text:text
+        text:
+            text
 
     };
 
@@ -3277,9 +4311,13 @@ function sendChat(){
     );
 
 
-    broadcast(data);
+    broadcast(
+        data
+    );
 
-    chatInput.value = "";
+
+    chatInput.value =
+        "";
 
 }
 
@@ -3290,36 +4328,58 @@ function addMessage(
 ){
 
     const item =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     item.className =
         "message";
 
 
     const nameEl =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     nameEl.className =
         "message-name";
 
+
     nameEl.textContent =
-        name || "User";
+        name ||
+        "User";
 
 
     const textEl =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     textEl.className =
         "message-text";
+
 
     textEl.textContent =
         text;
 
 
-    item.appendChild(nameEl);
-    item.appendChild(textEl);
+    item.appendChild(
+        nameEl
+    );
 
-    messages.appendChild(item);
+
+    item.appendChild(
+        textEl
+    );
+
+
+    messages.appendChild(
+        item
+    );
+
 
     messages.scrollTop =
         messages.scrollHeight;
@@ -3328,33 +4388,44 @@ function addMessage(
 
 
 document
-.getElementById("sendBtn")
+.getElementById(
+    "sendBtn"
+)
 .onclick =
 sendChat;
 
 
 chatInput.addEventListener(
     "keydown",
-    e => {
+    event => {
 
-        if(e.key === "Enter")
+        if(
+            event.key ===
+            "Enter"
+        ){
+
             sendChat();
+
+        }
 
     }
 );
 
 
-/* =====================================================
-   NAME
-===================================================== */
+/* =========================================================
+   SAVE NAME
+========================================================= */
 
 document
-.getElementById("saveNameBtn")
+.getElementById(
+    "saveNameBtn"
+)
 .onclick =
 () => {
 
     const name =
         nameInput.value.trim();
+
 
     if(!name)
         return;
@@ -3363,15 +4434,20 @@ document
     myName =
         name;
 
+
     localStorage.setItem(
         "watchparty_name",
         myName
     );
 
 
-    if(peer?.id){
+    if(
+        participants[peer.id]
+    ){
 
-        participants[peer.id].name =
+        participants[
+            peer.id
+        ].name =
             myName;
 
     }
@@ -3389,16 +4465,17 @@ document
 };
 
 
-/* =====================================================
+/* =========================================================
    CAMERA BUTTON
-===================================================== */
+========================================================= */
 
 cameraBtn.onclick =
 async () => {
 
     if(
         !isHost &&
-        participants[peer.id]?.cameraLocked
+        participants[peer.id]
+        ?.cameraLocked
     ){
 
         alert(
@@ -3410,7 +4487,9 @@ async () => {
     }
 
 
-    if(cameraEnabled){
+    if(
+        cameraEnabled
+    ){
 
         stopCamera();
 
@@ -3423,9 +4502,9 @@ async () => {
 };
 
 
-/* =====================================================
+/* =========================================================
    MIC BUTTON
-===================================================== */
+========================================================= */
 
 micBtn.onclick =
 async () => {
@@ -3435,39 +4514,46 @@ async () => {
 };
 
 
-/* =====================================================
-   CAMERA SWITCH
-===================================================== */
+/* =========================================================
+   SWITCH CAMERA
+========================================================= */
 
 switchCameraBtn.onclick =
 switchCamera;
 
 
-/* =====================================================
-   SCREEN BUTTONS
-===================================================== */
+/* =========================================================
+   SCREEN
+========================================================= */
 
 shareBtn.onclick =
 startScreenShare;
+
 
 stopShareBtn.onclick =
 stopScreenShare;
 
 
-/* =====================================================
+/* =========================================================
    FULLSCREEN
-===================================================== */
+========================================================= */
 
 document
-.getElementById("fullscreenBtn")
+.getElementById(
+    "fullscreenBtn"
+)
 .onclick =
 async () => {
 
     try{
 
-        if(!document.fullscreenElement){
+        if(
+            !document.fullscreenElement
+        ){
 
-            if(stage.requestFullscreen){
+            if(
+                stage.requestFullscreen
+            ){
 
                 await stage.requestFullscreen();
 
@@ -3485,7 +4571,7 @@ async () => {
 
         }
 
-    }catch(e){
+    }catch(error){
 
         stage.classList.toggle(
             "fullscreen"
@@ -3500,7 +4586,9 @@ document.addEventListener(
     "fullscreenchange",
     () => {
 
-        if(document.fullscreenElement){
+        if(
+            document.fullscreenElement
+        ){
 
             stage.classList.add(
                 "fullscreen"
@@ -3518,26 +4606,31 @@ document.addEventListener(
 );
 
 
-/* =====================================================
+/* =========================================================
    COPY ROOM
-===================================================== */
+========================================================= */
 
 document
-.getElementById("copyRoomBtn")
+.getElementById(
+    "copyRoomBtn"
+)
 .onclick =
 async () => {
 
     try{
 
-        await navigator.clipboard.writeText(
-            location.href
-        );
+        await navigator
+            .clipboard
+            .writeText(
+                location.href
+            );
+
 
         alert(
             "Link room berhasil disalin."
         );
 
-    }catch(e){
+    }catch(error){
 
         roomUrl.select();
 
@@ -3554,12 +4647,14 @@ async () => {
 };
 
 
-/* =====================================================
+/* =========================================================
    LEAVE
-===================================================== */
+========================================================= */
 
 document
-.getElementById("leaveBtn")
+.getElementById(
+    "leaveBtn"
+)
 .onclick =
 () => {
 
@@ -3571,27 +4666,39 @@ document
         return;
 
 
-    if(localCameraStream){
+    if(
+        localCameraStream
+    ){
 
         localCameraStream
         .getTracks()
-        .forEach(t=>t.stop());
+        .forEach(
+            track =>
+                track.stop()
+        );
 
     }
 
 
-    if(localScreenStream){
+    if(
+        localScreenStream
+    ){
 
         localScreenStream
         .getTracks()
-        .forEach(t=>t.stop());
+        .forEach(
+            track =>
+                track.stop()
+        );
 
     }
 
 
     try{
+
         peer.destroy();
-    }catch(e){}
+
+    }catch(error){}
 
 
     location.href =
@@ -3600,42 +4707,64 @@ document
 };
 
 
-/* =====================================================
+/* =========================================================
    REMOVE PARTICIPANT
-===================================================== */
+========================================================= */
 
-function removeParticipant(id){
+function removeParticipant(
+    id
+){
 
-    delete participants[id];
+    delete participants[
+        id
+    ];
 
 
-    if(cameraCalls[id]){
+    if(
+        cameraCalls[id]
+    ){
 
         try{
-            cameraCalls[id].close();
-        }catch(e){}
+
+            cameraCalls[id]
+                .close();
+
+        }catch(error){}
+
 
         delete cameraCalls[id];
 
     }
 
 
-    if(screenCalls[id]){
+    if(
+        screenCalls[id]
+    ){
 
         try{
-            screenCalls[id].close();
-        }catch(e){}
+
+            screenCalls[id]
+                .close();
+
+        }catch(error){}
+
 
         delete screenCalls[id];
 
     }
 
 
-    if(connections[id]){
+    if(
+        connections[id]
+    ){
 
         try{
-            connections[id].close();
-        }catch(e){}
+
+            connections[id]
+                .close();
+
+        }catch(error){}
+
 
         delete connections[id];
 
@@ -3644,7 +4773,8 @@ function removeParticipant(id){
 
     const bubble =
         document.getElementById(
-            "bubble-" + id
+            "bubble-" +
+            id
         );
 
 
@@ -3653,8 +4783,8 @@ function removeParticipant(id){
 
 
     /*
-       Jika peserta yang share screen
-       keluar.
+       Kalau orang yang share screen keluar,
+       host mengambil kembali permission.
     */
 
     if(
@@ -3665,54 +4795,75 @@ function removeParticipant(id){
         screenOwner =
             null;
 
+
         screenPermission =
             peer.id;
 
 
         broadcast({
-            type:"screenStopped",
-            owner:id
+            type:
+                "screenStopped",
+
+            owner:
+                id
         });
 
 
         broadcast({
-            type:"permission",
-            permission:peer.id,
-            owner:null
+            type:
+                "permission",
+
+            permission:
+                peer.id,
+
+            owner:
+                null
         });
 
     }
 
 
     renderBubbles();
+
     updateHostUsers();
+
     updateScreenUI();
 
 }
 
 
-/* =====================================================
+/* =========================================================
    BEFORE UNLOAD
-===================================================== */
+========================================================= */
 
 window.addEventListener(
     "beforeunload",
     () => {
 
-        if(localCameraStream){
+        if(
+            localCameraStream
+        ){
 
             localCameraStream
             .getTracks()
-            .forEach(t=>t.stop());
+            .forEach(
+                track =>
+                    track.stop()
+            );
 
         }
 
 
-        if(localScreenStream){
+        if(
+            localScreenStream
+        ){
 
             localScreenStream
             .getTracks()
-            .forEach(t=>t.stop());
+            .forEach(
+                track =>
+                    track.stop()
+            );
 
         }
 
@@ -3720,12 +4871,13 @@ window.addEventListener(
 );
 
 
-/* =====================================================
+/* =========================================================
    INITIAL
-===================================================== */
+========================================================= */
+
+updateSelf();
 
 updateScreenUI();
-updateSelf();
 
 </script>
 
