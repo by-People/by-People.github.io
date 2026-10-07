@@ -1398,7 +1398,50 @@ function handleData(
         return;
     }
 
+/* =========================================================
+   UPDATE SELF
+========================================================= */
 
+function updateSelf(){
+
+    if(!participants[peer.id]){
+        participants[peer.id] = {
+            id: peer.id,
+            name: myName,
+            camera: cameraEnabled,
+            mic: micEnabled,
+            cameraLocked: false,
+            micLocked: false,
+            connected: true,
+            self: true,
+            isHost: isHost
+        };
+    }
+
+    participants[peer.id].name =
+        myName;
+
+    participants[peer.id].camera =
+        cameraEnabled;
+
+    participants[peer.id].mic =
+        micEnabled;
+
+    renderBubbles();
+
+    updateHostUsers();
+
+    cameraBtn.textContent =
+        cameraEnabled
+        ? "📷 Kamera OFF"
+        : "📷 Kamera ON";
+
+    micBtn.textContent =
+        micEnabled
+        ? "🎤 Mic OFF"
+        : "🎤 Mic ON";
+}
+    
     /* ================= MIC ================= */
 
     if(
@@ -1721,10 +1764,38 @@ async function startCamera(){
         updateSelf();
 
 
-        broadcast({
+       if(isHost){
+
+   if(isHost){
+
+    broadcast({
+        type:"cameraState",
+        enabled:false
+    });
+
+}else{
+
+    sendTo(
+        connections[hostPeerId],
+        {
+            type:"cameraState",
+            enabled:false
+        }
+    );
+
+}
+
+}else{
+
+    sendTo(
+        connections[hostPeerId],
+        {
             type:"cameraState",
             enabled:true
-        });
+        }
+    );
+
+}
 
 
         Object.keys(
