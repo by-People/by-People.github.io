@@ -3,31 +3,31 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Watch Party P2P</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;background:#0b0d10;color:#fff;font:14px Arial,sans-serif}
+body{margin:0;background:#0b0d10;color:#fff;font:14px Arial,sans-serif}
 button,input,select{font:inherit}
 button{cursor:pointer;border:0;border-radius:7px;padding:9px 11px;background:#27313c;color:#fff}
-button:disabled{opacity:.45;cursor:not-allowed}
+button:disabled{opacity:.45;cursor:not-allowed}a
+input,select{background:#1b2027;color:#fff;border:1px solid #343b44;border-radius:7px;padding:9px;min-width:0}
 #app{height:100dvh;display:flex;flex-direction:column}
 header{height:54px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;background:#15191f;border-bottom:1px solid #303640}
 header strong{font-size:16px}
 #status{font-size:12px;color:#aeb8c4}
 main{flex:1;min-height:0;display:flex}
-#stage{position:relative;flex:1;min-width:0;min-height:0;background:#050607;overflow:hidden}
+#stage{flex:1;min-width:0;min-height:0;position:relative;background:#050607;overflow:hidden}
 #screen{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#050607}
 #empty{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#9aa4b1;pointer-events:none;padding:20px}
 #empty h2{font-size:20px}
 #bubbles{position:absolute;inset:0;pointer-events:none;z-index:3}
-.bubble{position:absolute;width:160px;height:110px;min-width:90px;min-height:65px;background:#15191f;border:1px solid #647080;border-radius:10px;overflow:hidden;box-shadow:0 5px 20px #0008;pointer-events:auto;touch-action:none;user-select:none}
-.bubble video{display:block;width:100%;height:100%;object-fit:cover;background:#111}
-.bubble label{position:absolute;left:5px;bottom:5px;background:#000b;padding:4px;border-radius:4px;font-size:11px;pointer-events:none}
-.resize{position:absolute;right:0;bottom:0;width:27px;height:27px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 48%,#fff9 50%,transparent 62%)}
-#controls{position:absolute;z-index:5;bottom:10px;left:8px;right:8px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;pointer-events:none}
-#controls>*{pointer-events:auto}
+.bubble{position:absolute;width:160px;height:110px;min-width:90px;min-height:65px;background:#15191f;border:1px solid #647080;border-radius:10px;overflow:hidden;box-shadow:0 5px 20px #0008;pointer-events:auto;touch-action:none}
+.bubble video{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.bubble label{position:absolute;left:5px;bottom:5px;background:#000a;padding:4px;border-radius:4px;font-size:11px;pointer-events:none}
+.resize{position:absolute;right:0;bottom:0;z-index:5;width:38px;height:38px;cursor:nwse-resize;touch-action:none;pointer-events:auto;background:linear-gradient(135deg,transparent 48%,#fff 50%,#fff 55%,transparent 57%)}
+#controls{position:absolute;z-index:5;bottom:10px;left:8px;right:8px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap}
 #controls button,#controls select{box-shadow:0 2px 8px #0008}
 .blue{background:#1769e0}
 .red{background:#9c3030}
@@ -36,15 +36,14 @@ aside{width:300px;flex-shrink:0;display:flex;flex-direction:column;min-height:0;
 .section{padding:11px;border-bottom:1px solid #303640}
 .heading{font-size:11px;color:#9ca7b4;text-transform:uppercase;font-weight:bold;margin-bottom:8px}
 .roomrow{display:flex;gap:5px}
-#roomCode{flex:1;width:50px;text-align:center;font-weight:bold;letter-spacing:1px}
-input,select{background:#1b2027;color:#fff;border:1px solid #343b44;border-radius:7px;padding:9px}
+#roomCode{flex:1;text-align:center;font-weight:bold;letter-spacing:1px}
 #chat{flex:1;min-height:80px;display:flex;flex-direction:column;padding:11px}
 #messages{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:7px}
 .msg{background:#202630;border-radius:7px;padding:8px;font-size:12px;overflow-wrap:anywhere}
 .msg.mine{background:#173b69}
 .msg b{display:block;color:#8eb9ff;margin-bottom:3px;font-size:11px}
 #chatForm{display:flex;gap:5px;margin-top:8px}
-#chatInput{flex:1;width:50px;min-width:0}
+#chatInput{flex:1;width:50px}
 .row{display:flex;gap:6px;margin-top:8px}
 .row button{flex:1;font-size:12px}
 #hostPanel{display:none}
@@ -57,10 +56,9 @@ input,select{background:#1b2027;color:#fff;border:1px solid #343b44;border-radiu
  main{flex-direction:column}
  #stage{flex:1;min-height:40vh}
  aside{width:100%;height:45vh;border-left:0;border-top:1px solid #303640}
+ .bubble{width:125px;height:85px}
  header{padding:0 7px}
- header strong{font-size:14px}
  #status{font-size:10px}
- #controls button{padding:8px;font-size:11px}
 }
 </style>
 </head>
@@ -142,38 +140,34 @@ input,select{background:#1b2027;color:#fff;border:1px solid #343b44;border-radiu
 <script>
 (() => {
 "use strict";
+
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
-const HOST_ROOM_KEY = "wp_host_room_v2";
+
+let room = params.get("room");
+let isHost = params.get("host") === "1";
 
 function randomRoom(){
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   return Array.from({length:8},()=>chars[Math.floor(Math.random()*chars.length)]).join("");
 }
 
-/* Pertahankan room saat refresh, termasuk jika URL tidak memiliki room. */
-let room = params.get("room");
-let isHost = params.get("host") === "1";
-
 if(!room){
-  room = localStorage.getItem(HOST_ROOM_KEY) || randomRoom();
+  room = randomRoom();
   isHost = true;
+  history.replaceState({}, "", "?room="+room+"&host=1");
 }
-room = room.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,24) || randomRoom();
 
-if(isHost){
-  localStorage.setItem(HOST_ROOM_KEY,room);
-  history.replaceState({}, "", "?room="+encodeURIComponent(room)+"&host=1");
-}else{
-  history.replaceState({}, "", "?room="+encodeURIComponent(room));
-}
+room = room.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,24);
+if(!room) room = randomRoom();
 
 const hostId = "wp-"+room.toLowerCase();
+
 $("roomCode").value = room;
+$("myName").textContent =
+  localStorage.getItem("wp_name") || (isHost ? "Host" : "Guest");
 
-let name = localStorage.getItem("wp_name") || (isHost ? "Host" : "Guest");
-$("myName").textContent = name;
-
+let name = $("myName").textContent;
 let peer = null;
 let conn = null;
 let guestId = null;
@@ -189,12 +183,7 @@ let micOn = false;
 let camOn = false;
 let remoteName = "Peserta";
 let reconnectTimer = null;
-let hostRetryTimer = null;
 let toastTimer = null;
-let peerGeneration = 0;
-let remoteMediaStream = null;
-let remoteCameraOn = true;
-let remoteMicOn = true;
 const bubbles = new Map();
 
 function toast(text){
@@ -204,68 +193,66 @@ function toast(text){
   toastTimer = setTimeout(()=>$("toast").style.display="none",2800);
 }
 function status(text){ $("status").textContent = text; }
+function safeText(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function send(data){
   if(conn && conn.open){
-    try{conn.send(data);return true;}catch(e){}
+    try{ conn.send(data); return true; }catch(e){}
   }
   return false;
 }
 function addMessage(who,text,mine=false){
-  const div=document.createElement("div");
-  div.className="msg"+(mine?" mine":"");
-  const b=document.createElement("b");
-  b.textContent=who;
-  const body=document.createElement("div");
-  body.textContent=text;
-  div.append(b,body);
+  const div = document.createElement("div");
+  div.className = "msg"+(mine?" mine":"");
+  div.innerHTML = "<b>"+safeText(who)+"</b><div>"+safeText(text)+"</div>";
   $("messages").appendChild(div);
-  $("messages").scrollTop=$("messages").scrollHeight;
+  $("messages").scrollTop = $("messages").scrollHeight;
 }
 function sendHello(){
-  send({type:"hello",name,id:peer?.id,mic:micOn,camera:camOn});
+  send({type:"hello",name,id:peer.id,mic:micOn,camera:camOn});
 }
-function updateButtons(){
-  $("mic").textContent=micOn?"🎤 Mic ON":"🔇 Mic OFF";
-  $("camera").textContent=camOn?"📷 Kamera ON":"📷 Kamera OFF";
-  $("mic").disabled=micLocked;
-  $("camera").disabled=camLocked;
+function setMediaButtons(){
+  $("mic").textContent = micOn ? "🎤 Mic ON" : "🔇 Mic OFF";
+  $("camera").textContent = camOn ? "📷 Kamera ON" : "📷 Kamera OFF";
+  $("mic").disabled = micLocked;
+  $("camera").disabled = camLocked;
 }
 function updatePermissionUI(){
-  $("share").disabled=!isHost && permission!==true;
-  $("share").title=$("share").disabled?"Tunggu izin Host":"";
+  $("share").disabled = !isHost && permission !== true;
+  $("share").title = $("share").disabled ? "Tunggu izin Host" : "";
 }
 function updateHostUI(){
   $("hostPanel").classList.toggle("show",isHost);
-  $("participant").textContent=guestId?remoteName+" terhubung":"Menunggu peserta...";
+  $("participant").textContent = guestId ? remoteName+" terhubung" : "Menunggu peserta...";
 }
 function getQuality(){
-  const q=$("quality").value;
-  if(q==="720p")return {w:1280,h:720,fps:30,bitrate:4000000};
-  if(q==="1080p")return {w:1920,h:1080,fps:30,bitrate:7000000};
-  if(q==="1080p60")return {w:1920,h:1080,fps:60,bitrate:12000000};
-  return {w:1920,h:1080,fps:60,bitrate:10000000};
+  const q = $("quality").value;
+  if(q==="720p") return {w:1280,h:720,fps:30,bitrate:5000000};
+  if(q==="1080p") return {w:1920,h:1080,fps:30,bitrate:9000000};
+  if(q==="1080p60") return {w:1920,h:1080,fps:60,bitrate:16000000};
+  return {w:1920,h:1080,fps:60,bitrate:14000000};
 }
 
-/* Host keeps a stable room-based ID. Client always gets a unique ID. */
+/* Each browser must have its own Peer ID.
+   Only the Host uses the stable room-based ID. */
 function createPeer(){
-  const generation=++peerGeneration;
-  status(isHost?"Membuka room...":"Mencari Host...");
-  peer=isHost?new Peer(hostId,{debug:1}):new Peer({debug:1});
+  status(isHost ? "Membuka room..." : "Mencari Host...");
+  peer = isHost ? new Peer(hostId,{debug:1}) : new Peer({debug:1});
 
   peer.on("open",()=>{
-    if(generation!==peerGeneration)return;
-    status(isHost?"Room siap":"Mencari Host...");
+    status(isHost ? "Room siap" : "Mencari Host...");
     if(isHost){
       $("hostPanel").classList.add("show");
       updateHostUI();
-    }else connectHost();
+    }else{
+      connectHost();
+    }
     ensureMedia().then(()=>{
-      if(conn?.open)sendHello();
+      if(conn && conn.open) sendHello();
     });
   });
 
   peer.on("connection",incoming=>{
-    if(!isHost)return;
+    if(!isHost) return;
     if(guestId && incoming.peer!==guestId){
       incoming.on("open",()=>{
         incoming.send({type:"kick",reason:"Room ini hanya untuk satu peserta."});
@@ -273,31 +260,37 @@ function createPeer(){
       });
       return;
     }
-    conn=incoming;
-    guestId=incoming.peer;
-    setupDataConnection(incoming,generation);
+    conn = incoming;
+    guestId = incoming.peer;
+    setupDataConnection(incoming);
   });
 
   peer.on("call",call=>{
-    if(generation!==peerGeneration)return;
-    if(call.metadata?.kind==="screen")receiveScreenCall(call);
-    else receiveMediaCall(call);
+    if(call.metadata && call.metadata.kind==="screen"){
+      receiveScreenCall(call);
+    }else{
+      receiveMediaCall(call);
+    }
   });
 
   peer.on("disconnected",()=>{
-    if(generation!==peerGeneration)return;
     status("Menyambungkan kembali...");
-    if(isHost){
-      try{peer.reconnect();}catch(e){scheduleHostRetry();}
-    }else scheduleReconnect();
+    if(!isHost) scheduleReconnect();
+    else{
+      try{peer.reconnect();}catch(e){}
+    }
   });
 
   peer.on("error",err=>{
-    if(generation!==peerGeneration)return;
-    console.error("PeerJS:",err.type,err);
+    console.error("PeerJS error:",err.type,err);
     if(err.type==="unavailable-id" && isHost){
-      status("Room sedang reconnect...");
-      scheduleHostRetry();
+      status("ID room masih aktif, mencoba lagi...");
+      setTimeout(()=>{
+        if(peer && !peer.destroyed){
+          try{peer.destroy();}catch(e){}
+        }
+        createPeer();
+      },2500);
     }else if(err.type==="peer-unavailable" && !isHost){
       status("Host belum tersedia...");
       scheduleReconnect();
@@ -307,52 +300,44 @@ function createPeer(){
   });
 }
 
-function scheduleHostRetry(){
-  clearTimeout(hostRetryTimer);
-  hostRetryTimer=setTimeout(()=>{
-    if(!isHost)return;
-    const old=peer;
-    try{if(old && !old.destroyed)old.destroy();}catch(e){}
-    createPeer(); // room dan hostId tidak berubah
-  },3500);
-}
 function connectHost(){
-  if(isHost || !peer || peer.destroyed || (conn && conn.open))return;
+  if(isHost || !peer || peer.destroyed) return;
+  if(conn && conn.open) return;
   status("Menghubungkan ke Host...");
   try{
-    const c=peer.connect(hostId,{reliable:true});
-    conn=c;
-    setupDataConnection(c,peerGeneration);
+    const c = peer.connect(hostId,{reliable:true});
+    conn = c;
+    setupDataConnection(c);
   }catch(e){
     console.error(e);
     scheduleReconnect();
   }
 }
 function scheduleReconnect(){
-  if(isHost)return;
+  if(isHost) return;
   clearTimeout(reconnectTimer);
-  reconnectTimer=setTimeout(()=>{
-    if(!conn || !conn.open)connectHost();
+  reconnectTimer = setTimeout(()=>{
+    if(!conn || !conn.open) connectHost();
   },2200);
 }
-function setupDataConnection(c,generation){
+
+function setupDataConnection(c){
   c.on("open",()=>{
-    if(generation!==peerGeneration)return;
-    status(isHost?"Peserta terhubung":"Terhubung ke Host");
-    if(isHost)guestId=c.peer;
+    status(isHost ? "Peserta terhubung" : "Terhubung ke Host");
+    if(isHost) guestId = c.peer;
     sendHello();
     updateHostUI();
     maybeStartMediaCall();
-    if(isHost && screenStream)sendScreen();
+    if(isHost && screenStream) sendScreen();
   });
-  c.on("data",d=>handleData(d));
+  c.on("data",data=>handleData(data));
   c.on("close",()=>{
-    if(conn===c)conn=null;
+    if(conn===c) conn=null;
     if(isHost){
       guestId=null;
       remoteName="Peserta";
-      if(mediaCall){try{mediaCall.close();}catch(e){}mediaCall=null;}
-      if(screenCall){try{screenCall.close();}catch(e){}screenCall=null;}
+      if(mediaCall){try{mediaCall.close()}catch(e){} mediaCall=null;}
+      if(screenCall){try{screenCall.close()}catch(e){} screenCall=null;}
       updateHostUI();
       status("Menunggu peserta...");
     }else{
@@ -364,17 +349,14 @@ function setupDataConnection(c,generation){
 }
 
 function handleData(d){
-  if(!d || !d.type)return;
+  if(!d || !d.type) return;
   switch(d.type){
     case "hello":
       remoteName=d.name||"Peserta";
-      if(isHost)guestId=d.id;
-      remoteCameraOn=d.camera!==false;
-      remoteMicOn=d.mic!==false;
+      if(isHost) guestId=d.id;
       updateHostUI();
-      updateRemoteBubbleLabel();
       maybeStartMediaCall();
-      if(isHost && screenStream && !screenCall)sendScreen();
+      if(isHost && screenStream) sendScreen();
       break;
     case "chat":
       addMessage(d.name||"Peserta",d.text||"",false);
@@ -382,43 +364,32 @@ function handleData(d){
     case "name":
       remoteName=d.name||"Peserta";
       updateHostUI();
-      updateRemoteBubbleLabel();
-      break;
-    case "media-state":
-      remoteCameraOn=!!d.camera;
-      remoteMicOn=!!d.mic;
-      updateRemoteBubbleLabel();
-      const rv=bubbles.get("remote")?.querySelector("video");
-      if(rv && remoteMediaStream && remoteCameraOn){
-        rv.srcObject=remoteMediaStream;
-        rv.play().catch(()=>{});
-      }
       break;
     case "permission":
       permission=!!d.allowed;
       updatePermissionUI();
-      if(!permission && screenStream && !isHost)stopScreen(false);
+      if(!permission && screenStream && !isHost) stopScreen(false);
       break;
     case "command":
       if(d.kind==="mic"){
         const t=localMedia?.getAudioTracks()[0];
-        if(t)t.enabled=!!d.enabled;
+        if(t) t.enabled=!!d.enabled;
         micOn=!!d.enabled;
         micLocked=!!d.locked;
-        updateButtons();
-        sendMediaState();
+        setMediaButtons();
+        sendHello();
       }
       if(d.kind==="camera"){
         const t=localMedia?.getVideoTracks()[0];
-        if(t)t.enabled=!!d.enabled;
+        if(t) t.enabled=!!d.enabled;
         camOn=!!d.enabled;
         camLocked=!!d.locked;
-        updateButtons();
-        sendMediaState();
+        setMediaButtons();
+        sendHello();
       }
       if(d.kind==="revoke-screen"){
         permission=false;
-        if(screenStream)stopScreen(false);
+        if(screenStream) stopScreen(false);
         updatePermissionUI();
       }
       break;
@@ -426,71 +397,61 @@ function handleData(d){
       toast(d.reason||"Anda dikeluarkan dari room.");
       setTimeout(()=>location.href=location.pathname,1200);
       break;
+    case "screen-start":
+      break;
     case "screen-stop":
       clearRemoteScreen();
       break;
   }
 }
 
-/* Local webcam and microphone */
+/* Webcam + microphone: one bidirectional WebRTC call.
+   Host initiates it to avoid simultaneous duplicate calls. */
 async function ensureMedia(){
-  if(localMedia)return;
+  if(localMedia) return;
   if(!navigator.mediaDevices?.getUserMedia){
-    toast("Kamera/mikrofon memerlukan HTTPS.");
+    toast("Kamera/mikrofon memerlukan HTTPS dan browser yang mendukung.");
     return;
   }
   try{
-    localMedia=await navigator.mediaDevices.getUserMedia({
+    localMedia = await navigator.mediaDevices.getUserMedia({
       video:{width:{ideal:1280},height:{ideal:720},frameRate:{ideal:30}},
       audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}
     });
   }catch(e){
-    console.warn("Combined camera/mic unavailable:",e);
+    console.warn("Camera and mic unavailable:",e);
     try{
-      localMedia=await navigator.mediaDevices.getUserMedia({audio:true});
+      localMedia = await navigator.mediaDevices.getUserMedia({audio:true});
     }catch(e2){
       toast("Izin kamera/mikrofon belum diberikan.");
       return;
     }
   }
-  camOn=localMedia.getVideoTracks().some(t=>t.enabled);
-  micOn=localMedia.getAudioTracks().some(t=>t.enabled);
+  camOn = localMedia.getVideoTracks().some(t=>t.enabled);
+  micOn = localMedia.getAudioTracks().some(t=>t.enabled);
   createBubble("local",name,localMedia,true);
-  updateButtons();
+  setMediaButtons();
   sendHello();
   maybeStartMediaCall();
 }
-function sendMediaState(){
-  send({type:"media-state",camera:camOn,mic:micOn});
-  sendHello();
-  updateRemoteBubbleLabel();
-}
 function maybeStartMediaCall(){
-  if(!isHost || !guestId || !conn?.open || !localMedia || mediaCall)return;
+  if(!isHost || !guestId || !conn?.open || !localMedia || mediaCall) return;
   try{
     const c=peer.call(guestId,localMedia,{metadata:{kind:"media"}});
-    if(!c)return;
+    if(!c) return;
     mediaCall=c;
-    c.on("stream",stream=>{
-      remoteMediaStream=stream;
-      createBubble("remote",remoteName,stream,false);
-      updateRemoteBubbleLabel();
-    });
-    c.on("close",()=>{if(mediaCall===c)mediaCall=null;});
+    c.on("stream",stream=>createBubble("remote",remoteName,stream,false));
+    c.on("close",()=>{if(mediaCall===c) mediaCall=null;});
     c.on("error",e=>{console.error("Media call:",e);if(mediaCall===c)mediaCall=null;});
   }catch(e){console.error(e);}
 }
-async function receiveMediaCall(call){
-  await ensureMedia();
-  call.answer(localMedia||undefined);
-  mediaCall=call;
-  call.on("stream",stream=>{
-    remoteMediaStream=stream;
-    createBubble("remote",remoteName,stream,false);
-    updateRemoteBubbleLabel();
+function receiveMediaCall(call){
+  ensureMedia().then(()=>{
+    call.answer(localMedia||undefined);
+    call.on("stream",stream=>createBubble("remote",remoteName,stream,false));
+    call.on("close",()=>{if(mediaCall===call)mediaCall=null;});
+    mediaCall=call;
   });
-  call.on("close",()=>{if(mediaCall===call)mediaCall=null;});
-  call.on("error",e=>console.error("Media call:",e));
 }
 
 function createBubble(key,label,stream,muted){
@@ -498,7 +459,7 @@ function createBubble(key,label,stream,muted){
   if(!b){
     b=document.createElement("div");
     b.className="bubble";
-    b.innerHTML='<video autoplay playsinline></video><label></label><div class="resize" aria-label="Ubah ukuran kamera"></div>';
+    b.innerHTML='<video autoplay playsinline></video><label></label><div class="resize"></div>';
     $("bubbles").appendChild(b);
     bubbles.set(key,b);
     makeDraggable(b);
@@ -507,42 +468,35 @@ function createBubble(key,label,stream,muted){
   }
   b.querySelector("label").textContent=label;
   const v=b.querySelector("video");
-  if(v.srcObject!==stream)v.srcObject=stream;
+  if(v.srcObject!==stream) v.srcObject=stream;
   v.muted=!!muted;
-  v.autoplay=true;
-  v.playsInline=true;
   v.play().catch(()=>{});
   return b;
 }
-function updateRemoteBubbleLabel(){
-  const b=bubbles.get("remote");
-  if(!b)return;
-  b.querySelector("label").textContent=
-    remoteName+(remoteCameraOn?"":" • Kamera OFF")+(remoteMicOn?"":" • Mic OFF");
-}
 function arrangeBubbles(){
   const list=[...bubbles.values()];
-  const w=$("stage").clientWidth;
-  const h=$("stage").clientHeight;
-  const gap=8,pad=10;
-  const bw=Math.min(160,Math.max(90,(w-pad*2-gap)/2));
+  const stage=$("stage");
+  const w=stage.clientWidth;
+  const h=stage.clientHeight;
+  const bw=Math.min(160,Math.max(100,(w-30)/2));
   const bh=bw*.69;
   list.forEach((b,i)=>{
-    if(b.dataset.moved==="1")return;
+    if(b.dataset.moved==="1") return;
     b.style.width=bw+"px";
     b.style.height=bh+"px";
-    b.style.left=(pad+i*(bw+gap))+"px";
-    b.style.top=Math.max(pad,h-bh-14)+"px";
+    b.style.left=(12+i*(bw+8))+"px";
+    b.style.top=Math.max(12,h-bh-16)+"px";
   });
 }
 function makeDraggable(b){
   let active=false,dx=0,dy=0;
   b.addEventListener("pointerdown",e=>{
-    if(e.target.classList.contains("resize"))return;
+    if(e.target.classList.contains("resize")) return;
     active=true;
     const r=b.getBoundingClientRect();
+    const p=$("bubbles").getBoundingClientRect();
     dx=e.clientX-r.left;dy=e.clientY-r.top;
-    try{b.setPointerCapture(e.pointerId);}catch(err){}
+    b.setPointerCapture(e.pointerId);
     e.preventDefault();
   });
   b.addEventListener("pointermove",e=>{
@@ -552,68 +506,60 @@ function makeDraggable(b){
     b.style.top=Math.max(0,Math.min($("stage").clientHeight-b.offsetHeight,e.clientY-p.top-dy))+"px";
     b.dataset.moved="1";
   });
-  const end=()=>active=false;
-  b.addEventListener("pointerup",end);
-  b.addEventListener("pointercancel",end);
+  b.addEventListener("pointerup",()=>active=false);
+  b.addEventListener("pointercancel",()=>active=false);
 }
 function makeResizable(b){
-  const handle=b.querySelector(".resize");
-  let active=false,sx=0,sy=0,sw=0,sh=0;
-  handle.addEventListener("pointerdown",e=>{
-    active=true;sx=e.clientX;sy=e.clientY;sw=b.offsetWidth;sh=b.offsetHeight;
-    try{handle.setPointerCapture(e.pointerId);}catch(err){}
-    e.stopPropagation();e.preventDefault();
+  const h=b.querySelector(".resize");
+  let active=false,sx=0,sy=0,sw=0,sh=0,pointerId=null;
+  h.style.touchAction="none";
+  h.addEventListener("pointerdown",e=>{
+    e.preventDefault(); e.stopPropagation();
+    active=true; pointerId=e.pointerId;
+    sx=e.clientX; sy=e.clientY;
+    sw=b.getBoundingClientRect().width; sh=b.getBoundingClientRect().height;
+    try{h.setPointerCapture(pointerId)}catch(_){}
+    h.style.backgroundColor="#1769e0";
   });
-  handle.addEventListener("pointermove",e=>{
-    if(!active)return;
-    const stage=$("stage");
-    b.style.width=Math.max(90,Math.min(stage.clientWidth,sw+e.clientX-sx))+"px";
-    b.style.height=Math.max(65,Math.min(stage.clientHeight,sh+e.clientY-sy))+"px";
+  function move(e){
+    if(!active || (pointerId!==null && e.pointerId!==pointerId))return;
+    e.preventDefault();
+    const stage=$("stage").getBoundingClientRect();
+    const r=b.getBoundingClientRect();
+    const maxW=Math.max(100,stage.right-r.left);
+    const maxH=Math.max(70,stage.bottom-r.top);
+    b.style.width=Math.max(90,Math.min(maxW,sw+e.clientX-sx))+"px";
+    b.style.height=Math.max(65,Math.min(maxH,sh+e.clientY-sy))+"px";
     b.dataset.moved="1";
-  });
-  const end=()=>active=false;
-  handle.addEventListener("pointerup",end);
-  handle.addEventListener("pointercancel",end);
+  }
+  function end(e){
+    if(pointerId!==null && e.pointerId!==pointerId)return;
+    active=false; pointerId=null; h.style.backgroundColor="";
+  }
+  h.addEventListener("pointermove",move);
+  h.addEventListener("pointerup",end);
+  h.addEventListener("pointercancel",end);
+  window.addEventListener("pointermove",move,{passive:false});
+  window.addEventListener("pointerup",end);
+  window.addEventListener("pointercancel",end);
 }
 
-/* Camera/mic toggles preserve the original tracks so they can be re-enabled. */
 $("mic").onclick=async()=>{
   if(micLocked)return;
   if(!localMedia){await ensureMedia();return;}
   const t=localMedia.getAudioTracks()[0];
   if(!t){toast("Mikrofon tidak tersedia.");return;}
-  t.enabled=!t.enabled;
-  micOn=t.enabled;
-  updateButtons();
-  sendMediaState();
+  t.enabled=!t.enabled;micOn=t.enabled;setMediaButtons();sendHello();
 };
 $("camera").onclick=async()=>{
   if(camLocked)return;
   if(!localMedia){await ensureMedia();return;}
-  let t=localMedia.getVideoTracks()[0];
-  if(!t){
-    try{
-      const fresh=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720}}});
-      t=fresh.getVideoTracks()[0];
-      if(!t)return;
-      localMedia.addTrack(t);
-      const old=mediaCall;
-      if(old){try{old.close();}catch(e){}mediaCall=null;}
-      if(isHost)maybeStartMediaCall();
-      else send({type:"renegotiate-media"});
-    }catch(e){
-      toast("Tidak dapat mengaktifkan kamera.");
-      return;
-    }
-  }else{
-    t.enabled=!t.enabled;
-  }
-  camOn=t.enabled;
-  updateButtons();
-  sendMediaState();
+  const t=localMedia.getVideoTracks()[0];
+  if(!t){toast("Kamera tidak tersedia.");return;}
+  t.enabled=!t.enabled;camOn=t.enabled;setMediaButtons();sendHello();
 };
 
-/* Screen share: separate WebRTC call from camera/mic. */
+/* Screen share uses its own call, separate from webcam call. */
 $("share").onclick=startScreen;
 async function startScreen(){
   if(!isHost && permission!==true){
@@ -621,10 +567,6 @@ async function startScreen(){
     return;
   }
   if(screenStream)return;
-  if(!navigator.mediaDevices?.getDisplayMedia){
-    toast("Browser tidak mendukung screen share.");
-    return;
-  }
   const q=getQuality();
   try{
     screenStream=await navigator.mediaDevices.getDisplayMedia({
@@ -636,8 +578,15 @@ async function startScreen(){
     });
     const vt=screenStream.getVideoTracks()[0];
     if(vt){
-      try{vt.contentHint="motion";}catch(e){}
-      vt.addEventListener("ended",()=>{if(screenStream)stopScreen(true);});
+      try{vt.contentHint="detail"}catch(e){}
+      try{
+        await vt.applyConstraints({
+          width:{ideal:q.w,max:q.w},
+          height:{ideal:q.h,max:q.h},
+          frameRate:{ideal:q.fps,max:q.fps}
+        });
+      }catch(e){console.warn("Capture constraints could not be applied; using browser-selected capture size.",e);}
+      vt.addEventListener("ended",()=>{if(screenStream)stopScreen(true)});
     }
     $("screen").srcObject=screenStream;
     $("screen").muted=true;
@@ -657,19 +606,68 @@ async function startScreen(){
 }
 function sendScreen(){
   if(!screenStream || !guestId || !conn?.open || !peer)return;
-  if(screenCall && screenCall.peer===guestId && screenCall.open)return;
-  if(screenCall){try{screenCall.close();}catch(e){}screenCall=null;}
+  if(screenCall){
+    try{screenCall.close()}catch(e){}
+    screenCall=null;
+  }
   try{
     const c=peer.call(guestId,screenStream,{metadata:{kind:"screen"}});
     if(!c){toast("Koneksi screen share gagal dibuat.");return;}
     screenCall=c;
+    c.on("error",e=>console.error("Screen call error:",e));
     c.on("close",()=>{if(screenCall===c)screenCall=null;});
-    c.on("error",e=>{console.error("Screen call:",e);if(screenCall===c)screenCall=null;});
-    setTimeout(()=>applyQualityToCall(c),500);
+    c.on("stream",()=>{});
+    c.on("error",()=>{if(screenCall===c)screenCall=null;});
+    setTimeout(()=>setVideoBitrate(c),250);
+    setTimeout(()=>setVideoBitrate(c),900);
+    setTimeout(()=>setVideoBitrate(c),1800);
   }catch(e){console.error("sendScreen:",e);}
 }
+async function setVideoBitrate(call,attempt=0){
+  try{
+    const sender=call?.peerConnection?.getSenders().find(s=>s.track?.kind==="video");
+    if(!sender){
+      if(attempt<12)setTimeout(()=>setVideoBitrate(call,attempt+1),350);
+      return;
+    }
+    const q=getQuality(), p=sender.getParameters()||{};
+    if(!p.encodings || !p.encodings.length)p.encodings=[{}];
+    p.encodings[0].maxBitrate=q.bitrate;
+    p.encodings[0].maxFramerate=q.fps;
+    if("degradationPreference" in p)p.degradationPreference="maintain-resolution";
+    await sender.setParameters(p);
+    console.log("Screen share sender profile applied:",q);
+  }catch(e){
+    console.warn("Could not apply sender bitrate yet:",e);
+    if(attempt<12)setTimeout(()=>setVideoBitrate(call,attempt+1),350);
+  }
+}
+async function applyScreenQuality(){
+  const q=getQuality();
+  if(!screenStream){
+    toast("Profil kualitas akan digunakan saat screen share dimulai.");
+    return;
+  }
+  const track=screenStream.getVideoTracks()[0];
+  if(track){
+    try{
+      await track.applyConstraints({
+        width:{ideal:q.w,max:q.w},
+        height:{ideal:q.h,max:q.h},
+        frameRate:{ideal:q.fps,max:q.fps}
+      });
+    }catch(e){
+      console.warn("Selected share source cannot change to requested profile:",e);
+      toast("Browser/sumber layar membatasi resolusi; bitrate tetap disesuaikan.");
+    }
+  }
+  if(screenCall)await setVideoBitrate(screenCall);
+  toast("Profil kualitas diterapkan. Hasil bergantung pada sumber layar dan upload Host.");
+}
 function receiveScreenCall(call){
-  if(remoteScreenCall){try{remoteScreenCall.close();}catch(e){}}
+  if(remoteScreenCall){
+    try{remoteScreenCall.close()}catch(e){}
+  }
   remoteScreenCall=call;
   call.answer();
   call.on("stream",stream=>{
@@ -682,8 +680,7 @@ function receiveScreenCall(call){
     $("share").style.display="none";
     $("stop").style.display="none";
     v.play().then(()=>$("sound").style.display="none").catch(()=>$("sound").style.display="block");
-    stream.getVideoTracks().forEach(t=>t.addEventListener("ended",clearRemoteScreen,{once:true}));
-    toast("Screen share diterima.");
+    toast("Screen share Host diterima.");
   });
   call.on("close",()=>{
     if(remoteScreenCall===call){
@@ -691,69 +688,30 @@ function receiveScreenCall(call){
       clearRemoteScreen();
     }
   });
-  call.on("error",e=>console.error("Receive screen:",e));
+  call.on("error",e=>{
+    console.error("Receive screen error:",e);
+    if(remoteScreenCall===call)remoteScreenCall=null;
+  });
 }
-
-/* Apply both capture constraints and outgoing bitrate while sharing. */
-async function applyQuality(){
-  if(!screenStream)return;
-  const q=getQuality();
-  const track=screenStream.getVideoTracks()[0];
-  if(track){
-    try{
-      await track.applyConstraints({
-        width:{ideal:q.w},
-        height:{ideal:q.h},
-        frameRate:{ideal:q.fps,max:q.fps}
-      });
-    }catch(e){
-      console.warn("Capture constraints not supported; applying bitrate only.",e);
-    }
-    try{track.contentHint="motion";}catch(e){}
-  }
-  if(screenCall)applyQualityToCall(screenCall);
-}
-function applyQualityToCall(call){
-  try{
-    const sender=call.peerConnection?.getSenders().find(s=>s.track?.kind==="video");
-    if(!sender)return;
-    const q=getQuality();
-    const p=sender.getParameters();
-    if(!p.encodings || !p.encodings.length)p.encodings=[{}];
-    p.encodings[0].maxBitrate=q.bitrate;
-    p.encodings[0].maxFramerate=q.fps;
-    sender.setParameters(p).catch(e=>console.warn("Bitrate update:",e));
-  }catch(e){console.warn("Quality update:",e);}
-}
-$("quality").onchange=()=>{
-  if(screenStream){
-    applyQuality();
-    toast("Menerapkan kualitas baru...");
-  }else{
-    toast("Kualitas dipakai saat screen share dimulai.");
-  }
-};
-
 $("sound").onclick=()=>{
   $("screen").muted=false;
   $("screen").volume=1;
-  $("screen").play().then(()=>$("sound").style.display="none").catch(()=>toast("Browser belum mengizinkan pemutaran audio."));
+  $("screen").play().then(()=>$("sound").style.display="none").catch(()=>toast("Klik video lalu coba aktifkan suara lagi."));
 };
-$("stop").onclick=()=>stopScreen(true);
 function stopScreen(notify=true){
-  if(screenStream)screenStream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});
+  if(screenStream){
+    screenStream.getTracks().forEach(t=>{try{t.stop()}catch(e){}});
+  }
   screenStream=null;
-  if(screenCall){try{screenCall.close();}catch(e){}screenCall=null;}
+  if(screenCall){try{screenCall.close()}catch(e){}screenCall=null;}
   $("screen").srcObject=null;
-  $("screen").muted=false;
-  $("screen").volume=1;
   $("empty").style.display="grid";
   $("share").style.display="inline-block";
   $("stop").style.display="none";
   $("sound").style.display="none";
   if(notify)send({type:"screen-stop"});
-  updatePermissionUI();
 }
+$("stop").onclick=()=>stopScreen(true);
 function clearRemoteScreen(){
   if(screenStream)return;
   $("screen").srcObject=null;
@@ -763,33 +721,14 @@ function clearRemoteScreen(){
   $("stop").style.display="none";
   $("sound").style.display="none";
 }
-
-/* Fullscreen: stage first, native video fallback where supported. */
+$("quality").onchange=()=>{ applyScreenQuality(); };
 $("full").onclick=async()=>{
-  const stage=$("stage");
   try{
-    if(document.fullscreenElement){
-      await document.exitFullscreen();
-      return;
-    }
-    if(stage.requestFullscreen){
-      await stage.requestFullscreen();
-      return;
-    }
-    const v=$("screen");
-    if(v.webkitEnterFullscreen){
-      v.webkitEnterFullscreen();
-      return;
-    }
-    toast("Fullscreen tidak didukung browser ini.");
-  }catch(e){
-    const v=$("screen");
-    try{
-      if(v.webkitEnterFullscreen)v.webkitEnterFullscreen();
-      else toast("Browser menolak fullscreen. Coba gunakan Chrome/Edge.");
-    }catch(e2){toast("Fullscreen tidak tersedia pada perangkat ini.");}
-  }
+    if(!document.fullscreenElement)await $("stage").requestFullscreen();
+    else await document.exitFullscreen();
+  }catch(e){toast("Fullscreen tidak didukung pada kondisi ini.");}
 };
+window.addEventListener("resize",arrangeBubbles);
 
 /* Chat */
 $("chatForm").onsubmit=e=>{
@@ -828,12 +767,10 @@ $("lockCam").onclick=()=>{
   $("lockCam").textContent=camLocked?"Buka Kunci Kamera":"Kunci Kamera";
 };
 $("grant").onclick=()=>{
-  permission=true;
   send({type:"permission",allowed:true});
   toast("Izin screen share diberikan.");
 };
 $("revoke").onclick=()=>{
-  permission=false;
   send({type:"permission",allowed:false});
   send({type:"command",kind:"revoke-screen"});
   toast("Izin screen share dicabut.");
@@ -842,13 +779,12 @@ $("kick").onclick=()=>{
   if(!guestId){toast("Belum ada peserta.");return;}
   send({type:"kick",reason:"Anda dikeluarkan oleh Host."});
   setTimeout(()=>{
-    if(conn){try{conn.close();}catch(e){}}
-    guestId=null;
-    updateHostUI();
+    if(conn){try{conn.close()}catch(e){}}
+    guestId=null;updateHostUI();
   },300);
 };
 
-/* Always share the participant link, never the Host link. */
+/* Host link stays private to Host; copy the participant link. */
 $("copyLink").onclick=async()=>{
   const link=location.origin+location.pathname+"?room="+encodeURIComponent(room);
   try{await navigator.clipboard.writeText(link);toast("Link peserta disalin.");}
@@ -859,14 +795,9 @@ $("copyCode").onclick=async()=>{
   catch(e){prompt("Kode room:",room);}
 };
 
-window.addEventListener("resize",arrangeBubbles);
-document.addEventListener("visibilitychange",()=>{
-  if(!document.hidden && !isHost && (!conn || !conn.open))scheduleReconnect();
-});
-
 updatePermissionUI();
 updateHostUI();
-updateButtons();
+setMediaButtons();
 createPeer();
 })();
 </script>
