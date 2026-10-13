@@ -76,7 +76,7 @@ aside{width:300px;flex-shrink:0;display:flex;flex-direction:column;min-height:0;
   <div id="empty"><div><div style="font-size:42px">📺</div><h2>Belum ada screen share</h2><p>Mulai berbagi layar untuk menonton bersama.</p></div></div>
   <div id="bubbles"></div>
   <div id="controls">
-    <label style="font-size:12px">Kualitas
+    <label id="qualityWrap" style="font-size:12px">Kualitas
       <select id="quality">
         <option value="auto">Auto</option>
         <option value="720p">720p 30 FPS</option>
@@ -228,7 +228,7 @@ function getQuality(){
   const q = $("quality").value;
   if(q==="720p") return {w:1280,h:720,fps:30,bitrate:5000000};
   if(q==="1080p") return {w:1920,h:1080,fps:30,bitrate:9000000};
-  if(q==="1080p60") return {w:1920,h:1080,fps:60,bitrate:16000000};
+  if(q==="1080p60") return {w:1920,h:1080,fps:60,bitrate:12000000};
   return {w:1920,h:1080,fps:60,bitrate:14000000};
 }
 
@@ -578,7 +578,7 @@ async function startScreen(){
     });
     const vt=screenStream.getVideoTracks()[0];
     if(vt){
-      try{vt.contentHint="detail"}catch(e){}
+      try{vt.contentHint=q.fps>=60 ? "motion" : "detail"}catch(e){}
       try{
         await vt.applyConstraints({
           width:{ideal:q.w,max:q.w},
@@ -634,7 +634,7 @@ async function setVideoBitrate(call,attempt=0){
     if(!p.encodings || !p.encodings.length)p.encodings=[{}];
     p.encodings[0].maxBitrate=q.bitrate;
     p.encodings[0].maxFramerate=q.fps;
-    if("degradationPreference" in p)p.degradationPreference="maintain-resolution";
+    if("degradationPreference" in p)p.degradationPreference="maintain-framerate";
     await sender.setParameters(p);
     console.log("Screen share sender profile applied:",q);
   }catch(e){
@@ -722,12 +722,19 @@ function clearRemoteScreen(){
   $("sound").style.display="none";
 }
 $("quality").onchange=()=>{ applyScreenQuality(); };
+function updateFullscreenQualityVisibility(){
+  const inStageFullscreen = document.fullscreenElement === $("stage");
+  // Client tidak perlu melihat pemilih kualitas saat menonton fullscreen.
+  $("qualityWrap").style.display = (!isHost && inStageFullscreen) ? "none" : "";
+}
 $("full").onclick=async()=>{
   try{
     if(!document.fullscreenElement)await $("stage").requestFullscreen();
     else await document.exitFullscreen();
   }catch(e){toast("Fullscreen tidak didukung pada kondisi ini.");}
 };
+document.addEventListener("fullscreenchange",updateFullscreenQualityVisibility);
+updateFullscreenQualityVisibility();
 window.addEventListener("resize",arrangeBubbles);
 
 /* Chat */
