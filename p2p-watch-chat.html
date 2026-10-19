@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -26,7 +25,10 @@ main{flex:1;min-height:0;display:flex}
 .bubble{position:absolute;width:160px;height:110px;min-width:90px;min-height:65px;background:#15191f;border:1px solid #647080;border-radius:10px;overflow:hidden;box-shadow:0 5px 20px #0008;pointer-events:auto;touch-action:none}
 .bubble video{width:100%;height:100%;object-fit:cover;pointer-events:none}
 .bubble label{position:absolute;left:5px;bottom:5px;background:#000a;padding:4px;border-radius:4px;font-size:11px;pointer-events:none}
-.resize{position:absolute;right:0;bottom:0;z-index:5;width:38px;height:38px;cursor:nwse-resize;touch-action:none;pointer-events:auto;background:linear-gradient(135deg,transparent 48%,#fff 50%,#fff 55%,transparent 57%)}
+.resize{position:absolute;right:1px;bottom:1px;z-index:5;width:32px;height:32px;cursor:nwse-resize;touch-action:none;pointer-events:auto;opacity:.42;background:linear-gradient(135deg,transparent 49%,#ffffff 50%,#ffffff 53%,transparent 56%);transition:opacity .15s ease}
+.bubble:active .resize,.resize:active{opacity:.85}
+#full.fullscreen-auto-hidden{opacity:0;pointer-events:none;transition:opacity .35s ease}
+#full{transition:opacity .25s ease}
 #controls{position:absolute;z-index:5;bottom:10px;left:8px;right:8px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap}
 #controls button,#controls select{box-shadow:0 2px 8px #0008}
 .blue{background:#1769e0}
@@ -67,7 +69,7 @@ aside{width:300px;flex-shrink:0;display:flex;flex-direction:column;min-height:0;
 <header>
   <strong>🎬 Watch Party</strong>
   <span id="status">Menghubungkan...</span>
-  <button id="copyLink">Salin Link Peserta</button>
+  <button id="copyHostLink" style="display:none">Salin Link Host</button><button id="copyLink">Salin Link Peserta</button>
 </header>
 
 <main>
@@ -146,6 +148,7 @@ const params = new URLSearchParams(location.search);
 
 let room = params.get("room");
 let isHost = params.get("host") === "1";
+const HOST_ROOM_KEY = "wp_host_room_v3";
 
 function randomRoom(){
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -153,13 +156,15 @@ function randomRoom(){
 }
 
 if(!room){
-  room = randomRoom();
+  room = localStorage.getItem(HOST_ROOM_KEY) || randomRoom();
   isHost = true;
-  history.replaceState({}, "", "?room="+room+"&host=1");
 }
-
 room = room.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,24);
 if(!room) room = randomRoom();
+if(isHost){
+  localStorage.setItem(HOST_ROOM_KEY,room);
+  history.replaceState({}, "", "?room="+encodeURIComponent(room)+"&host=1");
+}
 
 const hostId = "wp-"+room.toLowerCase();
 
@@ -242,6 +247,7 @@ function createPeer(){
     status(isHost ? "Room siap" : "Mencari Host...");
     if(isHost){
       $("hostPanel").classList.add("show");
+      $("copyHostLink").style.display="inline-block";
       updateHostUI();
     }else{
       connectHost();
@@ -722,10 +728,29 @@ function clearRemoteScreen(){
   $("sound").style.display="none";
 }
 $("quality").onchange=()=>{ applyScreenQuality(); };
+let fullscreenHideTimer=null;
+function isMobileLayout(){
+  return window.matchMedia("(max-width:700px), (pointer:coarse)").matches;
+}
+function showFullscreenButtonTemporarily(){
+  const btn=$("full");
+  clearTimeout(fullscreenHideTimer);
+  btn.classList.remove("fullscreen-auto-hidden");
+  if(document.fullscreenElement === $("stage") && isMobileLayout()){
+    fullscreenHideTimer=setTimeout(()=>{
+      btn.classList.add("fullscreen-auto-hidden");
+    },3000);
+  }
+}
 function updateFullscreenQualityVisibility(){
   const inStageFullscreen = document.fullscreenElement === $("stage");
-  // Client tidak perlu melihat pemilih kualitas saat menonton fullscreen.
+  // Client tidak perlu melihat pemilih kualitas saat masuk fullscreen.
   $("qualityWrap").style.display = (!isHost && inStageFullscreen) ? "none" : "";
+  if(inStageFullscreen && isMobileLayout()) showFullscreenButtonTemporarily();
+  else {
+    clearTimeout(fullscreenHideTimer);
+    $("full").classList.remove("fullscreen-auto-hidden");
+  }
 }
 $("full").onclick=async()=>{
   try{
@@ -733,7 +758,12 @@ $("full").onclick=async()=>{
     else await document.exitFullscreen();
   }catch(e){toast("Fullscreen tidak didukung pada kondisi ini.");}
 };
+// Ketuk layar saat fullscreen di HP untuk menampilkan tombol fullscreen selama 3 detik.
+$("stage").addEventListener("pointerdown",()=>{
+  if(document.fullscreenElement === $("stage") && isMobileLayout()) showFullscreenButtonTemporarily();
+},{passive:true});
 document.addEventListener("fullscreenchange",updateFullscreenQualityVisibility);
+window.addEventListener("resize",updateFullscreenQualityVisibility);
 updateFullscreenQualityVisibility();
 window.addEventListener("resize",arrangeBubbles);
 
@@ -796,6 +826,11 @@ $("copyLink").onclick=async()=>{
   const link=location.origin+location.pathname+"?room="+encodeURIComponent(room);
   try{await navigator.clipboard.writeText(link);toast("Link peserta disalin.");}
   catch(e){prompt("Salin link peserta ini:",link);}
+};
+$("copyHostLink").onclick=async()=>{
+  const link=location.origin+location.pathname+"?room="+encodeURIComponent(room)+"&host=1";
+  try{await navigator.clipboard.writeText(link);toast("Link Host disalin. Gunakan link ini untuk membuka room sebagai Host.");}
+  catch(e){prompt("Simpan link Host ini:",link);}
 };
 $("copyCode").onclick=async()=>{
   try{await navigator.clipboard.writeText(room);toast("Kode room disalin.");}
