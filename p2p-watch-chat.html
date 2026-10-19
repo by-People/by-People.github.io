@@ -27,8 +27,22 @@ main{flex:1;min-height:0;display:flex}
 .bubble label{position:absolute;left:5px;bottom:5px;background:#000a;padding:4px;border-radius:4px;font-size:11px;pointer-events:none}
 .resize{position:absolute;right:1px;bottom:1px;z-index:5;width:32px;height:32px;cursor:nwse-resize;touch-action:none;pointer-events:auto;opacity:.42;background:linear-gradient(135deg,transparent 49%,#ffffff 50%,#ffffff 53%,transparent 56%);transition:opacity .15s ease}
 .bubble:active .resize,.resize:active{opacity:.85}
-#full.fullscreen-auto-hidden{opacity:0;pointer-events:none;transition:opacity .35s ease}
-#full{transition:opacity .25s ease}
+#controls{transition:opacity .3s ease,transform .3s ease}
+#controls.fullscreen-controls-hidden{opacity:0;pointer-events:none;transform:translateY(8px)}
+#chatToggle{position:absolute;z-index:12;right:12px;top:12px;background:#202833dd;border:1px solid #ffffff35;border-radius:999px;padding:10px 13px;box-shadow:0 3px 14px #0008}
+#chat.chat-fullscreen-panel{position:absolute;z-index:11;right:12px;top:62px;bottom:12px;width:min(340px,32%);height:auto;min-height:0;background:#111923ed;border:1px solid #ffffff2b;border-radius:12px;box-shadow:0 8px 28px #0009;padding:10px;backdrop-filter:blur(10px)}
+#chat.chat-fullscreen-panel .heading{display:flex;align-items:center;justify-content:space-between}
+#chat.chat-fullscreen-panel #messages{overscroll-behavior:contain}
+#chat.chat-fullscreen-panel #chatInput{min-width:0}
+#chat.chat-fullscreen-panel #chatForm{padding-bottom:env(safe-area-inset-bottom)}
+#chat.chat-fullscreen-panel.chat-hidden{display:none!important}
+@media (orientation:portrait) {
+  #chat.chat-fullscreen-panel{left:10px;right:10px;top:auto;bottom:12px;width:auto;height:min(44%,360px)}
+}
+@media (max-width:700px) {
+  #chat.chat-fullscreen-panel{width:min(34%,340px)}
+}
+
 #controls{position:absolute;z-index:5;bottom:10px;left:8px;right:8px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap}
 #controls button,#controls select{box-shadow:0 2px 8px #0008}
 .blue{background:#1769e0}
@@ -77,6 +91,7 @@ aside{width:300px;flex-shrink:0;display:flex;flex-direction:column;min-height:0;
   <video id="screen" autoplay playsinline></video>
   <div id="empty"><div><div style="font-size:42px">📺</div><h2>Belum ada screen share</h2><p>Mulai berbagi layar untuk menonton bersama.</p></div></div>
   <div id="bubbles"></div>
+  <button id="chatToggle" type="button" aria-label="Tampilkan chat" style="display:none">💬 Chat</button>
   <div id="controls">
     <label id="qualityWrap" style="font-size:12px">Kualitas
       <select id="quality">
@@ -103,7 +118,7 @@ aside{width:300px;flex-shrink:0;display:flex;flex-direction:column;min-height:0;
   </div>
 
   <section id="chat">
-    <div class="heading">Chat</div>
+    <div class="heading"><span>Chat</span><button id="chatClose" type="button" aria-label="Sembunyikan chat" style="display:none;padding:3px 8px">✕</button></div>
     <div id="messages"></div>
     <form id="chatForm">
       <input id="chatInput" placeholder="Tulis pesan..." maxlength="1000" autocomplete="off">
@@ -366,6 +381,11 @@ function handleData(d){
       break;
     case "chat":
       addMessage(d.name||"Peserta",d.text||"",false);
+      if(isFullscreenStage()){
+        chatUnread++;
+        showChatPanel();
+        $("chatToggle").textContent="💬 Chat";
+      }
       break;
     case "name":
       remoteName=d.name||"Peserta";
@@ -728,28 +748,75 @@ function clearRemoteScreen(){
   $("sound").style.display="none";
 }
 $("quality").onchange=()=>{ applyScreenQuality(); };
-let fullscreenHideTimer=null;
-function isMobileLayout(){
-  return window.matchMedia("(max-width:700px), (pointer:coarse)").matches;
+let fullscreenHideTimer = null;
+let chatOriginalParent = null;
+let chatOriginalNextSibling = null;
+let chatUnread = 0;
+let chatWasManuallyHidden = false;
+
+function isFullscreenStage(){
+  return document.fullscreenElement === $("stage");
 }
-function showFullscreenButtonTemporarily(){
-  const btn=$("full");
+function showFullscreenControlsTemporarily(){
   clearTimeout(fullscreenHideTimer);
-  btn.classList.remove("fullscreen-auto-hidden");
-  if(document.fullscreenElement === $("stage") && isMobileLayout()){
+  $("controls").classList.remove("fullscreen-controls-hidden");
+  if(isFullscreenStage()){
     fullscreenHideTimer=setTimeout(()=>{
-      btn.classList.add("fullscreen-auto-hidden");
+      // Keep controls available while typing in chat.
+      if(document.activeElement !== $("chatInput")){
+        $("controls").classList.add("fullscreen-controls-hidden");
+      }
     },3000);
   }
 }
+function enterFullscreenChat(){
+  if(!chatOriginalParent){
+    chatOriginalParent=$("chat").parentNode;
+    chatOriginalNextSibling=$("chat").nextSibling;
+  }
+  $("stage").appendChild($("chat"));
+  $("chat").classList.add("chat-fullscreen-panel");
+  $("chat").classList.remove("chat-hidden");
+  $("chatToggle").style.display="inline-block";
+  $("chatClose").style.display="inline-block";
+  chatWasManuallyHidden=false;
+}
+function exitFullscreenChat(){
+  if(chatOriginalParent){
+    if(chatOriginalNextSibling && chatOriginalNextSibling.parentNode===chatOriginalParent){
+      chatOriginalParent.insertBefore($("chat"),chatOriginalNextSibling);
+    }else{
+      chatOriginalParent.appendChild($("chat"));
+    }
+  }
+  $("chat").classList.remove("chat-fullscreen-panel","chat-hidden");
+  $("chatToggle").style.display="none";
+  $("chatClose").style.display="none";
+  chatOriginalParent=null;
+  chatOriginalNextSibling=null;
+}
+function showChatPanel(){
+  if(!isFullscreenStage())return;
+  $("chat").classList.remove("chat-hidden");
+  $("chatToggle").textContent=chatUnread ? "💬 Chat ("+chatUnread+")" : "💬 Chat";
+  chatWasManuallyHidden=false;
+  chatUnread=0;
+}
+function hideChatPanel(){
+  $("chat").classList.add("chat-hidden");
+  $("chatToggle").textContent=chatUnread ? "💬 Chat ("+chatUnread+")" : "💬 Chat";
+  chatWasManuallyHidden=true;
+}
 function updateFullscreenQualityVisibility(){
-  const inStageFullscreen = document.fullscreenElement === $("stage");
-  // Client tidak perlu melihat pemilih kualitas saat masuk fullscreen.
-  $("qualityWrap").style.display = (!isHost && inStageFullscreen) ? "none" : "";
-  if(inStageFullscreen && isMobileLayout()) showFullscreenButtonTemporarily();
-  else {
+  const inStageFullscreen=isFullscreenStage();
+  $("qualityWrap").style.display=(!isHost && inStageFullscreen) ? "none" : "";
+  if(inStageFullscreen){
+    enterFullscreenChat();
+    showFullscreenControlsTemporarily();
+  }else{
     clearTimeout(fullscreenHideTimer);
-    $("full").classList.remove("fullscreen-auto-hidden");
+    $("controls").classList.remove("fullscreen-controls-hidden");
+    exitFullscreenChat();
   }
 }
 $("full").onclick=async()=>{
@@ -758,10 +825,28 @@ $("full").onclick=async()=>{
     else await document.exitFullscreen();
   }catch(e){toast("Fullscreen tidak didukung pada kondisi ini.");}
 };
-// Ketuk layar saat fullscreen di HP untuk menampilkan tombol fullscreen selama 3 detik.
-$("stage").addEventListener("pointerdown",()=>{
-  if(document.fullscreenElement === $("stage") && isMobileLayout()) showFullscreenButtonTemporarily();
+$("chatToggle").onclick=()=>{
+  if($("chat").classList.contains("chat-hidden"))showChatPanel();
+  else hideChatPanel();
+};
+$("chatClose").onclick=hideChatPanel;
+
+// On mouse movement or touch, show fullscreen controls briefly on desktop and mobile.
+$("stage").addEventListener("pointermove",()=>{
+  if(isFullscreenStage())showFullscreenControlsTemporarily();
 },{passive:true});
+$("stage").addEventListener("pointerdown",()=>{
+  if(isFullscreenStage())showFullscreenControlsTemporarily();
+},{passive:true});
+$("chatInput").addEventListener("focus",()=>{
+  if(isFullscreenStage()){
+    clearTimeout(fullscreenHideTimer);
+    $("controls").classList.remove("fullscreen-controls-hidden");
+  }
+});
+$("chatInput").addEventListener("blur",()=>{
+  if(isFullscreenStage())showFullscreenControlsTemporarily();
+});
 document.addEventListener("fullscreenchange",updateFullscreenQualityVisibility);
 window.addEventListener("resize",updateFullscreenQualityVisibility);
 updateFullscreenQualityVisibility();
@@ -775,6 +860,7 @@ $("chatForm").onsubmit=e=>{
   addMessage(name,text,true);
   send({type:"chat",name,text});
   $("chatInput").value="";
+  if(isFullscreenStage())showChatPanel();
 };
 
 /* Name */
